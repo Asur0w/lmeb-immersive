@@ -10,7 +10,7 @@ const TIME_SLOTS = [
     title: 'Matinée',
     icon: <Sunrise size={24} />,
     price: 150,
-    image: 'https://images.unsplash.com/photo-1507608616759-54f48f0af0ee?q=80&w=2787&auto=format&fit=crop'
+    image: 'https://www.lemonde-enbouteille.be/web/image/16055-76e0b5e2/105-DSC09413.webp'
   },
   {
     id: 'aprem',
@@ -18,7 +18,7 @@ const TIME_SLOTS = [
     title: 'Après-midi',
     icon: <Sun size={24} />,
     price: 200,
-    image: 'https://images.unsplash.com/photo-1487958449943-2429e8be8625?q=80&w=2940&auto=format&fit=crop'
+    image: 'https://www.lemonde-enbouteille.be/web/image/16058-be08a656/86-DSC09383.webp'
   },
   {
     id: 'soiree',
@@ -26,7 +26,7 @@ const TIME_SLOTS = [
     title: 'Soirée',
     icon: <Moon size={24} />,
     price: 300,
-    image: 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=2940&auto=format&fit=crop'
+    image: 'https://www.lemonde-enbouteille.be/web/image/16057-9de877a5/83-DSC09379.webp'
   },
   {
     id: '24h',
@@ -405,8 +405,8 @@ En attente de votre validation.
   if (step === 0) {
     return (
       <div className="relative h-screen w-full bg-[#050505] overflow-hidden flex flex-col items-center justify-center p-8 text-white">
-        <div className="absolute inset-0 z-0 opacity-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] animate-grain"></div>
-        <div className="absolute inset-0 z-0 opacity-40 bg-[url('https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?q=80&w=2940&auto=format&fit=crop')] bg-cover bg-center mix-blend-overlay"></div>
+        <div className="absolute inset-0 z-0 opacity-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
+        <div className="absolute inset-0 z-0 opacity-40 bg-[url('https://www.lemonde-enbouteille.be/web/image/16056-b2829e5f/79-DSC09373.webp')] bg-cover bg-center mix-blend-overlay"></div>
 
         <div className="relative z-10 text-center space-y-12 animate-in fade-in zoom-in duration-1000 max-w-4xl mx-auto">
           <div className="w-px h-24 bg-gradient-to-b from-transparent via-amber-600 to-transparent mx-auto"></div>
@@ -950,22 +950,6 @@ En attente de votre validation.
         .font-mono { font-family: 'Space Grotesk', sans-serif; }
         .writing-vertical { writing-mode: vertical-rl; }
         
-        @keyframes grain {
-          0%, 100% { transform: translate(0, 0); }
-          10% { transform: translate(-5%, -10%); }
-          20% { transform: translate(-15%, 5%); }
-          30% { transform: translate(7%, -25%); }
-          40% { transform: translate(-5%, 25%); }
-          50% { transform: translate(-15%, 10%); }
-          60% { transform: translate(15%, 0%); }
-          70% { transform: translate(0%, 15%); }
-          80% { transform: translate(3%, 35%); }
-          90% { transform: translate(-10%, 10%); }
-        }
-        .animate-grain {
-          animation: grain 8s steps(10) infinite;
-        }
-
         /* HIDE SCROLLBAR UTILITY */
         .scrollbar-hide {
             -ms-overflow-style: none;  /* IE and Edge */
