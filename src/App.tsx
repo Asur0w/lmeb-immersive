@@ -126,9 +126,9 @@ const EXPERIENCES = [
   },
   { 
     id: 'gastro', 
-    title: 'Mets & Vins', 
+    title: 'Instant Gourmand', 
     price: -1, // Sur Devis
-    sub: 'Instant Gourmand',
+    sub: 'Repas',
     image: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=2940&auto=format&fit=crop'
   }
 ];
@@ -711,7 +711,7 @@ export default function App() {
                          <h4 className="text-xl md:text-2xl font-serif">Expérience Immersive</h4>
                       </div>
                       <p className={`text-xs md:text-sm ${!isDryHire ? 'text-white/90' : 'text-neutral-400'}`}>
-                        Une animation sensorielle incluse (Vin, Casino, Gastronomie).
+                        Une animation sensorielle incluse (Vin, Casino, Repas).
                       </p>
                    </button>
                 </div>
