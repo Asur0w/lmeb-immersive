@@ -10,7 +10,7 @@ const TIME_SLOTS = [
     title: 'Matinée',
     icon: <Sunrise size={24} />,
     price: 150,
-    image: 'https://images.unsplash.com/photo-1513569771920-c9e1d31714b0?q=80&w=2800&auto=format&fit=crop'
+    image: 'https://www.lemonde-enbouteille.be/web/image/16055-76e0b5e2/105-DSC09413.webp'
   },
   {
     id: 'aprem',
@@ -18,7 +18,7 @@ const TIME_SLOTS = [
     title: 'Après-midi',
     icon: <Sun size={24} />,
     price: 200,
-    image: 'https://images.unsplash.com/photo-1497215728101-856f4ea42174?q=80&w=2832&auto=format&fit=crop'
+    image: 'https://www.lemonde-enbouteille.be/web/image/16058-be08a656/86-DSC09383.webp'
   },
   {
     id: 'soiree',
@@ -26,7 +26,7 @@ const TIME_SLOTS = [
     title: 'Soirée',
     icon: <Moon size={24} />,
     price: 300,
-    image: 'https://images.unsplash.com/photo-1550989460-0adf9ea622e2?q=80&w=2787&auto=format&fit=crop'
+    image: 'https://www.lemonde-enbouteille.be/web/image/16057-9de877a5/83-DSC09379.webp'
   },
   {
     id: '24h',
@@ -51,21 +51,21 @@ const EVENT_TYPES = [
     title: 'Séminaire',
     subtitle: 'Stratégie',
     desc: 'Décisions clés.',
-    image: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?q=80&w=2828&auto=format&fit=crop'
+    image: 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=2940&auto=format&fit=crop'
   },
   {
     id: 'afterwork',
     title: 'Afterwork',
     subtitle: 'Réseau',
     desc: 'Décompression.',
-    image: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?q=80&w=2864&auto=format&fit=crop'
+    image: 'https://images.unsplash.com/photo-1572116469696-31de0f17cc34?q=80&w=2874&auto=format&fit=crop'
   },
   {
     id: 'prive',
     title: 'Privé',
     subtitle: 'Exception',
     desc: 'Moments rares.',
-    image: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=2940&auto=format&fit=crop'
+    image: 'https://images.unsplash.com/photo-1516997121675-4c2d1684aa3e?q=80&w=2944&auto=format&fit=crop'
   }
 ];
 
@@ -76,7 +76,7 @@ const FORMATS = [
     subtitle: 'Standard',
     desc: 'Notre disposition signature. Équilibrée & chaleureuse.',
     setupFee: 0,
-    image: 'https://images.unsplash.com/photo-1544148103-0773bf10d330?q=80&w=2940&auto=format&fit=crop'
+    image: 'https://images.unsplash.com/photo-1610223515025-276d99723058?q=80&w=2787&auto=format&fit=crop'
   },
   {
     id: 'cocktail',
@@ -84,7 +84,7 @@ const FORMATS = [
     subtitle: 'Debout',
     desc: 'Espace libéré. Mange-debout & circulation fluide.',
     setupFee: 0,
-    image: 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=2800&auto=format&fit=crop'
+    image: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?q=80&w=2864&auto=format&fit=crop'
   },
   {
     id: 'hybride',
@@ -92,7 +92,7 @@ const FORMATS = [
     subtitle: 'Mixte',
     desc: 'Zones de confort assises et zones de flux debout.',
     setupFee: 0,
-    image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=2800&auto=format&fit=crop'
+    image: 'https://images.unsplash.com/photo-1550581190-9c1c48d21d6c?q=80&w=2909&auto=format&fit=crop'
   }
 ];
 
@@ -116,7 +116,7 @@ const EXPERIENCES = [
     title: 'Casino du Vin', 
     price: 46, 
     sub: 'Animation Ludique',
-    image: 'https://images.unsplash.com/photo-1605870445919-838d190e8e10?q=80&w=2942&auto=format&fit=crop'
+    image: 'https://images.unsplash.com/photo-1596838132731-3301c3fd4317?q=80&w=2940&auto=format&fit=crop'
   },
   { 
     id: 'gastro', 
@@ -233,7 +233,7 @@ const StepIndicator = ({ step, setStep }) => (
         </button>
       ))}
     </div>
-    <div className="text-[10px] text-neutral-700 writing-vertical rotate-180 tracking-widest">MIKE G.</div>
+    <div className="text-[10px] text-neutral-700 writing-vertical rotate-180 tracking-widest">LE MONDE EN BOUTEILLE. </div>
   </div>
 );
 
@@ -352,55 +352,75 @@ export default function App() {
     if (step > 0) goToStep(step - 1);
   };
 
+  // --- EMAIL SUBMISSION HANDLER (NO DATABASE REQUIRED) ---
   const handleSubmit = () => {
+    // 1. Validation basique
     if (!data.contact.email || !data.contact.name) {
         alert("Merci de compléter au moins votre Nom et votre Email pour envoyer la demande.");
         return;
     }
 
-    const subject = `DEMANDE IMMERSIVE - ${data.contact.name.toUpperCase()} - ${data.date}`;
+    // 2. Construction du mail - STYLE "SILENT LUXURY"
+    // Objet : [PROJET] - NOM CLIENT - DATE
+    const subject = `PROJET IMMERSIVE / ${data.contact.name.toUpperCase()} - ${data.date || 'DATE À DÉFINIR'}`;
     
+    // Construction du détail des services
     const servicesList = data.selectedServices.map(id => {
         const srv = SERVICES.find(s => s.id === id);
-        return srv ? `- ${srv.title}` : '';
+        return srv ? `• ${srv.title}` : '';
     }).filter(Boolean).join('\n');
 
     const experienceDetail = isDryHire 
-        ? "Location Sèche (Aucune animation)" 
-        : `${data.experience?.title || 'Non défini'} (${data.experience?.price > 0 ? data.experience.price + '€/pax' : 'Sur Devis'})`;
+        ? "Location Sèche (Espace nu)" 
+        : `${data.experience?.title || 'Non défini'} (${data.experience?.price > 0 ? data.experience.price + '€/pers' : 'Sur Devis'})`;
 
     const body = `
 Bonjour Mike,
 
-Voici ma vision pour un événement à L'Immersive :
+J'ai initié une ébauche d'expérience via votre interface en ligne.
+Nous souhaiterions vérifier la faisabilité de ce projet et obtenir une proposition formelle.
 
---- DÉTAILS ---
-📅 Date : ${data.date || 'Non définie'}
-👥 Invités : ${data.pax} personnes
-⏰ Créneau : ${data.timeSlot?.title || 'Non défini'} (${data.timeSlot?.label || ''})
+Voici les contours de l'événement envisagé :
+
+━━━━━━━━━━━━━━━━━━━━━━
+LA VISION
+━━━━━━━━━━━━━━━━━━━━━━
+📅 Date cible : ${data.date || 'À définir avec vous'}
+👥 Audience : ${data.pax} personnes
+⏰ Temporalité : ${data.timeSlot?.title || 'Non défini'} (${data.timeSlot?.label || ''})
 🎯 Intention : ${data.eventType?.title || 'Non définie'}
-🏛 Configuration : ${data.format?.title || 'Non définie'}
+🏛 Architecture : ${data.format?.title || 'Non définie'}
 
---- EXPÉRIENCE ---
-✨ Choix : ${experienceDetail}
+━━━━━━━━━━━━━━━━━━━━━━
+L'IMMERSION
+━━━━━━━━━━━━━━━━━━━━━━
+✨ Expérience centrale : ${experienceDetail}
 
---- OPTIONS & SERVICES ---
-${servicesList || "Aucune option sélectionnée"}
+🛠 Services & Finitions souhaités :
+${servicesList || "Aucune option spécifique"}
 
---- BUDGET ESTIMÉ ---
-💰 Total TVAC : ${totalAmount} € ${isCustom ? '(+ Devis Spécifique)' : ''}
+━━━━━━━━━━━━━━━━━━━━━━
+BUDGET & CONTACT
+━━━━━━━━━━━━━━━━━━━━━━
+💰 Estimation indicative (TVAC) : ${totalAmount} € ${isCustom ? '(+ Partie sur devis)' : ''}
 
---- CONTACT ---
-👤 Nom : ${data.contact.name}
+👤 Porteur du projet : ${data.contact.name}
 📧 Email : ${data.contact.email}
 📞 Téléphone : ${data.contact.phone}
-📝 Message : ${data.contact.message}
 
-En attente de votre validation.
+📝 Note particulière :
+${data.contact.message || "Aucune note particulière."}
+
+Dans l'attente de votre retour pour affiner cette proposition.
+
+Cordialement,
+${data.contact.name}
     `;
 
+    // 3. Encodage et Ouverture du mail
     const mailtoLink = `mailto:info@lemonde-enbouteille.be?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     
+    // Création d'un lien temporaire pour forcer l'ouverture du client mail
     const link = document.createElement('a');
     link.href = mailtoLink;
     document.body.appendChild(link);
@@ -421,6 +441,13 @@ En attente de votre validation.
           <div className="w-px h-16 md:h-24 bg-gradient-to-b from-transparent via-amber-600 to-transparent mx-auto"></div>
           
           <div>
+            {/* LOGO ADDED HERE */}
+            <img 
+              src="https://www.lemonde-enbouteille.be/web/image/26768-edef09a5/LOGO%20l%27immersive-24.png" 
+              alt="Logo L'Immersive" 
+              className="w-32 md:w-48 mx-auto mb-6 opacity-90 drop-shadow-2xl" 
+            />
+            
             <h1 className="text-5xl md:text-7xl lg:text-[8rem] font-serif tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-neutral-500 leading-none mb-4">
               L'IMMERSIVE
             </h1>
@@ -431,9 +458,9 @@ En attente de votre validation.
 
           <div className="border-l border-amber-600/30 pl-6 md:pl-8 text-left max-w-lg mx-auto backdrop-blur-sm py-4">
              <p className="text-neutral-400 font-light leading-relaxed text-xs md:text-sm">
-               Bienvenue dans <strong>le sanctuaire sensoriel de Namur</strong>. 
-               Un espace modulable où la technologie rencontre le terroir.
-               Configurez votre moment.
+               Une adresse confidentielle à Namur. 
+               Ici, la technologie sublime le terroir pour des événements qui marquent.
+               Ne louez pas une salle, vivez une expérience.
              </p>
           </div>
 
