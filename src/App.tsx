@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, ChevronRight, ChevronLeft, Check, Clock, Calendar, Users, Briefcase, Wine, Coffee, Music, Monitor, Minus, Plus, Sparkles, Sun, Moon, Sunrise, Star, Utensils, Wifi, Gift, Palette, LayoutTemplate, Droplets, Map, Mail } from 'lucide-react';
+import { ArrowRight, ChevronRight, ChevronLeft, Check, Clock, Calendar, Users, Briefcase, Wine, Coffee, Music, Monitor, Minus, Plus, Sparkles, Sun, Moon, Sunrise, Star, Utensils, Wifi, Gift, Palette, LayoutTemplate, Droplets, Map, Mail, Loader, Send } from 'lucide-react';
+
+// --- CONFIGURATION EMAIL FINALE ---
+const EMAILJS_SERVICE_ID = "service_z8iw21s"; 
+const EMAILJS_TEMPLATE_ADMIN_ID = "template_3i47cv7"; // Demande de projet
+const EMAILJS_TEMPLATE_CLIENT_ID = "template_2keg8go"; // Accusé réception
+const EMAILJS_PUBLIC_KEY = "s1sthtiZPEDfGRote"; 
 
 // --- DATA ---
 
@@ -233,11 +239,11 @@ const StepIndicator = ({ step, setStep }) => (
         </button>
       ))}
     </div>
-    <div className="text-[10px] text-neutral-700 writing-vertical rotate-180 tracking-widest">LE MONDE EN BOUTEILLE. </div>
+    <div className="text-[10px] text-neutral-700 writing-vertical rotate-180 tracking-widest">MIKE G.</div>
   </div>
 );
 
-// Mobile Step Indicator (Top Bar)
+// Mobile Step Indicator
 const MobileStepIndicator = ({ step }) => (
   <div className="md:hidden absolute top-4 left-4 z-40 flex items-center gap-2">
       <div className="text-amber-600 font-serif font-bold text-lg">L.</div>
@@ -252,7 +258,6 @@ export default function App() {
   const [isAnimating, setIsAnimating] = useState(false);
   const [hoveredTime, setHoveredTime] = useState(null);
   
-  // States
   const [isDryHire, setIsDryHire] = useState(true); 
   const [data, setData] = useState({
     timeSlot: null,
@@ -260,12 +265,14 @@ export default function App() {
     format: null,
     pax: 10,
     date: '',
-    experience: EXPERIENCES[0], // Default Location Sèche
+    experience: EXPERIENCES[0],
     selectedServices: ['tech'],
     contact: { name: '', email: '', phone: '', message: '' }
   });
 
-  // AUTO-SELECT HOST LOGIC
+  const [isSending, setIsSending] = useState(false);
+  const [isSent, setIsSent] = useState(false);
+
   useEffect(() => {
     if (!isDryHire && data.experience.id !== 'none') {
         if (!data.selectedServices.includes('host')) {
@@ -274,7 +281,6 @@ export default function App() {
     }
   }, [data.experience, isDryHire]);
 
-  // Helper Softs
   const getSoftsPrice = (pax) => {
     if (pax <= 8) return 20;
     if (pax <= 16) return 30;
@@ -282,7 +288,6 @@ export default function App() {
     return 45;
   };
 
-  // Calcul Total
   const calculateTotal = () => {
     let total = 0;
     let custom = false;
@@ -290,7 +295,6 @@ export default function App() {
     if (data.timeSlot) total += data.timeSlot.price;
     if (data.format) total += data.format.setupFee;
     
-    // Si exp
     if (!isDryHire && data.experience) {
         if (data.experience.price === -1) {
             custom = true;
@@ -321,7 +325,6 @@ export default function App() {
     const current = data.selectedServices;
     let newServices = [...current];
 
-    // Mutually exclusive food
     if (id === 'food_light' && current.includes('food_full')) {
         newServices = newServices.filter(x => x !== 'food_full');
     }
@@ -352,85 +355,70 @@ export default function App() {
     if (step > 0) goToStep(step - 1);
   };
 
-  // --- EMAIL SUBMISSION HANDLER (NO DATABASE REQUIRED) ---
-  const handleSubmit = () => {
-    // 1. Validation basique
-    if (!data.contact.email || !data.contact.name) {
-        alert("Merci de compléter au moins votre Nom et votre Email pour envoyer la demande.");
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!data.contact.email || !data.contact.name || !data.contact.phone) {
+        alert("Merci de compléter vos coordonnées pour valider la demande.");
         return;
     }
 
-    // 2. Construction du mail - STYLE "SILENT LUXURY"
-    // Objet : [PROJET] - NOM CLIENT - DATE
-    const subject = `PROJET IMMERSIVE / ${data.contact.name.toUpperCase()} - ${data.date || 'DATE À DÉFINIR'}`;
-    
-    // Construction du détail des services
-    const servicesList = data.selectedServices.map(id => {
-        const srv = SERVICES.find(s => s.id === id);
-        return srv ? `• ${srv.title}` : '';
-    }).filter(Boolean).join('\n');
+    setIsSending(true);
 
-    const experienceDetail = isDryHire 
-        ? "Location Sèche (Espace nu)" 
-        : `${data.experience?.title || 'Non défini'} (${data.experience?.price > 0 ? data.experience.price + '€/pers' : 'Sur Devis'})`;
+    const templateParams = {
+        name: data.contact.name,
+        email: data.contact.email,
+        phone: data.contact.phone,
+        message: data.contact.message,
+        date: data.date || "À définir",
+        pax: data.pax,
+        type: data.eventType?.title || "Non défini",
+        time_slot: data.timeSlot?.title || "Non défini",
+        format: data.format?.title || "Non défini",
+        experience: isDryHire ? "Location Sèche" : data.experience?.title,
+        services: data.selectedServices.map(id => SERVICES.find(s => s.id === id)?.title).join(', '),
+        total: totalAmount,
+        is_custom: isCustom ? "OUI (Devis requis)" : "NON"
+    };
 
-    const body = `
-Bonjour Mike,
+    // --- ENVOI VIA CDN (window.emailjs) ---
+    // @ts-ignore
+    const sendAdmin = window.emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ADMIN_ID, templateParams, EMAILJS_PUBLIC_KEY);
+    // @ts-ignore
+    const sendClient = window.emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_CLIENT_ID, templateParams, EMAILJS_PUBLIC_KEY);
 
-J'ai initié une ébauche d'expérience via votre interface en ligne.
-Nous souhaiterions vérifier la faisabilité de ce projet et obtenir une proposition formelle.
-
-Voici les contours de l'événement envisagé :
-
-━━━━━━━━━━━━━━━━━━━━━━
-LA VISION
-━━━━━━━━━━━━━━━━━━━━━━
-📅 Date cible : ${data.date || 'À définir avec vous'}
-👥 Audience : ${data.pax} personnes
-⏰ Temporalité : ${data.timeSlot?.title || 'Non défini'} (${data.timeSlot?.label || ''})
-🎯 Intention : ${data.eventType?.title || 'Non définie'}
-🏛 Architecture : ${data.format?.title || 'Non définie'}
-
-━━━━━━━━━━━━━━━━━━━━━━
-L'IMMERSION
-━━━━━━━━━━━━━━━━━━━━━━
-✨ Expérience centrale : ${experienceDetail}
-
-🛠 Services & Finitions souhaités :
-${servicesList || "Aucune option spécifique"}
-
-━━━━━━━━━━━━━━━━━━━━━━
-BUDGET & CONTACT
-━━━━━━━━━━━━━━━━━━━━━━
-💰 Estimation indicative (TVAC) : ${totalAmount} € ${isCustom ? '(+ Partie sur devis)' : ''}
-
-👤 Porteur du projet : ${data.contact.name}
-📧 Email : ${data.contact.email}
-📞 Téléphone : ${data.contact.phone}
-
-📝 Note particulière :
-${data.contact.message || "Aucune note particulière."}
-
-Dans l'attente de votre retour pour affiner cette proposition.
-
-Cordialement,
-${data.contact.name}
-    `;
-
-    // 3. Encodage et Ouverture du mail
-    const mailtoLink = `mailto:info@lemonde-enbouteille.be?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    
-    // Création d'un lien temporaire pour forcer l'ouverture du client mail
-    const link = document.createElement('a');
-    link.href = mailtoLink;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    Promise.all([sendAdmin, sendClient])
+      .then(() => {
+          setIsSending(false);
+          setIsSent(true);
+      })
+      .catch((error) => {
+          console.error("Erreur d'envoi", error);
+          setIsSending(false);
+          alert("Une erreur est survenue lors de l'envoi. Vérifiez votre connexion.");
+      });
   };
 
-  // --- VUES ---
+  if (isSent) {
+      return (
+          <div className="h-screen w-full bg-[#080808] flex flex-col items-center justify-center text-white p-8 text-center animate-fade-in">
+              <div className="w-24 h-24 rounded-full border border-amber-600/30 flex items-center justify-center mb-8 bg-amber-600/10">
+                  <Check size={48} className="text-amber-500" />
+              </div>
+              <h2 className="text-4xl md:text-5xl font-serif mb-4">Demande Transmise</h2>
+              <p className="font-mono text-xs md:text-sm text-neutral-400 max-w-md leading-relaxed mb-12">
+                  Merci {data.contact.name}. Votre vision a bien été reçue par nos équipes.
+                  <br/><br/>
+                  Un email de confirmation vous a été envoyé.
+                  Nous allons vérifier la disponibilité de la date et vous recontacter sous 24h avec une proposition officielle.
+              </p>
+              <button onClick={() => window.location.reload()} className="text-xs font-mono uppercase tracking-widest border-b border-amber-600 pb-1 text-amber-500 hover:text-white transition-colors">
+                  Retour à l'accueil
+              </button>
+          </div>
+      )
+  }
 
-  // 0. LANDING
   if (step === 0) {
     return (
       <div className="relative h-screen w-full bg-[#050505] overflow-hidden flex flex-col items-center justify-center p-6 md:p-8 text-white">
@@ -441,9 +429,8 @@ ${data.contact.name}
           <div className="w-px h-16 md:h-24 bg-gradient-to-b from-transparent via-amber-600 to-transparent mx-auto"></div>
           
           <div>
-            {/* LOGO ADDED HERE */}
             <img 
-              src="https://www.lemonde-enbouteille.be/web/image/26768-edef09a5/LOGO%20l%27immersive-24.png" 
+              src="https://www.lemonde-enbouteille.be/web/image/26770-282662bc/LOGO%20l%27immersive-22.png" 
               alt="Logo L'Immersive" 
               className="w-32 md:w-48 mx-auto mb-6 opacity-90 drop-shadow-2xl" 
             />
@@ -482,19 +469,13 @@ ${data.contact.name}
     <div className="relative h-screen w-full bg-[#080808] text-white overflow-hidden font-sans flex flex-col md:flex-row">
       <div className="absolute inset-0 z-0 pointer-events-none opacity-[0.08] bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay"></div>
       
-      {/* PC: Top Progress Bar / Mobile: Top Progress Bar */}
       <ProgressBar current={step} total={7} />
-      
-      {/* PC: Sidebar Indicator / Mobile: Hidden */}
       <StepIndicator step={step} setStep={goToStep} />
-
-      {/* Mobile: Top Bar Indicator */}
       <MobileStepIndicator step={step} />
 
-      {/* --- MAIN STAGE --- */}
       <div className="flex-1 relative flex flex-col z-10 w-full h-full">
         
-        {/* HEADER BUDGET (Responsive) */}
+        {/* HEADER BUDGET */}
         <div className="absolute top-4 right-4 md:top-8 md:right-8 z-50">
            <div className="bg-black/60 backdrop-blur-md border border-white/10 rounded-lg px-4 py-2 md:px-6 md:py-3 flex flex-col items-end shadow-2xl">
              <div className="font-mono text-[8px] md:text-[10px] uppercase text-neutral-400 tracking-widest mb-1">Budget Estimé</div>
@@ -507,10 +488,9 @@ ${data.contact.name}
 
         {step > 1 && <BackButton onClick={goBack} />}
 
-        {/* ÉTAPE 1 : TEMPORALITÉ (Vertical Stack on Mobile) */}
+        {/* ÉTAPE 1 : TEMPORALITÉ */}
         {step === 1 && (
           <div className="flex-1 flex flex-col h-full animate-in fade-in duration-700 relative">
-            {/* Header Text Overlay */}
             <div className="absolute top-0 left-0 p-6 md:p-12 z-50 pointer-events-none bg-gradient-to-b from-black/80 to-transparent w-full">
                <BackButton onClick={() => goToStep(0)} />
                <div className="mt-16 md:mt-16 pointer-events-auto">
@@ -590,7 +570,7 @@ ${data.contact.name}
           </div>
         )}
 
-        {/* ÉTAPE 3 : ARCHITECTURE (SANS PAX) */}
+        {/* ÉTAPE 3 : ARCHITECTURE */}
         {step === 3 && (
           <div className="flex-1 flex flex-col justify-center p-6 md:p-16 animate-in slide-in-from-right duration-500 overflow-y-auto">
              <div className="max-w-7xl mx-auto w-full h-full flex flex-col">
@@ -641,8 +621,6 @@ ${data.contact.name}
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
-                   
-                   {/* INVITES */}
                    <div className="flex flex-col items-center gap-6 p-8 md:p-10 border border-white/10 bg-white/[0.02]">
                         <span className="text-xs font-mono uppercase tracking-widest text-neutral-500">Volume Invités</span>
                         <div className="flex items-center gap-6 md:gap-8">
@@ -652,7 +630,6 @@ ${data.contact.name}
                         </div>
                    </div>
 
-                   {/* DATE */}
                    <div className="flex flex-col items-center gap-6 p-8 md:p-10 border border-white/10 bg-white/[0.02]">
                         <span className="text-xs font-mono uppercase tracking-widest text-neutral-500">Date Cible</span>
                         <div className="w-full">
@@ -686,9 +663,7 @@ ${data.contact.name}
                    <h3 className="text-3xl md:text-4xl font-serif mb-2">Niveau d'Expérience</h3>
                 </div>
 
-                {/* THE CHOICE */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-8 md:mb-12">
-                   {/* OPTION A: LOCATION SÈCHE */}
                    <button 
                      onClick={() => { setIsDryHire(true); setData({...data, experience: EXPERIENCES[0]}); }}
                      className={`p-6 md:p-8 border text-left transition-all duration-300 group ${isDryHire ? 'border-white bg-white text-black' : 'border-white/10 hover:border-white/30 bg-[#0a0a0a]'}`}
@@ -700,7 +675,6 @@ ${data.contact.name}
                       </p>
                    </button>
 
-                   {/* OPTION B: EXPERIENCE */}
                    <button 
                      onClick={() => { setIsDryHire(false); setData({...data, experience: EXPERIENCES[1]}); }}
                      className={`p-6 md:p-8 border text-left transition-all duration-300 group ${!isDryHire ? 'border-amber-600 bg-amber-600 text-white' : 'border-white/10 hover:border-amber-600/50 bg-[#0a0a0a]'}`}
@@ -715,7 +689,6 @@ ${data.contact.name}
                    </button>
                 </div>
 
-                {/* EXPERIENCE GRID */}
                 {!isDryHire && (
                   <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 pb-20 md:pb-0">
                      <h3 className="text-sm font-mono uppercase tracking-widest text-neutral-500 mb-6">Sélectionnez l'expérience</h3>
@@ -765,7 +738,7 @@ ${data.contact.name}
           </div>
         )}
 
-        {/* ÉTAPE 6 : SERVICES (UPSELL) */}
+        {/* ÉTAPE 6 : SERVICES */}
         {step === 6 && (
           <div className="flex-1 p-6 md:p-16 overflow-y-auto scrollbar-hide animate-in slide-in-from-right duration-500">
              <div className="max-w-6xl mx-auto w-full h-full flex flex-col">
@@ -836,7 +809,7 @@ ${data.contact.name}
           </div>
         )}
 
-        {/* ÉTAPE 7 : FINAL (DETAILED RECAP) */}
+        {/* ÉTAPE 7 : FINAL */}
         {step === 7 && (
           <div className="flex-1 flex items-center justify-center p-0 md:p-6 animate-in zoom-in-95 duration-700 relative overflow-hidden h-full">
              
@@ -847,7 +820,6 @@ ${data.contact.name}
 
              <div className="w-full max-w-5xl flex flex-col md:flex-row bg-[#0a0a0a]/95 md:bg-[#0a0a0a]/90 border-0 md:border border-white/10 backdrop-blur-xl shadow-2xl relative z-10 rounded-none md:rounded-sm overflow-hidden h-full md:h-[85vh]">
                 
-                {/* LEFT: RECEIPT / RECAP */}
                 <div className="w-full md:w-1/2 p-6 md:p-10 border-b md:border-b-0 md:border-r border-white/10 flex flex-col relative overflow-y-auto scrollbar-hide pt-20 md:pt-10 max-h-[50vh] md:max-h-full">
                    <div className="absolute top-0 right-0 p-6 opacity-30">
                       <Sparkles className="text-amber-600 w-12 h-12" />
@@ -862,10 +834,8 @@ ${data.contact.name}
                          <span>{data.pax} Invités</span>
                       </div>
                       
-                      {/* RECEIPT LINES */}
                       <div className="space-y-4 text-xs md:text-sm border-t border-white/10 pt-6">
                         
-                        {/* 1. Time Slot */}
                         <div className="flex justify-between items-center group">
                            <div>
                               <div className="text-white font-medium">Location — {data.timeSlot?.title}</div>
@@ -874,7 +844,6 @@ ${data.contact.name}
                            <div className="font-mono text-neutral-300">{data.timeSlot?.price} €</div>
                         </div>
 
-                        {/* 2. Experience */}
                         {!isDryHire && data.experience && (
                            <div className="flex justify-between items-center group">
                               <div>
@@ -887,7 +856,6 @@ ${data.contact.name}
                            </div>
                         )}
 
-                        {/* 3. Services */}
                         {data.selectedServices.length > 0 && (
                             <div className="pt-4 mt-4 border-t border-white/5 space-y-4">
                                 {data.selectedServices.map(id => {
@@ -922,7 +890,6 @@ ${data.contact.name}
                       </div>
                    </div>
 
-                   {/* Footer Total */}
                    <div className="pt-8 mt-12 border-t border-white/10 text-center pb-8 md:pb-0">
                       <div className="text-xs text-neutral-500 uppercase tracking-widest mb-3">Total Estimé TVAC</div>
                       <div className="flex items-baseline justify-center gap-3">
@@ -932,15 +899,15 @@ ${data.contact.name}
                    </div>
                 </div>
 
-                {/* RIGHT: CONTACT FORM */}
                 <div className="w-full md:w-1/2 p-6 md:p-10 flex flex-col justify-center bg-black/40 relative">
                    <h3 className="text-xl md:text-2xl font-serif text-white mb-2">Finaliser l'Accord</h3>
                    <p className="text-xs text-neutral-500 mb-8 font-mono">Ceci est une pré-réservation. Aucun paiement immédiat.</p>
 
-                   <div className="space-y-4 md:space-y-6">
+                   <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
                       <div className="group relative">
                         <input 
                             type="text" 
+                            required
                             placeholder="NOM / ENTREPRISE" 
                             className="w-full bg-transparent border-b border-white/20 py-3 text-white outline-none focus:border-amber-600 transition-colors placeholder:text-neutral-700 font-mono text-sm"
                             onChange={e => setData({...data, contact: {...data.contact, name: e.target.value}})}
@@ -949,6 +916,7 @@ ${data.contact.name}
                       <div className="group relative">
                         <input 
                             type="email" 
+                            required
                             placeholder="EMAIL PROFESSIONNEL" 
                             className="w-full bg-transparent border-b border-white/20 py-3 text-white outline-none focus:border-amber-600 transition-colors placeholder:text-neutral-700 font-mono text-sm"
                             onChange={e => setData({...data, contact: {...data.contact, email: e.target.value}})}
@@ -957,6 +925,7 @@ ${data.contact.name}
                       <div className="group relative">
                         <input 
                             type="tel" 
+                            required
                             placeholder="TÉLÉPHONE" 
                             className="w-full bg-transparent border-b border-white/20 py-3 text-white outline-none focus:border-amber-600 transition-colors placeholder:text-neutral-700 font-mono text-sm"
                             onChange={e => setData({...data, contact: {...data.contact, phone: e.target.value}})}
@@ -970,37 +939,44 @@ ${data.contact.name}
                             onChange={e => setData({...data, contact: {...data.contact, message: e.target.value}})}
                         ></textarea>
                       </div>
-                   </div>
 
-                   <button 
-                        onClick={handleSubmit}
-                        className="mt-8 mb-20 md:mb-0 w-full bg-white text-black py-4 font-mono text-xs uppercase tracking-[0.2em] hover:bg-amber-600 hover:text-white transition-all duration-500 shadow-lg flex items-center justify-center gap-3"
-                   >
-                      <Mail size={16} /> Soumettre la demande par email
-                   </button>
+                       <button 
+                            type="submit"
+                            disabled={isSending}
+                            className="mt-8 mb-20 md:mb-0 w-full bg-white text-black py-4 font-mono text-xs uppercase tracking-[0.2em] hover:bg-amber-600 hover:text-white transition-all duration-500 shadow-lg flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                       >
+                          {isSending ? (
+                              <>
+                                <Loader className="animate-spin" size={16} /> Envoi en cours...
+                              </>
+                          ) : (
+                              <>
+                                <Send size={16} /> Envoyer la demande
+                              </>
+                          )}
+                       </button>
+                   </form>
                 </div>
 
              </div>
           </div>
         )}
 
-      </div>
-
-      <style>{`
+        <style dangerouslySetInnerHTML={{__html: `
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Space+Grotesk:wght@300;400;500&display=swap');
         .font-serif { font-family: 'Playfair Display', serif; }
         .font-mono { font-family: 'Space Grotesk', sans-serif; }
         .writing-vertical { writing-mode: vertical-rl; }
         
-        /* HIDE SCROLLBAR UTILITY */
         .scrollbar-hide {
-            -ms-overflow-style: none;  /* IE and Edge */
-            scrollbar-width: none;  /* Firefox */
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
         .scrollbar-hide::-webkit-scrollbar {
-            display: none; /* Chrome, Safari and Opera */
+            display: none;
         }
-      `}</style>
+      `}} />
+      </div>
     </div>
   );
 }
