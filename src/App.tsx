@@ -457,7 +457,7 @@ export default function App() {
           
           <div>
             <img 
-              src="https://www.lemonde-enbouteille.be/web/image/26770-282662bc/LOGO%20l%27immersive-22.png" 
+              src="https://www.lemonde-enbouteille.be/web/image/26770-282662bc/LOGO%20l%27immersive-24.png" 
               alt="Logo L'Immersive" 
               className="w-32 md:w-48 mx-auto mb-6 opacity-90 drop-shadow-2xl" 
             />
