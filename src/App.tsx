@@ -98,7 +98,7 @@ const FORMATS = [
     subtitle: 'Mixte',
     desc: 'Zone de confort assises et zone de flux debout.',
     setupFee: 0,
-    image: 'https://www.lemonde-enbouteille.be/web/image/26778-34e20e4e/94-DSC09399.svg'
+    image: 'https://www.lemonde-enbouteille.be/web/image/26782-133bd9dc/78-DSC09371.webp'
   }
 ];
 
