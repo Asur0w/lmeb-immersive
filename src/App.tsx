@@ -400,24 +400,51 @@ export default function App() {
   };
 
   if (isSent) {
-      return (
-          <div className="h-screen w-full bg-[#080808] flex flex-col items-center justify-center text-white p-8 text-center animate-fade-in">
-              <div className="w-24 h-24 rounded-full border border-amber-600/30 flex items-center justify-center mb-8 bg-amber-600/10">
-                  <Check size={48} className="text-amber-500" />
+    return (
+      <div className="relative h-screen w-full bg-[#050505] overflow-hidden flex flex-col items-center justify-center p-6 text-white">
+           {/* 1. FOND TEXTURÉ (Rappel de l'accueil) */}
+           <div className="absolute inset-0 z-0 opacity-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
+           <div className="absolute inset-0 z-0 opacity-30 bg-[url('https://www.lemonde-enbouteille.be/web/image/16056-b2829e5f/79-DSC09373.webp')] bg-cover bg-center blur-sm mix-blend-overlay"></div>
+
+           {/* 2. CARTE "LUXE" CENTRALE */}
+           <div className="relative z-10 max-w-xl w-full bg-black/40 backdrop-blur-xl border border-white/10 p-12 md:p-16 flex flex-col items-center text-center shadow-2xl animate-in zoom-in-95 duration-700">
+              
+              {/* Icône animée */}
+              <div className="mb-8 relative">
+                 <div className="absolute inset-0 bg-amber-600 blur-xl opacity-20 animate-pulse"></div>
+                 <div className="w-20 h-20 rounded-full border border-amber-600/50 flex items-center justify-center bg-black/50 relative z-10">
+                    <Check size={32} className="text-amber-500" />
+                 </div>
               </div>
-              <h2 className="text-4xl md:text-5xl font-serif mb-4">Demande Transmise</h2>
-              <p className="font-mono text-xs md:text-sm text-neutral-400 max-w-md leading-relaxed mb-12">
-                  Merci {data.contact.name}. Votre vision a bien été reçue par nos équipes.
-                  <br/><br/>
-                  Un email de confirmation vous a été envoyé.
-                  Nous allons vérifier la disponibilité de la date et vous recontacter sous 24h avec une proposition officielle.
+
+              <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-amber-600 mb-4">Confirmation</div>
+              
+              <h2 className="text-4xl md:text-5xl font-serif mb-6 text-transparent bg-clip-text bg-gradient-to-b from-white to-neutral-400">
+                Demande Transmise
+              </h2>
+
+              <div className="w-12 h-px bg-white/20 mb-8"></div>
+
+              <p className="font-light text-neutral-300 leading-relaxed text-sm mb-10">
+                Merci <span className="text-white font-medium">{data.contact.name}</span>. <br/>
+                Votre vision a été capturée. Une confirmation vient d'être envoyée à votre adresse email.
+                <br/><br/>
+                <span className="text-xs font-mono text-neutral-500">Nous reviendrons vers vous sous 24h avec une proposition chiffrée.</span>
               </p>
-              <button onClick={() => window.location.reload()} className="text-xs font-mono uppercase tracking-widest border-b border-amber-600 pb-1 text-amber-500 hover:text-white transition-colors">
+
+              <button 
+                onClick={() => window.location.reload()} 
+                className="group relative px-8 py-4 bg-white/5 border border-white/10 hover:border-amber-600/50 transition-all duration-500"
+              >
+                <div className="absolute inset-0 bg-amber-600/10 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500 ease-out"></div>
+                <span className="relative font-mono text-[10px] uppercase tracking-[0.2em] text-white group-hover:text-amber-500 transition-colors">
                   Retour à l'accueil
+                </span>
               </button>
-          </div>
-      )
-  }
+           </div>
+      </div>
+    )
+}
 
   if (step === 0) {
     return (
