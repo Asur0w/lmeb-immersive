@@ -10,7 +10,7 @@ const TIME_SLOTS = [
     title: 'Matinée',
     icon: <Sunrise size={24} />,
     price: 150,
-    image: 'https://www.lemonde-enbouteille.be/web/image/16055-76e0b5e2/105-DSC09413.webp'
+    image: 'https://images.unsplash.com/photo-1513569771920-c9e1d31714b0?q=80&w=2800&auto=format&fit=crop'
   },
   {
     id: 'aprem',
@@ -18,7 +18,7 @@ const TIME_SLOTS = [
     title: 'Après-midi',
     icon: <Sun size={24} />,
     price: 200,
-    image: 'https://www.lemonde-enbouteille.be/web/image/16058-be08a656/86-DSC09383.webp'
+    image: 'https://images.unsplash.com/photo-1497215728101-856f4ea42174?q=80&w=2832&auto=format&fit=crop'
   },
   {
     id: 'soiree',
@@ -26,7 +26,7 @@ const TIME_SLOTS = [
     title: 'Soirée',
     icon: <Moon size={24} />,
     price: 300,
-    image: 'https://www.lemonde-enbouteille.be/web/image/16057-9de877a5/83-DSC09379.webp'
+    image: 'https://images.unsplash.com/photo-1550989460-0adf9ea622e2?q=80&w=2787&auto=format&fit=crop'
   },
   {
     id: '24h',
@@ -51,21 +51,21 @@ const EVENT_TYPES = [
     title: 'Séminaire',
     subtitle: 'Stratégie',
     desc: 'Décisions clés.',
-    image: 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=2940&auto=format&fit=crop'
+    image: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?q=80&w=2828&auto=format&fit=crop'
   },
   {
     id: 'afterwork',
     title: 'Afterwork',
     subtitle: 'Réseau',
     desc: 'Décompression.',
-    image: 'https://images.unsplash.com/photo-1572116469696-31de0f17cc34?q=80&w=2874&auto=format&fit=crop'
+    image: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?q=80&w=2864&auto=format&fit=crop'
   },
   {
     id: 'prive',
     title: 'Privé',
     subtitle: 'Exception',
     desc: 'Moments rares.',
-    image: 'https://images.unsplash.com/photo-1516997121675-4c2d1684aa3e?q=80&w=2944&auto=format&fit=crop'
+    image: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=2940&auto=format&fit=crop'
   }
 ];
 
@@ -76,7 +76,7 @@ const FORMATS = [
     subtitle: 'Standard',
     desc: 'Notre disposition signature. Équilibrée & chaleureuse.',
     setupFee: 0,
-    image: 'https://images.unsplash.com/photo-1610223515025-276d99723058?q=80&w=2787&auto=format&fit=crop'
+    image: 'https://images.unsplash.com/photo-1544148103-0773bf10d330?q=80&w=2940&auto=format&fit=crop'
   },
   {
     id: 'cocktail',
@@ -84,7 +84,7 @@ const FORMATS = [
     subtitle: 'Debout',
     desc: 'Espace libéré. Mange-debout & circulation fluide.',
     setupFee: 0,
-    image: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?q=80&w=2864&auto=format&fit=crop'
+    image: 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=2800&auto=format&fit=crop'
   },
   {
     id: 'hybride',
@@ -92,7 +92,7 @@ const FORMATS = [
     subtitle: 'Mixte',
     desc: 'Zones de confort assises et zones de flux debout.',
     setupFee: 0,
-    image: 'https://images.unsplash.com/photo-1550581190-9c1c48d21d6c?q=80&w=2909&auto=format&fit=crop'
+    image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=2800&auto=format&fit=crop'
   }
 ];
 
@@ -116,7 +116,7 @@ const EXPERIENCES = [
     title: 'Casino du Vin', 
     price: 46, 
     sub: 'Animation Ludique',
-    image: 'https://images.unsplash.com/photo-1596838132731-3301c3fd4317?q=80&w=2940&auto=format&fit=crop'
+    image: 'https://images.unsplash.com/photo-1605870445919-838d190e8e10?q=80&w=2942&auto=format&fit=crop'
   },
   { 
     id: 'gastro', 
@@ -207,7 +207,7 @@ const ProgressBar = ({ current, total }) => (
 const BackButton = ({ onClick }) => (
   <button 
     onClick={onClick}
-    className="absolute bottom-8 left-8 z-40 flex items-center gap-2 text-neutral-500 hover:text-white transition-colors uppercase text-[10px] tracking-widest font-mono group mix-blend-difference"
+    className="absolute bottom-8 left-6 md:left-8 z-40 flex items-center gap-2 text-neutral-500 hover:text-white transition-colors uppercase text-[10px] tracking-widest font-mono group mix-blend-difference bg-black/20 p-2 rounded backdrop-blur-sm md:bg-transparent md:p-0"
   >
     <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
     Retour
@@ -234,6 +234,16 @@ const StepIndicator = ({ step, setStep }) => (
       ))}
     </div>
     <div className="text-[10px] text-neutral-700 writing-vertical rotate-180 tracking-widest">MIKE G.</div>
+  </div>
+);
+
+// Mobile Step Indicator (Top Bar)
+const MobileStepIndicator = ({ step }) => (
+  <div className="md:hidden absolute top-4 left-4 z-40 flex items-center gap-2">
+      <div className="text-amber-600 font-serif font-bold text-lg">L.</div>
+      <div className="text-[10px] font-mono text-neutral-500 uppercase tracking-widest border-l border-white/20 pl-2">
+         {step === 0 ? 'Accueil' : `Étape 0${step}/07`}
+      </div>
   </div>
 );
 
@@ -342,26 +352,22 @@ export default function App() {
     if (step > 0) goToStep(step - 1);
   };
 
-  // --- EMAIL SUBMISSION HANDLER (NO DATABASE REQUIRED) ---
   const handleSubmit = () => {
-    // 1. Validation basique
     if (!data.contact.email || !data.contact.name) {
-        alert("Merci de compléter votre nom et email.");
+        alert("Merci de compléter au moins votre Nom et votre Email pour envoyer la demande.");
         return;
     }
 
-    // 2. Construction du mail
     const subject = `DEMANDE IMMERSIVE - ${data.contact.name.toUpperCase()} - ${data.date}`;
     
-    // Construction du détail des services
     const servicesList = data.selectedServices.map(id => {
         const srv = SERVICES.find(s => s.id === id);
-        return `- ${srv.title}`;
-    }).join('\n');
+        return srv ? `- ${srv.title}` : '';
+    }).filter(Boolean).join('\n');
 
     const experienceDetail = isDryHire 
         ? "Location Sèche (Aucune animation)" 
-        : `${data.experience.title} (${data.experience.price > 0 ? data.experience.price + '€/pax' : 'Sur Devis'})`;
+        : `${data.experience?.title || 'Non défini'} (${data.experience?.price > 0 ? data.experience.price + '€/pax' : 'Sur Devis'})`;
 
     const body = `
 Bonjour Mike,
@@ -369,11 +375,11 @@ Bonjour Mike,
 Voici ma vision pour un événement à L'Immersive :
 
 --- DÉTAILS ---
-📅 Date : ${data.date}
+📅 Date : ${data.date || 'Non définie'}
 👥 Invités : ${data.pax} personnes
-⏰ Créneau : ${data.timeSlot.title} (${data.timeSlot.label})
-🎯 Intention : ${data.eventType.title}
-🏛 Configuration : ${data.format.title}
+⏰ Créneau : ${data.timeSlot?.title || 'Non défini'} (${data.timeSlot?.label || ''})
+🎯 Intention : ${data.eventType?.title || 'Non définie'}
+🏛 Configuration : ${data.format?.title || 'Non définie'}
 
 --- EXPÉRIENCE ---
 ✨ Choix : ${experienceDetail}
@@ -393,10 +399,13 @@ ${servicesList || "Aucune option sélectionnée"}
 En attente de votre validation.
     `;
 
-    // 3. Encodage et Ouverture du mail
     const mailtoLink = `mailto:info@lemonde-enbouteille.be?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     
-    window.location.href = mailtoLink;
+    const link = document.createElement('a');
+    link.href = mailtoLink;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   // --- VUES ---
@@ -404,24 +413,24 @@ En attente de votre validation.
   // 0. LANDING
   if (step === 0) {
     return (
-      <div className="relative h-screen w-full bg-[#050505] overflow-hidden flex flex-col items-center justify-center p-8 text-white">
+      <div className="relative h-screen w-full bg-[#050505] overflow-hidden flex flex-col items-center justify-center p-6 md:p-8 text-white">
         <div className="absolute inset-0 z-0 opacity-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
         <div className="absolute inset-0 z-0 opacity-40 bg-[url('https://www.lemonde-enbouteille.be/web/image/16056-b2829e5f/79-DSC09373.webp')] bg-cover bg-center mix-blend-overlay"></div>
 
-        <div className="relative z-10 text-center space-y-12 animate-in fade-in zoom-in duration-1000 max-w-4xl mx-auto">
-          <div className="w-px h-24 bg-gradient-to-b from-transparent via-amber-600 to-transparent mx-auto"></div>
+        <div className="relative z-10 text-center space-y-8 md:space-y-12 animate-in fade-in zoom-in duration-1000 max-w-4xl mx-auto w-full">
+          <div className="w-px h-16 md:h-24 bg-gradient-to-b from-transparent via-amber-600 to-transparent mx-auto"></div>
           
           <div>
-            <h1 className="text-7xl md:text-[8rem] font-serif tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-neutral-500 leading-[0.85] mb-4">
+            <h1 className="text-5xl md:text-7xl lg:text-[8rem] font-serif tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-neutral-500 leading-none mb-4">
               L'IMMERSIVE
             </h1>
-            <p className="font-mono text-xs uppercase tracking-[0.6em] text-amber-500">
+            <p className="font-mono text-[10px] md:text-xs uppercase tracking-[0.4em] md:tracking-[0.6em] text-amber-500">
               Le Monde en Bouteille
             </p>
           </div>
 
-          <div className="border-l border-amber-600/30 pl-8 text-left max-w-lg mx-auto backdrop-blur-sm py-4">
-             <p className="text-neutral-400 font-light leading-relaxed text-sm">
+          <div className="border-l border-amber-600/30 pl-6 md:pl-8 text-left max-w-lg mx-auto backdrop-blur-sm py-4">
+             <p className="text-neutral-400 font-light leading-relaxed text-xs md:text-sm">
                Bienvenue dans <strong>le sanctuaire sensoriel de Namur</strong>. 
                Un espace modulable où la technologie rencontre le terroir.
                Configurez votre moment.
@@ -430,10 +439,10 @@ En attente de votre validation.
 
           <button 
             onClick={() => goToStep(1)}
-            className="group relative px-10 py-5 bg-white/5 border border-white/10 hover:border-amber-600/50 transition-all duration-500"
+            className="group relative px-8 py-4 md:px-10 md:py-5 bg-white/5 border border-white/10 hover:border-amber-600/50 transition-all duration-500 w-full md:w-auto"
           >
             <div className="absolute inset-0 bg-amber-600/10 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500 ease-out"></div>
-            <span className="relative font-mono text-xs uppercase tracking-[0.2em] flex items-center gap-4 text-white group-hover:text-amber-500 transition-colors">
+            <span className="relative font-mono text-xs uppercase tracking-[0.2em] flex items-center justify-center gap-4 text-white group-hover:text-amber-500 transition-colors">
               Initialiser <ArrowRight size={14} />
             </span>
           </button>
@@ -443,68 +452,75 @@ En attente de votre validation.
   }
 
   return (
-    <div className="relative h-screen w-full bg-[#080808] text-white overflow-hidden font-sans flex">
+    <div className="relative h-screen w-full bg-[#080808] text-white overflow-hidden font-sans flex flex-col md:flex-row">
       <div className="absolute inset-0 z-0 pointer-events-none opacity-[0.08] bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay"></div>
       
+      {/* PC: Top Progress Bar / Mobile: Top Progress Bar */}
       <ProgressBar current={step} total={7} />
+      
+      {/* PC: Sidebar Indicator / Mobile: Hidden */}
       <StepIndicator step={step} setStep={goToStep} />
 
+      {/* Mobile: Top Bar Indicator */}
+      <MobileStepIndicator step={step} />
+
       {/* --- MAIN STAGE --- */}
-      <div className="flex-1 relative flex flex-col z-10">
+      <div className="flex-1 relative flex flex-col z-10 w-full h-full">
         
-        {/* HEADER BUDGET (FIXED UI) */}
-        <div className="absolute top-8 right-8 z-50">
-           <div className="bg-black/60 backdrop-blur-md border border-white/10 rounded-lg px-6 py-3 flex flex-col items-end shadow-2xl">
-             <div className="font-mono text-[10px] uppercase text-neutral-400 tracking-widest mb-1">Budget Estimé TVAC</div>
-             <div className="font-serif text-2xl text-white tracking-tight flex items-baseline gap-2">
+        {/* HEADER BUDGET (Responsive) */}
+        <div className="absolute top-4 right-4 md:top-8 md:right-8 z-50">
+           <div className="bg-black/60 backdrop-blur-md border border-white/10 rounded-lg px-4 py-2 md:px-6 md:py-3 flex flex-col items-end shadow-2xl">
+             <div className="font-mono text-[8px] md:text-[10px] uppercase text-neutral-400 tracking-widest mb-1">Budget Estimé</div>
+             <div className="font-serif text-lg md:text-2xl text-white tracking-tight flex items-baseline gap-2">
                 <span className={isCustom ? "text-amber-500" : "text-white"}>{totalAmount} €</span>
-                {isCustom && <span className="text-[10px] font-sans text-neutral-400 border border-neutral-600 px-1 rounded">+ Devis</span>}
+                {isCustom && <span className="text-[8px] md:text-[10px] font-sans text-neutral-400 border border-neutral-600 px-1 rounded">+ Devis</span>}
              </div>
            </div>
         </div>
 
         {step > 1 && <BackButton onClick={goBack} />}
 
-        {/* ÉTAPE 1 : TEMPORALITÉ */}
+        {/* ÉTAPE 1 : TEMPORALITÉ (Vertical Stack on Mobile) */}
         {step === 1 && (
           <div className="flex-1 flex flex-col h-full animate-in fade-in duration-700 relative">
-            <div className="absolute top-0 left-0 p-8 md:p-12 z-50 pointer-events-none bg-gradient-to-b from-black/80 to-transparent w-full">
+            {/* Header Text Overlay */}
+            <div className="absolute top-0 left-0 p-6 md:p-12 z-50 pointer-events-none bg-gradient-to-b from-black/80 to-transparent w-full">
                <BackButton onClick={() => goToStep(0)} />
-               <div className="mt-16 pointer-events-auto">
+               <div className="mt-16 md:mt-16 pointer-events-auto">
                  <span className="text-amber-500 font-mono text-xs uppercase tracking-widest mb-2 block">01 — Temporalité</span>
-                 <h2 className="text-4xl md:text-5xl font-serif text-white leading-none">Le Moment<br/>du Choix</h2>
+                 <h2 className="text-3xl md:text-5xl font-serif text-white leading-none">Le Moment<br/>du Choix</h2>
                </div>
             </div>
 
-            <div className="flex-1 flex flex-col md:flex-row h-full pt-32 md:pt-0">
+            <div className="flex-1 flex flex-col md:flex-row h-full pt-32 md:pt-0 overflow-y-auto md:overflow-hidden">
               {TIME_SLOTS.map((slot) => (
                 <div 
                   key={slot.id}
                   onMouseEnter={() => setHoveredTime(slot.id)}
                   onMouseLeave={() => setHoveredTime(null)}
                   onClick={() => { setData({...data, timeSlot: slot}); autoNext(2); }}
-                  className={`relative flex-1 h-full border-r border-white/5 cursor-pointer transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] group overflow-hidden ${
-                    hoveredTime === slot.id ? 'flex-[1.5] md:flex-[2]' : 'flex-1 opacity-80 hover:opacity-100'
+                  className={`relative w-full md:w-auto flex-shrink-0 md:flex-1 h-64 md:h-full border-b md:border-b-0 md:border-r border-white/5 cursor-pointer transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] group overflow-hidden ${
+                    hoveredTime === slot.id ? 'md:flex-[1.5] lg:flex-[2]' : 'md:flex-1 opacity-100 md:opacity-80 md:hover:opacity-100'
                   }`}
                 >
                   <div 
-                    className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 scale-110 group-hover:scale-100 grayscale group-hover:grayscale-0"
+                    className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 scale-110 group-hover:scale-100"
                     style={{ backgroundImage: `url(${slot.image})` }}
                   />
-                  <div className="absolute inset-0 bg-black/60 group-hover:bg-black/30 transition-colors duration-500"></div>
+                  <div className="absolute inset-0 bg-black/50 group-hover:bg-black/30 transition-colors duration-500"></div>
 
-                  <div className="absolute bottom-0 w-full p-6 bg-gradient-to-t from-black to-transparent z-20 flex flex-col items-center pb-12">
-                     <div className="font-mono text-xs uppercase tracking-[0.2em] text-white/90 bg-black/40 px-3 py-1 rounded-full border border-white/10 mb-2">
+                  <div className="absolute bottom-0 w-full p-4 md:p-6 bg-gradient-to-t from-black to-transparent z-20 flex flex-row md:flex-col justify-between md:justify-center items-center md:pb-12">
+                     <div className="font-mono text-[10px] md:text-xs uppercase tracking-[0.2em] text-white/90 bg-black/40 px-3 py-1 rounded-full border border-white/10 mb-0 md:mb-2">
                         {slot.label}
                      </div>
-                     <div className="text-amber-500 font-serif text-xl">{slot.price}€</div>
+                     <div className="text-amber-500 font-serif text-lg md:text-xl">{slot.price}€</div>
                   </div>
 
-                  <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-8 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 z-30">
-                    <div className="w-12 h-12 rounded-full bg-amber-600/20 flex items-center justify-center text-amber-500 mb-4 backdrop-blur-md border border-amber-600/50 scale-0 group-hover:scale-100 transition-transform duration-500">
+                  <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-8 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-500 delay-100 z-30">
+                    <div className="hidden md:flex w-12 h-12 rounded-full bg-amber-600/20 items-center justify-center text-amber-500 mb-4 backdrop-blur-md border border-amber-600/50 scale-0 group-hover:scale-100 transition-transform duration-500">
                        {slot.icon}
                     </div>
-                    <h3 className="text-3xl font-serif text-white mb-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">{slot.title}</h3>
+                    <h3 className="text-3xl md:text-3xl font-serif text-white mb-0 md:mb-2 translate-y-0 md:translate-y-4 group-hover:translate-y-0 transition-transform duration-500 shadow-black drop-shadow-lg">{slot.title}</h3>
                   </div>
                 </div>
               ))}
@@ -514,31 +530,31 @@ En attente de votre validation.
 
         {/* ÉTAPE 2 : INTENTION */}
         {step === 2 && (
-          <div className="flex-1 p-8 md:p-16 flex flex-col justify-center animate-in slide-in-from-right duration-500">
+          <div className="flex-1 p-6 md:p-16 flex flex-col justify-center animate-in slide-in-from-right duration-500 overflow-y-auto">
              <div className="max-w-7xl mx-auto w-full h-full flex flex-col">
-               <div className="mb-8 flex items-end justify-between border-b border-white/10 pb-6">
+               <div className="mb-6 md:mb-8 flex items-end justify-between border-b border-white/10 pb-6 mt-16 md:mt-0">
                  <div>
                    <span className="text-amber-600 font-mono text-xs uppercase tracking-widest mb-2 block">02 — Intention</span>
-                   <h2 className="text-4xl font-serif text-white">L'Énergie du Moment</h2>
+                   <h2 className="text-3xl md:text-4xl font-serif text-white">L'Énergie du Moment</h2>
                  </div>
                </div>
 
-               <div className="flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 pb-20 md:pb-0">
                  {EVENT_TYPES.map((type) => (
                    <button
                     key={type.id}
                     onClick={() => { setData({...data, eventType: type}); autoNext(3); }}
-                    className="group relative h-full w-full rounded-sm overflow-hidden border border-white/5 hover:border-amber-600/50 transition-all duration-300 text-left"
+                    className="group relative h-48 md:h-96 w-full rounded-sm overflow-hidden border border-white/5 hover:border-amber-600/50 transition-all duration-300 text-left"
                    >
                      <div 
                         className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110 opacity-50 group-hover:opacity-80"
                         style={{ backgroundImage: `url(${type.image})` }}
                      />
                      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
-                     <div className="absolute inset-0 p-8 flex flex-col justify-end">
-                        <h3 className="text-3xl font-serif text-white mb-1 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">{type.title}</h3>
-                        <div className="text-amber-500 text-xs font-mono uppercase tracking-wider mb-4 opacity-80 group-hover:opacity-100">{type.subtitle}</div>
-                        <p className="text-sm text-neutral-300 font-light opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500 delay-75 leading-relaxed">{type.desc}</p>
+                     <div className="absolute inset-0 p-6 md:p-8 flex flex-col justify-end">
+                        <h3 className="text-2xl md:text-3xl font-serif text-white mb-1 transform translate-y-0 md:translate-y-2 group-hover:translate-y-0 transition-transform duration-500">{type.title}</h3>
+                        <div className="text-amber-500 text-[10px] md:text-xs font-mono uppercase tracking-wider mb-2 md:mb-4 opacity-100 md:opacity-80 group-hover:opacity-100">{type.subtitle}</div>
+                        <p className="text-xs md:text-sm text-neutral-300 font-light opacity-100 md:opacity-0 group-hover:opacity-100 transform translate-y-0 md:translate-y-4 group-hover:translate-y-0 transition-all duration-500 delay-75 leading-relaxed">{type.desc}</p>
                      </div>
                    </button>
                  ))}
@@ -549,19 +565,19 @@ En attente de votre validation.
 
         {/* ÉTAPE 3 : ARCHITECTURE (SANS PAX) */}
         {step === 3 && (
-          <div className="flex-1 flex flex-col justify-center p-8 md:p-16 animate-in slide-in-from-right duration-500">
+          <div className="flex-1 flex flex-col justify-center p-6 md:p-16 animate-in slide-in-from-right duration-500 overflow-y-auto">
              <div className="max-w-7xl mx-auto w-full h-full flex flex-col">
-               <div className="mb-8 border-b border-white/10 pb-6">
+               <div className="mb-6 md:mb-8 border-b border-white/10 pb-6 mt-16 md:mt-0">
                  <span className="text-amber-600 font-mono text-xs uppercase tracking-widest mb-2 block">03 — Architecture</span>
-                 <h2 className="text-4xl font-serif text-white">Configuration de l'Espace</h2>
+                 <h2 className="text-3xl md:text-4xl font-serif text-white">Configuration de l'Espace</h2>
                </div>
                
-               <div className="flex-1 flex flex-col gap-6">
+               <div className="flex-1 flex flex-col gap-4 md:gap-6 pb-20 md:pb-0">
                   {FORMATS.map((fmt) => (
                     <button 
                       key={fmt.id}
                       onClick={() => { setData({...data, format: fmt}); autoNext(4); }}
-                      className="group relative flex-1 border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-all duration-300 flex items-center overflow-hidden hover:border-amber-600/30"
+                      className="group relative flex-1 min-h-[120px] md:min-h-0 border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-all duration-300 flex items-center overflow-hidden hover:border-amber-600/30"
                     >
                        <div className="w-1/3 h-full relative overflow-hidden">
                          <div 
@@ -570,15 +586,15 @@ En attente de votre validation.
                          />
                        </div>
 
-                       <div className="flex-1 p-8 text-left flex items-center justify-between">
+                       <div className="flex-1 p-6 md:p-8 text-left flex items-center justify-between">
                           <div>
-                            <h3 className="text-3xl font-serif text-white mb-2 group-hover:text-amber-500 transition-colors">{fmt.title}</h3>
-                            <div className="flex items-center gap-4 text-xs font-mono uppercase tracking-widest text-neutral-500">
+                            <h3 className="text-xl md:text-3xl font-serif text-white mb-1 md:mb-2 group-hover:text-amber-500 transition-colors">{fmt.title}</h3>
+                            <div className="flex items-center gap-4 text-[10px] md:text-xs font-mono uppercase tracking-widest text-neutral-500">
                                <span>{fmt.subtitle}</span>
                             </div>
                           </div>
                           <div className="text-sm text-neutral-400 font-light leading-relaxed max-w-xs text-right hidden md:block">{fmt.desc}</div>
-                          <ArrowRight size={24} className="text-white/20 group-hover:text-amber-600 transition-colors transform group-hover:translate-x-2 duration-300 ml-8"/>
+                          <ArrowRight size={20} className="text-white/20 group-hover:text-amber-600 transition-colors transform group-hover:translate-x-2 duration-300 ml-4 md:ml-8"/>
                        </div>
                     </button>
                   ))}
@@ -589,43 +605,43 @@ En attente de votre validation.
 
         {/* ÉTAPE 4 : CALIBRAGE */}
         {step === 4 && (
-          <div className="flex-1 flex flex-col animate-in slide-in-from-right duration-500 justify-center">
-             <div className="max-w-4xl mx-auto w-full p-8">
-                <div className="text-center mb-16">
+          <div className="flex-1 flex flex-col animate-in slide-in-from-right duration-500 justify-center overflow-y-auto">
+             <div className="max-w-4xl mx-auto w-full p-6 md:p-8 mt-16 md:mt-0">
+                <div className="text-center mb-10 md:mb-16">
                    <span className="text-amber-600 font-mono text-xs uppercase tracking-widest mb-4 block">04 — Calibrage</span>
-                   <h3 className="text-5xl font-serif mb-4 text-white">L'Horizon</h3>
-                   <p className="text-neutral-500 max-w-md mx-auto">Combien d'âmes pour ce moment ?</p>
+                   <h3 className="text-4xl md:text-5xl font-serif mb-4 text-white">L'Horizon</h3>
+                   <p className="text-neutral-500 max-w-md mx-auto text-sm">Combien d'âmes pour ce moment ?</p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
                    
                    {/* INVITES */}
-                   <div className="flex flex-col items-center gap-6 p-10 border border-white/10 bg-white/[0.02]">
+                   <div className="flex flex-col items-center gap-6 p-8 md:p-10 border border-white/10 bg-white/[0.02]">
                         <span className="text-xs font-mono uppercase tracking-widest text-neutral-500">Volume Invités</span>
-                        <div className="flex items-center gap-8">
-                           <button onClick={() => setData({...data, pax: Math.max(2, data.pax - 1)})} className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:bg-white hover:text-black transition-colors"><Minus size={20}/></button>
-                           <span className="text-6xl font-serif text-white w-24 text-center">{data.pax}</span>
-                           <button onClick={() => setData({...data, pax: Math.min(50, data.pax + 1)})} className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:bg-white hover:text-black transition-colors"><Plus size={20}/></button>
+                        <div className="flex items-center gap-6 md:gap-8">
+                           <button onClick={() => setData({...data, pax: Math.max(2, data.pax - 1)})} className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-white/20 flex items-center justify-center hover:bg-white hover:text-black transition-colors"><Minus size={18}/></button>
+                           <span className="text-5xl md:text-6xl font-serif text-white w-20 md:w-24 text-center">{data.pax}</span>
+                           <button onClick={() => setData({...data, pax: Math.min(50, data.pax + 1)})} className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-white/20 flex items-center justify-center hover:bg-white hover:text-black transition-colors"><Plus size={18}/></button>
                         </div>
                    </div>
 
                    {/* DATE */}
-                   <div className="flex flex-col items-center gap-6 p-10 border border-white/10 bg-white/[0.02]">
+                   <div className="flex flex-col items-center gap-6 p-8 md:p-10 border border-white/10 bg-white/[0.02]">
                         <span className="text-xs font-mono uppercase tracking-widest text-neutral-500">Date Cible</span>
                         <div className="w-full">
                           <input 
                             type="date" 
                             onChange={(e) => setData({...data, date: e.target.value})}
-                            className="bg-transparent text-3xl text-center font-serif text-white w-full outline-none border-b border-white/10 pb-4 focus:border-amber-600 transition-colors uppercase [color-scheme:dark]"
+                            className="bg-transparent text-2xl md:text-3xl text-center font-serif text-white w-full outline-none border-b border-white/10 pb-4 focus:border-amber-600 transition-colors uppercase [color-scheme:dark]"
                           />
                         </div>
                    </div>
                 </div>
 
-                <div className="mt-16 text-center">
+                <div className="mt-12 md:mt-16 text-center pb-20 md:pb-0">
                   <button 
                     onClick={() => goToStep(5)}
-                    className="inline-flex items-center gap-3 bg-white text-black px-12 py-4 hover:bg-amber-500 hover:text-white transition-colors font-mono text-xs uppercase tracking-widest shadow-lg rounded-sm"
+                    className="inline-flex items-center gap-3 bg-white text-black px-10 py-4 md:px-12 md:py-4 hover:bg-amber-500 hover:text-white transition-colors font-mono text-xs uppercase tracking-widest shadow-lg rounded-sm w-full md:w-auto justify-center"
                   >
                     Valider le Calibrage <ArrowRight size={14}/>
                   </button>
@@ -637,22 +653,22 @@ En attente de votre validation.
         {/* ÉTAPE 5 : IMMERSION */}
         {step === 5 && (
           <div className="flex-1 flex flex-col animate-in slide-in-from-right duration-500 overflow-y-auto scrollbar-hide">
-             <div className="max-w-6xl mx-auto w-full p-8 md:p-16">
-                <div className="mb-10">
+             <div className="max-w-6xl mx-auto w-full p-6 md:p-16 mt-16 md:mt-0">
+                <div className="mb-8 md:mb-10">
                    <span className="text-amber-600 font-mono text-xs uppercase tracking-widest mb-4 block">05 — Immersion</span>
-                   <h3 className="text-4xl font-serif mb-2">Niveau d'Expérience</h3>
+                   <h3 className="text-3xl md:text-4xl font-serif mb-2">Niveau d'Expérience</h3>
                 </div>
 
                 {/* THE CHOICE */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-8 md:mb-12">
                    {/* OPTION A: LOCATION SÈCHE */}
                    <button 
                      onClick={() => { setIsDryHire(true); setData({...data, experience: EXPERIENCES[0]}); }}
-                     className={`p-8 border text-left transition-all duration-300 group ${isDryHire ? 'border-white bg-white text-black' : 'border-white/10 hover:border-white/30 bg-[#0a0a0a]'}`}
+                     className={`p-6 md:p-8 border text-left transition-all duration-300 group ${isDryHire ? 'border-white bg-white text-black' : 'border-white/10 hover:border-white/30 bg-[#0a0a0a]'}`}
                    >
-                      <LayoutTemplate size={32} className={`mb-4 ${isDryHire ? 'text-black' : 'text-neutral-500'}`} />
-                      <h4 className="text-2xl font-serif mb-2">Location Sèche</h4>
-                      <p className={`text-sm ${isDryHire ? 'text-neutral-700' : 'text-neutral-400'}`}>
+                      <LayoutTemplate size={28} className={`mb-4 ${isDryHire ? 'text-black' : 'text-neutral-500'}`} />
+                      <h4 className="text-xl md:text-2xl font-serif mb-2">Location Sèche</h4>
+                      <p className={`text-xs md:text-sm ${isDryHire ? 'text-neutral-700' : 'text-neutral-400'}`}>
                         Mise à disposition de l'espace uniquement. 
                       </p>
                    </button>
@@ -660,13 +676,13 @@ En attente de votre validation.
                    {/* OPTION B: EXPERIENCE */}
                    <button 
                      onClick={() => { setIsDryHire(false); setData({...data, experience: EXPERIENCES[1]}); }}
-                     className={`p-8 border text-left transition-all duration-300 group ${!isDryHire ? 'border-amber-600 bg-amber-600 text-white' : 'border-white/10 hover:border-amber-600/50 bg-[#0a0a0a]'}`}
+                     className={`p-6 md:p-8 border text-left transition-all duration-300 group ${!isDryHire ? 'border-amber-600 bg-amber-600 text-white' : 'border-white/10 hover:border-amber-600/50 bg-[#0a0a0a]'}`}
                    >
                       <div className="flex items-center gap-3 mb-2">
                          <Sparkles size={20} className={!isDryHire ? 'text-white' : 'text-amber-500'} />
-                         <h4 className="text-2xl font-serif">Expérience Immersive</h4>
+                         <h4 className="text-xl md:text-2xl font-serif">Expérience Immersive</h4>
                       </div>
-                      <p className={`text-sm ${!isDryHire ? 'text-white/90' : 'text-neutral-400'}`}>
+                      <p className={`text-xs md:text-sm ${!isDryHire ? 'text-white/90' : 'text-neutral-400'}`}>
                         Une animation sensorielle incluse (Vin, Casino, Gastronomie).
                       </p>
                    </button>
@@ -674,14 +690,14 @@ En attente de votre validation.
 
                 {/* EXPERIENCE GRID */}
                 {!isDryHire && (
-                  <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                  <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 pb-20 md:pb-0">
                      <h3 className="text-sm font-mono uppercase tracking-widest text-neutral-500 mb-6">Sélectionnez l'expérience</h3>
                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         {EXPERIENCES.filter(e => e.id !== 'none').map((exp) => (
                            <div 
                              key={exp.id}
                              onClick={() => setData({...data, experience: exp})}
-                             className={`relative h-64 border cursor-pointer transition-all duration-300 group overflow-hidden ${
+                             className={`relative h-48 md:h-64 border cursor-pointer transition-all duration-300 group overflow-hidden ${
                                 data.experience.id === exp.id 
                                 ? 'border-amber-600 shadow-[0_0_30px_-10px_rgba(217,119,6,0.3)]' 
                                 : 'border-white/10 hover:border-white/30'
@@ -710,10 +726,10 @@ En attente de votre validation.
                   </div>
                 )}
 
-                <div className="mt-12 flex justify-end">
+                <div className="mt-12 flex justify-end pb-24 md:pb-0">
                   <button 
                     onClick={() => goToStep(6)}
-                    className="flex items-center gap-3 bg-white text-black px-10 py-4 hover:bg-amber-500 hover:text-white transition-colors font-mono text-xs uppercase tracking-widest shadow-lg"
+                    className="flex items-center justify-center gap-3 bg-white text-black px-10 py-4 hover:bg-amber-500 hover:text-white transition-colors font-mono text-xs uppercase tracking-widest shadow-lg w-full md:w-auto"
                   >
                     Valider <ArrowRight size={14}/>
                   </button>
@@ -724,16 +740,16 @@ En attente de votre validation.
 
         {/* ÉTAPE 6 : SERVICES (UPSELL) */}
         {step === 6 && (
-          <div className="flex-1 p-8 md:p-16 overflow-y-auto scrollbar-hide animate-in slide-in-from-right duration-500">
+          <div className="flex-1 p-6 md:p-16 overflow-y-auto scrollbar-hide animate-in slide-in-from-right duration-500">
              <div className="max-w-6xl mx-auto w-full h-full flex flex-col">
-                <div className="flex justify-between items-end mb-8 border-b border-white/10 pb-6">
+                <div className="flex justify-between items-end mb-8 border-b border-white/10 pb-6 mt-16 md:mt-0">
                    <div>
                      <span className="text-amber-600 font-mono text-xs uppercase tracking-widest">06 — Services & Exclusivités</span>
-                     <h2 className="text-4xl font-serif text-white mt-2">Finitions</h2>
+                     <h2 className="text-3xl md:text-4xl font-serif text-white mt-2">Finitions</h2>
                    </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-12">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 pb-24 md:pb-12">
                    {SERVICES.map(srv => {
                      const isSelected = data.selectedServices.includes(srv.id);
                      let priceDisplay = '';
@@ -781,10 +797,10 @@ En attente de votre validation.
                    })}
                 </div>
 
-                <div className="flex justify-end">
+                <div className="flex justify-end pb-24 md:pb-0">
                    <button 
                      onClick={() => goToStep(7)}
-                     className="bg-white text-black px-10 py-4 font-mono text-xs uppercase tracking-[0.2em] hover:bg-amber-500 hover:text-white transition-all duration-300 shadow-xl"
+                     className="bg-white text-black px-10 py-4 font-mono text-xs uppercase tracking-[0.2em] hover:bg-amber-500 hover:text-white transition-all duration-300 shadow-xl w-full md:w-auto"
                    >
                      Générer la vision
                    </button>
@@ -795,24 +811,24 @@ En attente de votre validation.
 
         {/* ÉTAPE 7 : FINAL (DETAILED RECAP) */}
         {step === 7 && (
-          <div className="flex-1 flex items-center justify-center p-6 animate-in zoom-in-95 duration-700 relative overflow-hidden">
+          <div className="flex-1 flex items-center justify-center p-0 md:p-6 animate-in zoom-in-95 duration-700 relative overflow-hidden h-full">
              
              <div 
                className="absolute inset-0 bg-cover bg-center opacity-30 blur-2xl scale-110"
                style={{ backgroundImage: `url(${data.timeSlot?.image})` }}
              ></div>
 
-             <div className="w-full max-w-5xl flex flex-col md:flex-row bg-[#0a0a0a]/90 border border-white/10 backdrop-blur-xl shadow-2xl relative z-10 rounded-sm overflow-hidden h-[85vh]">
+             <div className="w-full max-w-5xl flex flex-col md:flex-row bg-[#0a0a0a]/95 md:bg-[#0a0a0a]/90 border-0 md:border border-white/10 backdrop-blur-xl shadow-2xl relative z-10 rounded-none md:rounded-sm overflow-hidden h-full md:h-[85vh]">
                 
                 {/* LEFT: RECEIPT / RECAP */}
-                <div className="w-full md:w-1/2 p-10 border-b md:border-b-0 md:border-r border-white/10 flex flex-col relative overflow-y-auto scrollbar-hide">
+                <div className="w-full md:w-1/2 p-6 md:p-10 border-b md:border-b-0 md:border-r border-white/10 flex flex-col relative overflow-y-auto scrollbar-hide pt-20 md:pt-10 max-h-[50vh] md:max-h-full">
                    <div className="absolute top-0 right-0 p-6 opacity-30">
                       <Sparkles className="text-amber-600 w-12 h-12" />
                    </div>
                    
                    <div className="flex-1">
-                      <div className="font-mono text-xs text-amber-500 uppercase tracking-widest mb-6">Récapitulatif Détaillé</div>
-                      <h2 className="text-3xl font-serif text-white mb-2">{data.eventType?.title}</h2>
+                      <div className="font-mono text-xs text-amber-500 uppercase tracking-widest mb-4 md:mb-6">Récapitulatif Détaillé</div>
+                      <h2 className="text-2xl md:text-3xl font-serif text-white mb-2">{data.eventType?.title}</h2>
                       <div className="text-neutral-400 font-mono text-xs mb-8 flex items-center gap-4">
                          <span>{data.date || 'Date à définir'}</span>
                          <span className="w-1 h-1 bg-neutral-600 rounded-full"></span>
@@ -820,7 +836,7 @@ En attente de votre validation.
                       </div>
                       
                       {/* RECEIPT LINES */}
-                      <div className="space-y-4 text-sm border-t border-white/10 pt-6">
+                      <div className="space-y-4 text-xs md:text-sm border-t border-white/10 pt-6">
                         
                         {/* 1. Time Slot */}
                         <div className="flex justify-between items-center group">
@@ -831,12 +847,12 @@ En attente de votre validation.
                            <div className="font-mono text-neutral-300">{data.timeSlot?.price} €</div>
                         </div>
 
-                        {/* 2. Experience (if not Dry Hire) */}
+                        {/* 2. Experience */}
                         {!isDryHire && data.experience && (
                            <div className="flex justify-between items-center group">
                               <div>
                                  <div className="text-white font-medium">{data.experience.title}</div>
-                                 <div className="text-xs text-neutral-500">{data.experience.price > 0 ? `${data.experience.price}€ x ${data.pax} invités` : 'Inclus'}</div>
+                                 <div className="text-[10px] md:text-xs text-neutral-500">{data.experience.price > 0 ? `${data.experience.price}€ x ${data.pax} invités` : 'Inclus'}</div>
                               </div>
                               <div className="font-mono text-neutral-300">
                                  {data.experience.price === -1 ? 'Devis' : `${data.experience.price * data.pax} €`}
@@ -868,7 +884,7 @@ En attente de votre validation.
                                        <div key={id} className="flex justify-between items-center">
                                           <div>
                                              <div className="text-white font-medium">{srv.title}</div>
-                                             {calcDetail && <div className="text-xs text-neutral-500">{calcDetail}</div>}
+                                             {calcDetail && <div className="text-[10px] text-neutral-500">{calcDetail}</div>}
                                           </div>
                                           <div className="font-mono text-neutral-300">{priceStr}</div>
                                        </div>
@@ -879,23 +895,22 @@ En attente de votre validation.
                       </div>
                    </div>
 
-                   {/* Footer Total - CLEANED & CENTERED */}
-                   <div className="pt-8 mt-12 border-t border-white/10 text-center">
+                   {/* Footer Total */}
+                   <div className="pt-8 mt-12 border-t border-white/10 text-center pb-8 md:pb-0">
                       <div className="text-xs text-neutral-500 uppercase tracking-widest mb-3">Total Estimé TVAC</div>
                       <div className="flex items-baseline justify-center gap-3">
-                         <span className="text-5xl font-serif text-amber-500">{totalAmount} €</span>
+                         <span className="text-4xl md:text-5xl font-serif text-amber-500">{totalAmount} €</span>
                          {isCustom && <span className="text-sm font-sans text-neutral-400 border border-neutral-600 px-2 py-0.5 rounded">+ Devis</span>}
                       </div>
                    </div>
                 </div>
 
                 {/* RIGHT: CONTACT FORM */}
-                <div className="w-full md:w-1/2 p-10 flex flex-col justify-center bg-black/40 relative">
-                   
-                   <h3 className="text-2xl font-serif text-white mb-2">Finaliser l'Accord</h3>
+                <div className="w-full md:w-1/2 p-6 md:p-10 flex flex-col justify-center bg-black/40 relative">
+                   <h3 className="text-xl md:text-2xl font-serif text-white mb-2">Finaliser l'Accord</h3>
                    <p className="text-xs text-neutral-500 mb-8 font-mono">Ceci est une pré-réservation. Aucun paiement immédiat.</p>
 
-                   <div className="space-y-6">
+                   <div className="space-y-4 md:space-y-6">
                       <div className="group relative">
                         <input 
                             type="text" 
@@ -923,7 +938,7 @@ En attente de votre validation.
                       <div className="group relative">
                         <textarea 
                             rows="3" 
-                            placeholder="MESSAGE PARTICULIER (Allergies, horaires...)" 
+                            placeholder="MESSAGE (Allergies, horaires...)" 
                             className="w-full bg-transparent border-b border-white/20 py-3 text-white outline-none focus:border-amber-600 transition-colors placeholder:text-neutral-700 font-mono text-sm resize-none"
                             onChange={e => setData({...data, contact: {...data.contact, message: e.target.value}})}
                         ></textarea>
@@ -932,7 +947,7 @@ En attente de votre validation.
 
                    <button 
                         onClick={handleSubmit}
-                        className="mt-8 w-full bg-white text-black py-4 font-mono text-xs uppercase tracking-[0.2em] hover:bg-amber-600 hover:text-white transition-all duration-500 shadow-lg flex items-center justify-center gap-3"
+                        className="mt-8 mb-20 md:mb-0 w-full bg-white text-black py-4 font-mono text-xs uppercase tracking-[0.2em] hover:bg-amber-600 hover:text-white transition-all duration-500 shadow-lg flex items-center justify-center gap-3"
                    >
                       <Mail size={16} /> Envoyer la demande par email
                    </button>
