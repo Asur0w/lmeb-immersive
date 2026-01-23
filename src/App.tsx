@@ -976,7 +976,7 @@ ${data.contact.name}
                         onClick={handleSubmit}
                         className="mt-8 mb-20 md:mb-0 w-full bg-white text-black py-4 font-mono text-xs uppercase tracking-[0.2em] hover:bg-amber-600 hover:text-white transition-all duration-500 shadow-lg flex items-center justify-center gap-3"
                    >
-                      <Mail size={16} /> Envoyer la demande par email
+                      <Mail size={16} /> Soumettre la demande par email
                    </button>
                 </div>
 
