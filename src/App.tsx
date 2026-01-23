@@ -40,7 +40,7 @@ const TIME_SLOTS = [
     title: 'Totale',
     icon: <Star size={24} />,
     price: 550,
-    image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2864&auto=format&fit=crop'
+    image: 'https://www.lemonde-enbouteille.be/web/image/16056-b2829e5f/79-DSC09373.webp'
   }
 ];
 
@@ -54,7 +54,7 @@ const EVENT_TYPES = [
   },
   {
     id: 'seminaire',
-    title: 'Séminaire',
+    title: 'Séminaire/Conférence',
     subtitle: 'Stratégie',
     desc: 'Décisions clés.',
     image: 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=2940&auto=format&fit=crop'
@@ -82,7 +82,7 @@ const FORMATS = [
     subtitle: 'Standard',
     desc: 'Notre disposition signature. Équilibrée & chaleureuse.',
     setupFee: 0,
-    image: 'https://images.unsplash.com/photo-1610223515025-276d99723058?q=80&w=2787&auto=format&fit=crop'
+    image: 'https://www.lemonde-enbouteille.be/web/image/26778-34e20e4e/94-DSC09399.svg'
   },
   {
     id: 'cocktail',
@@ -90,15 +90,15 @@ const FORMATS = [
     subtitle: 'Debout',
     desc: 'Espace libéré. Mange-debout & circulation fluide.',
     setupFee: 0,
-    image: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?q=80&w=2864&auto=format&fit=crop'
+    image: 'https://www.lemonde-enbouteille.be/web/image/26780-69c7e9bf/58-DSC00974.webp'
   },
   {
     id: 'hybride',
     title: 'Hybride',
     subtitle: 'Mixte',
-    desc: 'Zones de confort assises et zones de flux debout.',
+    desc: 'Zone de confort assises et zone de flux debout.',
     setupFee: 0,
-    image: 'https://images.unsplash.com/photo-1550581190-9c1c48d21d6c?q=80&w=2909&auto=format&fit=crop'
+    image: 'https://www.lemonde-enbouteille.be/web/image/26778-34e20e4e/94-DSC09399.svg'
   }
 ];
 
@@ -128,7 +128,7 @@ const EXPERIENCES = [
     id: 'gastro', 
     title: 'Mets & Vins', 
     price: -1, // Sur Devis
-    sub: 'Repas Complet',
+    sub: 'Instant Gourmand',
     image: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=2940&auto=format&fit=crop'
   }
 ];
@@ -140,7 +140,7 @@ const SERVICES = [
     price: 0, 
     fakePrice: 100, 
     icon: <Wifi size={20}/>, 
-    desc: 'Écrans, Son, Wifi HD. Offert.',
+    desc: 'Écrans, Son, Wifi HD.',
     category: 'tech'
   },
   { 
@@ -156,7 +156,7 @@ const SERVICES = [
     title: 'Corporate Branding', 
     price: 40, 
     icon: <Monitor size={20}/>, 
-    desc: 'Votre logo sur les écrans.',
+    desc: 'Votre logo, marque d'identité et mise en avant',
     category: 'tech'
   },
   { 
@@ -164,7 +164,7 @@ const SERVICES = [
     title: 'Forfait Softs', 
     price: 'dynamic', 
     icon: <Droplets size={20}/>, 
-    desc: 'Eaux, jus, softs à discrétion.',
+    desc: 'Eaux et softs à discrétion.',
     category: 'food'
   },
   { 
@@ -182,7 +182,7 @@ const SERVICES = [
     price: -1, 
     isPerHead: true, 
     icon: <Utensils size={20}/>, 
-    desc: 'Menu sur-mesure.',
+    desc: 'Préparation culianire sur-mesure (Tapas, Menu 2-3-4 Services ou Cuisine conviviale).',
     category: 'food'
   },
   { 
@@ -190,7 +190,7 @@ const SERVICES = [
     title: 'Décoration Sur-Mesure', 
     price: 100, 
     icon: <Palette size={20}/>, 
-    desc: 'Création d\'une ambiance à votre image.',
+    desc: 'Création d\'une ambiance à l'image de votre évènement',
     category: 'deco'
   },
   { 
@@ -199,7 +199,7 @@ const SERVICES = [
     price: 15, 
     isPerHead: true, 
     icon: <Gift size={20}/>, 
-    desc: 'Pour vos invités.',
+    desc: 'Laissez une trace de votre évènement pour vos invités.',
     category: 'gift'
   }
 ];
@@ -239,7 +239,7 @@ const StepIndicator = ({ step, setStep }) => (
         </button>
       ))}
     </div>
-    <div className="text-[10px] text-neutral-700 writing-vertical rotate-180 tracking-widest">MIKE G.</div>
+    <div className="text-[10px] text-neutral-700 writing-vertical rotate-180 tracking-widest">LE MONDE EN BOUTEILLE</div>
   </div>
 );
 
@@ -484,7 +484,7 @@ export default function App() {
           >
             <div className="absolute inset-0 bg-amber-600/10 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500 ease-out"></div>
             <span className="relative font-mono text-xs uppercase tracking-[0.2em] flex items-center justify-center gap-4 text-white group-hover:text-amber-500 transition-colors">
-              Initialiser <ArrowRight size={14} />
+              Commençons l'expérience <ArrowRight size={14} />
             </span>
           </button>
         </div>
@@ -644,7 +644,7 @@ export default function App() {
                 <div className="text-center mb-10 md:mb-16">
                    <span className="text-amber-600 font-mono text-xs uppercase tracking-widest mb-4 block">04 — Calibrage</span>
                    <h3 className="text-4xl md:text-5xl font-serif mb-4 text-white">L'Horizon</h3>
-                   <p className="text-neutral-500 max-w-md mx-auto text-sm">Combien d'âmes pour ce moment ?</p>
+                   <p className="text-neutral-500 max-w-md mx-auto text-sm">Combien d'invités pour ce moment ?</p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
@@ -696,9 +696,9 @@ export default function App() {
                      className={`p-6 md:p-8 border text-left transition-all duration-300 group ${isDryHire ? 'border-white bg-white text-black' : 'border-white/10 hover:border-white/30 bg-[#0a0a0a]'}`}
                    >
                       <LayoutTemplate size={28} className={`mb-4 ${isDryHire ? 'text-black' : 'text-neutral-500'}`} />
-                      <h4 className="text-xl md:text-2xl font-serif mb-2">Location Sèche</h4>
+                      <h4 className="text-xl md:text-2xl font-serif mb-2">Location</h4>
                       <p className={`text-xs md:text-sm ${isDryHire ? 'text-neutral-700' : 'text-neutral-400'}`}>
-                        Mise à disposition de l'espace uniquement. 
+                        Mise à disposition de l'espace. 
                       </p>
                    </button>
 
