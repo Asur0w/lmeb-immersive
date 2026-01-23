@@ -105,7 +105,7 @@ const FORMATS = [
 const EXPERIENCES = [
   { 
     id: 'none', 
-    title: 'Location Sèche', 
+    title: 'Location', 
     price: 0, 
     sub: 'L\'espace nu',
     image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2301&auto=format&fit=crop'
@@ -156,7 +156,7 @@ const SERVICES = [
     title: 'Corporate Branding', 
     price: 40, 
     icon: <Monitor size={20}/>, 
-    desc: 'Votre logo, marque d'identité et mise en avant',
+    desc: "Votre logo, marque d'identité et mise en avant",
     category: 'tech'
   },
   { 
@@ -190,7 +190,7 @@ const SERVICES = [
     title: 'Décoration Sur-Mesure', 
     price: 100, 
     icon: <Palette size={20}/>, 
-    desc: 'Création d\'une ambiance à l'image de votre évènement',
+    desc: "Création d'une ambiance à l'image de votre évènement", 
     category: 'deco'
   },
   { 
@@ -375,7 +375,7 @@ export default function App() {
         type: data.eventType?.title || "Non défini",
         time_slot: data.timeSlot?.title || "Non défini",
         format: data.format?.title || "Non défini",
-        experience: isDryHire ? "Location Sèche" : data.experience?.title,
+        experience: isDryHire ? "Location" : data.experience?.title,
         services: data.selectedServices.map(id => SERVICES.find(s => s.id === id)?.title).join(', '),
         total: totalAmount,
         is_custom: isCustom ? "OUI (Devis requis)" : "NON"
