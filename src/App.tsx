@@ -54,9 +54,9 @@ const EVENT_TYPES = [
   },
   {
     id: 'seminaire',
-    title: 'Séminaire/Conférence',
+    title: 'Séminaire', // CORRIGÉ : Titre raccourci pour l'affichage
     subtitle: 'Stratégie',
-    desc: 'Décisions clés.',
+    desc: 'Décisions clés & Conférences.', // CORRIGÉ : Détail déplacé ici
     image: 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=2940&auto=format&fit=crop'
   },
   {
@@ -156,7 +156,7 @@ const SERVICES = [
     title: 'Corporate Branding', 
     price: 40, 
     icon: <Monitor size={20}/>, 
-    desc: "Votre logo, marque d'identité et mise en avant",
+    desc: "Votre logo, marque d'identité et mise en avant", // CORRIGÉ : Guillemets doubles
     category: 'tech'
   },
   { 
@@ -182,7 +182,7 @@ const SERVICES = [
     price: -1, 
     isPerHead: true, 
     icon: <Utensils size={20}/>, 
-    desc: 'Préparation culianire sur-mesure (Tapas, Menu 2-3-4 Services ou Cuisine conviviale).',
+    desc: 'Préparation culinaire sur-mesure (Tapas, Menu ou Cuisine conviviale).', 
     category: 'food'
   },
   { 
@@ -190,7 +190,7 @@ const SERVICES = [
     title: 'Décoration Sur-Mesure', 
     price: 100, 
     icon: <Palette size={20}/>, 
-    desc: "Création d'une ambiance à l'image de votre évènement", 
+    desc: "Création d'une ambiance à l'image de votre évènement", // CORRIGÉ : Guillemets doubles
     category: 'deco'
   },
   { 
@@ -402,7 +402,7 @@ export default function App() {
   if (isSent) {
     return (
       <div className="relative h-screen w-full bg-[#050505] overflow-hidden flex flex-col items-center justify-center p-6 text-white">
-           {/* 1. FOND TEXTURÉ (Rappel de l'accueil) */}
+           {/* 1. FOND TEXTURÉ */}
            <div className="absolute inset-0 z-0 opacity-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
            <div className="absolute inset-0 z-0 opacity-30 bg-[url('https://www.lemonde-enbouteille.be/web/image/16056-b2829e5f/79-DSC09373.webp')] bg-cover bg-center blur-sm mix-blend-overlay"></div>
 
@@ -484,7 +484,7 @@ export default function App() {
           >
             <div className="absolute inset-0 bg-amber-600/10 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500 ease-out"></div>
             <span className="relative font-mono text-xs uppercase tracking-[0.2em] flex items-center justify-center gap-4 text-white group-hover:text-amber-500 transition-colors">
-              Commençons l'expérience <ArrowRight size={14} />
+              Initialiser <ArrowRight size={14} />
             </span>
           </button>
         </div>
