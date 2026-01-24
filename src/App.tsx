@@ -403,52 +403,64 @@ export default function App() {
       });
   };
 
-  // --- ECRAN DE FIN ---
-  if (isSent) {
-    return (
-      <div className="relative h-[100dvh] w-full bg-[#050505] overflow-hidden flex flex-col items-center justify-center p-6 text-white">
-           <div className="absolute inset-0 z-0 opacity-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
-           <div className="absolute inset-0 z-0 opacity-30 bg-[url('https://www.lemonde-enbouteille.be/web/image/16056-b2829e5f/79-DSC09373.webp')] bg-cover bg-center blur-sm mix-blend-overlay"></div>
+// --- ECRAN DE FIN ---
+if (isSent) {
+  return (
+    <div className="relative h-[100dvh] w-full bg-[#050505] overflow-hidden flex flex-col items-center justify-center p-6 text-white">
+         <div className="absolute inset-0 z-0 opacity-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
+         <div className="absolute inset-0 z-0 opacity-30 bg-[url('https://www.lemonde-enbouteille.be/web/image/16056-b2829e5f/79-DSC09373.webp')] bg-cover bg-center blur-sm mix-blend-overlay"></div>
 
-           <div className="relative z-10 max-w-xl w-full bg-black/40 backdrop-blur-xl border border-white/10 p-12 md:p-16 flex flex-col items-center text-center shadow-2xl animate-in zoom-in-95 duration-700">
-              
-              <div className="mb-8 relative">
-                 <div className="absolute inset-0 bg-amber-600 blur-xl opacity-20 animate-pulse"></div>
-                 <div className="w-20 h-20 rounded-full border border-amber-600/50 flex items-center justify-center bg-black/50 relative z-10">
-                    <Check size={32} className="text-amber-500" />
-                 </div>
-              </div>
+         <div className="relative z-10 max-w-xl w-full bg-black/40 backdrop-blur-xl border border-white/10 p-12 md:p-16 flex flex-col items-center text-center shadow-2xl animate-fade-in-up">
+            
+            <div className="mb-8 relative">
+               <div className="absolute inset-0 bg-amber-600 blur-xl opacity-20 animate-pulse"></div>
+               <div className="w-20 h-20 rounded-full border border-amber-600/50 flex items-center justify-center bg-black/50 relative z-10">
+                  <Check size={32} className="text-amber-500" />
+               </div>
+            </div>
 
-              <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-amber-600 mb-4">Confirmation</div>
-              
-              <h2 className="text-4xl md:text-5xl font-serif mb-6 text-transparent bg-clip-text bg-gradient-to-b from-white to-neutral-400">
-                Demande Transmise
-              </h2>
+            <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-amber-600 mb-4">Confirmation</div>
+            
+            <h2 className="text-4xl md:text-5xl font-serif mb-6 text-transparent bg-clip-text bg-gradient-to-b from-white to-neutral-400">
+              Demande Transmise
+            </h2>
 
-              <div className="w-12 h-px bg-white/20 mb-8"></div>
+            <div className="w-12 h-px bg-white/20 mb-8"></div>
 
-              <p className="font-light text-neutral-300 leading-relaxed text-sm mb-10">
-                Merci <span className="text-white font-medium">{data.contact.name}</span>. <br/>
-                Votre vision a été capturée. Une confirmation vient d'être envoyée à votre adresse email.
-                <br/><br/>
-                <span className="text-xs font-mono text-neutral-500">Nous reviendrons vers vous sous 24h avec une proposition chiffrée.</span>
-              </p>
+            <p className="font-light text-neutral-300 leading-relaxed text-sm mb-10">
+              Merci <span className="text-white font-medium">{data.contact.name}</span>. <br/>
+              Votre vision a été capturée. Une confirmation vient d'être envoyée à votre adresse email.
+              <br/><br/>
+              <span className="text-xs font-mono text-neutral-500">Nous reviendrons vers vous sous 24h avec une proposition chiffrée.</span>
+            </p>
 
-              <button 
-                onClick={() => window.location.reload()} 
-                className="group relative px-8 py-4 bg-white/5 border border-white/10 hover:border-amber-600/50 transition-all duration-500 cursor-pointer"
-              >
-                <div className="absolute inset-0 bg-amber-600/10 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500 ease-out"></div>
-                <span className="relative font-mono text-[10px] uppercase tracking-[0.2em] text-white group-hover:text-amber-500 transition-colors">
-                  Retour à l'accueil
-                </span>
-              </button>
-           </div>
-      </div>
-    )
+            <div className="flex flex-col gap-4 w-full md:w-auto">
+                <button 
+                  onClick={() => window.location.reload()} 
+                  className="group relative px-8 py-4 bg-white/5 border border-white/10 hover:border-amber-600/50 transition-all duration-500 cursor-pointer w-full"
+                >
+                  <div className="absolute inset-0 bg-amber-600/10 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500 ease-out"></div>
+                  <span className="relative font-mono text-[10px] uppercase tracking-[0.2em] text-white group-hover:text-amber-500 transition-colors">
+                    Retour à l'accueil
+                  </span>
+                </button>
+
+                {/* NOUVEAU BOUTON VERS LE SITE PRINCIPAL */}
+                <a 
+                  href="https://www.lemonde-enbouteille.be/salle" 
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-center font-mono text-[10px] uppercase tracking-[0.2em] text-neutral-500 hover:text-white transition-colors py-2"
+                >
+                  Visiter le site officiel &rarr;
+                </a>
+            </div>
+         </div>
+    </div>
+  )
 }
 
-  //// --- ECRAN ACCUEIL (CORRIGÉ : TEXTE RÉALISTE) ---
+  // --- ECRAN ACCUEIL ---
   if (step === 0) {
     return (
       <div className="relative h-[100dvh] w-full bg-[#050505] flex flex-col items-center justify-center p-6 md:p-8 text-white overflow-hidden">
@@ -476,10 +488,9 @@ export default function App() {
           </div>
 
           <div className="border-l border-amber-600/30 pl-6 text-left max-w-lg mx-auto backdrop-blur-sm py-2 mb-10 md:mb-12 animate-fade-in-up delay-200">
-             {/* TEXTE CORRIGÉ : PLUS DE MUR D'IMAGES, JUSTE LE LIEU ET L'EQUIPEMENT */}
              <p className="text-neutral-400 font-light leading-relaxed text-xs md:text-sm">
                Une adresse confidentielle à Namur. <br className="hidden md:block"/>
-               <strong>Un espace événementiel privatif de plus de 65m² alliant architecture de caractère et équipements connectés.</strong> <br className="hidden md:block"/>
+               <strong>Un espace événementiel privatif alliant architecture de caractère et équipements connectés.</strong> <br className="hidden md:block"/>
                Réunions, séminaires ou soirées : ne louez pas une salle, vivez une expérience.
              </p>
           </div>
@@ -494,11 +505,20 @@ export default function App() {
             </span>
           </button>
 
-          {/* SOCIAL PROOF */}
-          <div className="mt-8 md:mt-12 animate-fade-in-up delay-500">
+          <div className="mt-8 md:mt-12 animate-fade-in-up delay-500 flex flex-col items-center gap-4">
              <p className="font-serif italic text-xs md:text-sm text-neutral-500 opacity-80">
                 Plébiscité par les entreprises & clients privés
              </p>
+             
+             {/* LIEN DISCRET VERS LE SITE PRINCIPAL */}
+             <a 
+                href="https://www.lemonde-enbouteille.be/salle" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="font-mono text-[9px] text-neutral-600 hover:text-amber-600 uppercase tracking-widest transition-colors border-b border-transparent hover:border-amber-600 pb-0.5"
+             >
+                www.lemonde-enbouteille.be
+             </a>
           </div>
 
         </div>
