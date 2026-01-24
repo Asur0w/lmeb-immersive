@@ -479,7 +479,7 @@ export default function App() {
              {/* TEXTE CORRIGÉ : PLUS DE MUR D'IMAGES, JUSTE LE LIEU ET L'EQUIPEMENT */}
              <p className="text-neutral-400 font-light leading-relaxed text-xs md:text-sm">
                Une adresse confidentielle à Namur. <br className="hidden md:block"/>
-               <strong>Un espace événementiel privatif alliant architecture de caractère et équipements connectés.</strong> <br className="hidden md:block"/>
+               <strong>Un espace événementiel privatif de plus de 65m² alliant architecture de caractère et équipements connectés.</strong> <br className="hidden md:block"/>
                Réunions, séminaires ou soirées : ne louez pas une salle, vivez une expérience.
              </p>
           </div>
