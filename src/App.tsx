@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowRight, ChevronRight, ChevronLeft, Check, Clock, Calendar, Users, Briefcase, Wine, Coffee, Music, Monitor, Minus, Plus, Sparkles, Sun, Moon, Sunrise, Star, Utensils, Wifi, Gift, Palette, LayoutTemplate, Droplets, Map, Mail, Loader, Send } from 'lucide-react';
 
-// --- CONFIGURATION EMAIL FINALE ---
+// --- CONFIGURATION EMAIL ---
 const EMAILJS_SERVICE_ID = "service_z8iw21s"; 
-const EMAILJS_TEMPLATE_ADMIN_ID = "template_3i47cv7"; // Demande de projet
-const EMAILJS_TEMPLATE_CLIENT_ID = "template_2keg8go"; // Accusé réception
+const EMAILJS_TEMPLATE_ADMIN_ID = "template_3i47cv7"; 
+const EMAILJS_TEMPLATE_CLIENT_ID = "template_2keg8go"; 
 const EMAILJS_PUBLIC_KEY = "s1sthtiZPEDfGRote"; 
 
 // --- DATA ---
@@ -102,11 +102,10 @@ const FORMATS = [
   }
 ];
 
-// --- MODIFICATION ICI : TEXTES DESCRIPTIFS AJOUTÉS ---
 const EXPERIENCES = [
   { 
     id: 'none', 
-    title: 'Location', 
+    title: 'Location Sèche', 
     price: 0, 
     sub: 'L\'espace nu',
     description: "Mise à disposition exclusive de l'espace. Idéal pour vos réunions autonomes ou présentations.",
@@ -218,7 +217,7 @@ const ProgressBar = ({ current, total }) => (
 const BackButton = ({ onClick }) => (
   <button 
     onClick={onClick}
-    className="absolute bottom-8 left-6 md:left-8 z-40 flex items-center gap-2 text-neutral-500 hover:text-white transition-colors uppercase text-[10px] tracking-widest font-mono group mix-blend-difference bg-black/20 p-2 rounded backdrop-blur-sm md:bg-transparent md:p-0"
+    className="absolute bottom-8 left-6 md:left-8 z-40 flex items-center gap-2 text-neutral-500 hover:text-white transition-colors uppercase text-[10px] tracking-widest font-mono group mix-blend-difference bg-black/20 p-2 rounded backdrop-blur-sm md:bg-transparent md:p-0 cursor-pointer"
   >
     <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
     Retour
@@ -404,17 +403,15 @@ export default function App() {
       });
   };
 
+  // --- ECRAN DE FIN ---
   if (isSent) {
     return (
-      <div className="relative h-screen w-full bg-[#050505] overflow-hidden flex flex-col items-center justify-center p-6 text-white">
-           {/* 1. FOND TEXTURÉ */}
+      <div className="relative h-[100dvh] w-full bg-[#050505] overflow-hidden flex flex-col items-center justify-center p-6 text-white">
            <div className="absolute inset-0 z-0 opacity-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
            <div className="absolute inset-0 z-0 opacity-30 bg-[url('https://www.lemonde-enbouteille.be/web/image/16056-b2829e5f/79-DSC09373.webp')] bg-cover bg-center blur-sm mix-blend-overlay"></div>
 
-           {/* 2. CARTE "LUXE" CENTRALE */}
            <div className="relative z-10 max-w-xl w-full bg-black/40 backdrop-blur-xl border border-white/10 p-12 md:p-16 flex flex-col items-center text-center shadow-2xl animate-in zoom-in-95 duration-700">
               
-              {/* Icône animée */}
               <div className="mb-8 relative">
                  <div className="absolute inset-0 bg-amber-600 blur-xl opacity-20 animate-pulse"></div>
                  <div className="w-20 h-20 rounded-full border border-amber-600/50 flex items-center justify-center bg-black/50 relative z-10">
@@ -439,7 +436,7 @@ export default function App() {
 
               <button 
                 onClick={() => window.location.reload()} 
-                className="group relative px-8 py-4 bg-white/5 border border-white/10 hover:border-amber-600/50 transition-all duration-500"
+                className="group relative px-8 py-4 bg-white/5 border border-white/10 hover:border-amber-600/50 transition-all duration-500 cursor-pointer"
               >
                 <div className="absolute inset-0 bg-amber-600/10 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500 ease-out"></div>
                 <span className="relative font-mono text-[10px] uppercase tracking-[0.2em] text-white group-hover:text-amber-500 transition-colors">
@@ -451,83 +448,81 @@ export default function App() {
     )
 }
 
-if (step === 0) {
-  return (
-    // UTILISATION DE 'dvh' POUR MOBILE ET SUPPRESSION DE 'overflow-hidden' STRICT
-    <div className="relative h-[100dvh] w-full bg-[#050505] flex flex-col items-center justify-center p-6 md:p-8 text-white overflow-y-auto overflow-x-hidden">
-      
-      {/* FOND AMBIANCE */}
-      <div className="absolute inset-0 z-0 opacity-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] pointer-events-none"></div>
-      <div className="absolute inset-0 z-0 opacity-40 bg-[url('https://www.lemonde-enbouteille.be/web/image/16056-b2829e5f/79-DSC09373.webp')] bg-cover bg-center mix-blend-overlay pointer-events-none"></div>
+  // --- ECRAN ACCUEIL ---
+  if (step === 0) {
+    return (
+      <div className="relative h-[100dvh] w-full bg-[#050505] flex flex-col items-center justify-center p-6 md:p-8 text-white overflow-y-auto overflow-x-hidden">
+        
+        <div className="absolute inset-0 z-0 opacity-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] pointer-events-none"></div>
+        <div className="absolute inset-0 z-0 opacity-40 bg-[url('https://www.lemonde-enbouteille.be/web/image/16056-b2829e5f/79-DSC09373.webp')] bg-cover bg-center mix-blend-overlay pointer-events-none"></div>
 
-      <div className="relative z-10 text-center space-y-8 md:space-y-12 animate-in fade-in zoom-in duration-1000 max-w-4xl mx-auto w-full flex flex-col items-center py-10">
-        
-        {/* LIGNE DÉCO */}
-        <div className="w-px h-16 md:h-24 bg-gradient-to-b from-transparent via-amber-600 to-transparent mx-auto"></div>
-        
-        <div>
-          <img 
-            src="https://www.lemonde-enbouteille.be/web/image/26768-edef09a5/LOGO%20l%27immersive-24.png" 
-            alt="Logo L'Immersive" 
-            className="w-32 md:w-48 mx-auto mb-6 opacity-90 drop-shadow-2xl" 
-          />
+        <div className="relative z-10 text-center space-y-8 md:space-y-12 animate-in fade-in zoom-in duration-1000 max-w-4xl mx-auto w-full flex flex-col items-center py-10">
           
-          <h1 className="text-5xl md:text-7xl lg:text-[8rem] font-serif tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-neutral-500 leading-none mb-4">
-            L'IMMERSIVE
-          </h1>
-          <p className="font-mono text-[10px] md:text-xs uppercase tracking-[0.4em] md:tracking-[0.6em] text-amber-500">
-            Le Monde en Bouteille
-          </p>
+          <div className="w-px h-16 md:h-24 bg-gradient-to-b from-transparent via-amber-600 to-transparent mx-auto"></div>
+          
+          <div>
+            <img 
+              src="https://www.lemonde-enbouteille.be/web/image/26768-edef09a5/LOGO%20l%27immersive-24.png" 
+              alt="Logo L'Immersive" 
+              className="w-32 md:w-48 mx-auto mb-6 opacity-90 drop-shadow-2xl" 
+            />
+            
+            <h1 className="text-5xl md:text-7xl lg:text-[8rem] font-serif tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-neutral-500 leading-none mb-4">
+              L'IMMERSIVE
+            </h1>
+            <p className="font-mono text-[10px] md:text-xs uppercase tracking-[0.4em] md:tracking-[0.6em] text-amber-500">
+              Le Monde en Bouteille
+            </p>
+          </div>
+
+          <div className="border-l border-amber-600/30 pl-6 md:pl-8 text-left max-w-lg mx-auto backdrop-blur-sm py-4">
+             <p className="text-neutral-400 font-light leading-relaxed text-xs md:text-sm">
+               Une adresse confidentielle à Namur. 
+               Ici, la technologie sublime le terroir pour des événements qui marquent.
+               Ne louez pas une salle, vivez une expérience.
+             </p>
+          </div>
+
+          <button 
+            onClick={() => goToStep(1)}
+            className="group relative px-8 py-4 md:px-10 md:py-5 bg-white/5 border border-white/10 hover:border-amber-600/50 transition-all duration-500 w-full md:w-auto cursor-pointer z-50"
+          >
+            <div className="absolute inset-0 bg-amber-600/10 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500 ease-out"></div>
+            <span className="relative font-mono text-xs uppercase tracking-[0.2em] flex items-center justify-center gap-4 text-white group-hover:text-amber-500 transition-colors">
+              Composer mon événement <ArrowRight size={14} />
+            </span>
+          </button>
+
+          <div className="pt-6 md:pt-8 flex flex-col items-center">
+             <div className="flex items-center justify-center gap-1 mb-3">
+                {[1,2,3,4,5].map(i => (
+                    <Star key={i} size={12} className="text-amber-600 fill-amber-600 opacity-80" />
+                ))}
+             </div>
+             <p className="font-mono text-[9px] md:text-[10px] text-neutral-400 uppercase tracking-widest text-center px-4">
+                Déjà plébiscité par de nombreuses sociétés & clients privés
+             </p>
+          </div>
+
         </div>
-
-        <div className="border-l border-amber-600/30 pl-6 md:pl-8 text-left max-w-lg mx-auto backdrop-blur-sm py-4">
-           <p className="text-neutral-400 font-light leading-relaxed text-xs md:text-sm">
-             Une adresse confidentielle à Namur. 
-             Ici, la technologie sublime le terroir pour des événements qui marquent.
-             Ne louez pas une salle, vivez une expérience.
-           </p>
-        </div>
-
-        <button 
-          onClick={() => goToStep(1)}
-          className="group relative px-8 py-4 md:px-10 md:py-5 bg-white/5 border border-white/10 hover:border-amber-600/50 transition-all duration-500 w-full md:w-auto cursor-pointer z-50"
-        >
-          <div className="absolute inset-0 bg-amber-600/10 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500 ease-out"></div>
-          <span className="relative font-mono text-xs uppercase tracking-[0.2em] flex items-center justify-center gap-4 text-white group-hover:text-amber-500 transition-colors">
-            Composer mon événement <ArrowRight size={14} />
-          </span>
-        </button>
-
-        {/* SOCIAL PROOF - SANS ANIMATION COMPLEXE POUR ÊTRE SÛR QU'IL S'AFFICHE */}
-        <div className="pt-6 md:pt-8 flex flex-col items-center">
-           <div className="flex items-center justify-center gap-1 mb-3">
-              {[1,2,3,4,5].map(i => (
-                  <Star key={i} size={12} className="text-amber-600 fill-amber-600 opacity-80" />
-              ))}
-           </div>
-           <p className="font-mono text-[9px] md:text-[10px] text-neutral-400 uppercase tracking-widest text-center px-4">
-              Déjà plébiscité par de nombreuses sociétés & clients privés
-           </p>
-        </div>
-
       </div>
-    </div>
-  );
-}
+    );
+  }
 
+  // --- STRUCTURE PRINCIPALE (OPTIMISÉE MOBILE 'dvh') ---
   return (
-    <div className="relative h-screen w-full bg-[#080808] text-white overflow-hidden font-sans flex flex-col md:flex-row">
+    <div className="relative h-[100dvh] w-full bg-[#080808] text-white overflow-hidden font-sans flex flex-col md:flex-row">
       <div className="absolute inset-0 z-0 pointer-events-none opacity-[0.08] bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay"></div>
       
       <ProgressBar current={step} total={7} />
       <StepIndicator step={step} setStep={goToStep} />
       <MobileStepIndicator step={step} />
 
-      <div className="flex-1 relative flex flex-col z-10 w-full h-full">
+      <div className="flex-1 relative flex flex-col z-10 w-full h-full overflow-hidden">
         
         {/* HEADER BUDGET */}
-        <div className="absolute top-4 right-4 md:top-8 md:right-8 z-50">
-           <div className="bg-black/60 backdrop-blur-md border border-white/10 rounded-lg px-4 py-2 md:px-6 md:py-3 flex flex-col items-end shadow-2xl">
+        <div className="absolute top-4 right-4 md:top-8 md:right-8 z-50 pointer-events-none">
+           <div className="bg-black/60 backdrop-blur-md border border-white/10 rounded-lg px-4 py-2 md:px-6 md:py-3 flex flex-col items-end shadow-2xl pointer-events-auto">
              <div className="font-mono text-[8px] md:text-[10px] uppercase text-neutral-400 tracking-widest mb-1">Budget Estimé</div>
              <div className="font-serif text-lg md:text-2xl text-white tracking-tight flex items-baseline gap-2">
                 <span className={isCustom ? "text-amber-500" : "text-white"}>{totalAmount} €</span>
@@ -719,7 +714,7 @@ if (step === 0) {
                      className={`p-6 md:p-8 border text-left transition-all duration-300 group ${isDryHire ? 'border-white bg-white text-black' : 'border-white/10 hover:border-white/30 bg-[#0a0a0a]'}`}
                    >
                       <LayoutTemplate size={28} className={`mb-4 ${isDryHire ? 'text-black' : 'text-neutral-500'}`} />
-                      <h4 className="text-xl md:text-2xl font-serif mb-2">Location</h4>
+                      <h4 className="text-xl md:text-2xl font-serif mb-2">Location Sèche</h4>
                       <p className={`text-xs md:text-sm ${isDryHire ? 'text-neutral-700' : 'text-neutral-400'}`}>
                         Mise à disposition de l'espace uniquement. 
                       </p>
@@ -766,7 +761,6 @@ if (step === 0) {
                                  <div className="text-[10px] font-mono text-amber-500 uppercase tracking-widest mb-2">{exp.sub}</div>
                                  <div className={`text-2xl font-serif leading-tight mb-3 ${data.experience.id === exp.id ? 'text-white' : 'text-neutral-200'}`}>{exp.title}</div>
                                  
-                                 {/* Description ajoutée ici */}
                                  <p className="text-xs text-neutral-400 leading-relaxed mb-4 opacity-80 max-w-[90%]">
                                     {exp.description}
                                  </p>
@@ -958,11 +952,11 @@ if (step === 0) {
                    </div>
                 </div>
 
-                <div className="w-full md:w-1/2 p-6 md:p-10 flex flex-col justify-center bg-black/40 relative">
+                <div className="w-full md:w-1/2 p-6 md:p-10 flex flex-col justify-center bg-black/40 relative overflow-y-auto">
                    <h3 className="text-xl md:text-2xl font-serif text-white mb-2">Finaliser l'Accord</h3>
                    <p className="text-xs text-neutral-500 mb-8 font-mono">Ceci est une pré-réservation. Aucun paiement immédiat.</p>
 
-                   <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
+                   <form className="space-y-4 md:space-y-6 pb-20 md:pb-0" onSubmit={handleSubmit}>
                       <div className="group relative">
                         <input 
                             type="text" 
