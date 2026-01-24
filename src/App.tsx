@@ -82,7 +82,7 @@ const FORMATS = [
     subtitle: 'Standard',
     desc: 'Notre disposition signature. Équilibrée & chaleureuse.',
     setupFee: 0,
-    image: 'https://www.lemonde-enbouteille.be/web/image/26811-76e0b5e2/105-DSC09413.webp'
+    image: 'https://www.lemonde-enbouteille.be/web/image/26813-d579cd53/104-DSC09412.webp'
   },
   {
     id: 'cocktail',
