@@ -434,7 +434,7 @@ if (isSent) {
               <span className="text-xs font-mono text-neutral-500">Nous reviendrons vers vous sous 24h avec une proposition chiffrée.</span>
             </p>
 
-            <div className="flex flex-col gap-4 w-full md:w-auto">
+            <div className="flex flex-col gap-6 w-full md:w-auto items-center">
                 <button 
                   onClick={() => window.location.reload()} 
                   className="group relative px-8 py-4 bg-white/5 border border-white/10 hover:border-amber-600/50 transition-all duration-500 cursor-pointer w-full"
@@ -445,14 +445,14 @@ if (isSent) {
                   </span>
                 </button>
 
-                {/* NOUVEAU BOUTON VERS LE SITE PRINCIPAL */}
+                {/* LIEN OFICIEL - STYLE MONO DISCRET */}
                 <a 
                   href="https://www.lemonde-enbouteille.be/salle" 
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-center font-mono text-[10px] uppercase tracking-[0.2em] text-neutral-500 hover:text-white transition-colors py-2"
+                  className="font-mono text-[9px] uppercase tracking-[0.25em] text-neutral-500 hover:text-white transition-colors border-b border-white/10 hover:border-white pb-1"
                 >
-                  Visiter le site officiel &rarr;
+                  Voir le lieu officiel
                 </a>
             </div>
          </div>
@@ -460,71 +460,78 @@ if (isSent) {
   )
 }
 
-  // --- ECRAN ACCUEIL ---
-  if (step === 0) {
-    return (
-      <div className="relative h-[100dvh] w-full bg-[#050505] flex flex-col items-center justify-center p-6 md:p-8 text-white overflow-hidden">
+ // --- ECRAN ACCUEIL (TYPO CORRIGÉE : MONO ULTRA-CLEAN) ---
+ if (step === 0) {
+  return (
+    <div className="relative h-[100dvh] w-full bg-[#050505] flex flex-col items-center justify-center p-6 md:p-8 text-white overflow-hidden">
+      
+      <div className="absolute inset-0 z-0 opacity-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] pointer-events-none"></div>
+      <div className="absolute inset-0 z-0 opacity-40 bg-[url('https://www.lemonde-enbouteille.be/web/image/16056-b2829e5f/79-DSC09373.webp')] bg-cover bg-center mix-blend-overlay pointer-events-none"></div>
+
+      <div className="relative z-10 text-center w-full max-w-4xl mx-auto flex flex-col items-center justify-center h-full">
         
-        <div className="absolute inset-0 z-0 opacity-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] pointer-events-none"></div>
-        <div className="absolute inset-0 z-0 opacity-40 bg-[url('https://www.lemonde-enbouteille.be/web/image/16056-b2829e5f/79-DSC09373.webp')] bg-cover bg-center mix-blend-overlay pointer-events-none"></div>
-
-        <div className="relative z-10 text-center w-full max-w-4xl mx-auto flex flex-col items-center justify-center h-full">
+        <div className="w-px h-12 md:h-20 bg-gradient-to-b from-transparent via-amber-600 to-transparent mx-auto mb-6 md:mb-8"></div>
+        
+        <div className="animate-fade-in-up">
+          <img 
+            src="https://www.lemonde-enbouteille.be/web/image/26768-edef09a5/LOGO%20l%27immersive-24.png" 
+            alt="Logo L'Immersive" 
+            className="w-28 md:w-40 mx-auto mb-4 md:mb-6 opacity-90 drop-shadow-2xl" 
+          />
           
-          <div className="w-px h-12 md:h-20 bg-gradient-to-b from-transparent via-amber-600 to-transparent mx-auto mb-6 md:mb-8"></div>
-          
-          <div className="animate-fade-in-up">
-            <img 
-              src="https://www.lemonde-enbouteille.be/web/image/26768-edef09a5/LOGO%20l%27immersive-24.png" 
-              alt="Logo L'Immersive" 
-              className="w-28 md:w-40 mx-auto mb-4 md:mb-6 opacity-90 drop-shadow-2xl" 
-            />
-            
-            <h1 className="text-5xl md:text-7xl lg:text-[7rem] font-serif tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-neutral-500 leading-none mb-3">
-              L'IMMERSIVE
-            </h1>
-            <p className="font-mono text-[9px] md:text-xs uppercase tracking-[0.4em] md:tracking-[0.6em] text-amber-500 mb-8 md:mb-10">
-              Le Monde en Bouteille
-            </p>
-          </div>
-
-          <div className="border-l border-amber-600/30 pl-6 text-left max-w-lg mx-auto backdrop-blur-sm py-2 mb-10 md:mb-12 animate-fade-in-up delay-200">
-             <p className="text-neutral-400 font-light leading-relaxed text-xs md:text-sm">
-               Une adresse confidentielle à Namur. <br className="hidden md:block"/>
-               <strong>Un espace événementiel privatif alliant architecture de caractère et équipements connectés.</strong> <br className="hidden md:block"/>
-               Réunions, séminaires ou soirées : ne louez pas une salle, vivez une expérience.
-             </p>
-          </div>
-
-          <button 
-            onClick={() => goToStep(1)}
-            className="group relative px-8 py-4 md:px-10 md:py-5 bg-white/5 border border-white/10 hover:border-amber-600/50 transition-all duration-500 w-full md:w-auto cursor-pointer z-50 animate-fade-in-up delay-300"
-          >
-            <div className="absolute inset-0 bg-amber-600/10 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500 ease-out"></div>
-            <span className="relative font-mono text-xs uppercase tracking-[0.2em] flex items-center justify-center gap-4 text-white group-hover:text-amber-500 transition-colors">
-              Composer mon événement <ArrowRight size={14} />
-            </span>
-          </button>
-
-          <div className="mt-8 md:mt-12 animate-fade-in-up delay-500 flex flex-col items-center gap-4">
-             <p className="font-serif italic text-xs md:text-sm text-neutral-500 opacity-80">
-                Plébiscité par les entreprises & clients privés
-             </p>
-             
-             {/* LIEN DISCRET VERS LE SITE PRINCIPAL */}
-             <a 
-                href="https://www.lemonde-enbouteille.be/salle" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="font-mono text-[9px] text-neutral-600 hover:text-amber-600 uppercase tracking-widest transition-colors border-b border-transparent hover:border-amber-600 pb-0.5"
-             >
-                www.lemonde-enbouteille.be
-             </a>
-          </div>
-
+          <h1 className="text-5xl md:text-7xl lg:text-[7rem] font-serif tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-neutral-500 leading-none mb-3">
+            L'IMMERSIVE
+          </h1>
+          <p className="font-mono text-[9px] md:text-xs uppercase tracking-[0.4em] md:tracking-[0.6em] text-amber-500 mb-8 md:mb-10">
+            Le Monde en Bouteille
+          </p>
         </div>
+
+        <div className="border-l border-amber-600/30 pl-6 text-left max-w-lg mx-auto backdrop-blur-sm py-2 mb-10 md:mb-12 animate-fade-in-up delay-200">
+           <p className="text-neutral-400 font-light leading-relaxed text-xs md:text-sm">
+             Une adresse confidentielle à Namur. <br className="hidden md:block"/>
+             <strong>Un espace événementiel privatif alliant architecture de caractère et équipements connectés.</strong> <br className="hidden md:block"/>
+             Réunions, séminaires ou soirées : ne louez pas une salle, vivez une expérience.
+           </p>
+        </div>
+
+        <button 
+          onClick={() => goToStep(1)}
+          className="group relative px-8 py-4 md:px-10 md:py-5 bg-white/5 border border-white/10 hover:border-amber-600/50 transition-all duration-500 w-full md:w-auto cursor-pointer z-50 animate-fade-in-up delay-300"
+        >
+          <div className="absolute inset-0 bg-amber-600/10 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500 ease-out"></div>
+          <span className="relative font-mono text-xs uppercase tracking-[0.2em] flex items-center justify-center gap-4 text-white group-hover:text-amber-500 transition-colors">
+            Composer mon événement <ArrowRight size={14} />
+          </span>
+        </button>
+
+        {/* FOOTER INTEGRE ET MINIMALISTE */}
+        <div className="mt-12 md:mt-16 animate-fade-in-up delay-500 flex flex-col items-center gap-3 opacity-60 hover:opacity-100 transition-opacity duration-500">
+           
+           {/* Mention de confiance : Style Technique/Mono */}
+           <div className="flex items-center gap-3">
+              <div className="h-px w-8 bg-white/20"></div>
+              <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-neutral-400">
+                 Confiance : Entreprises & Privés
+              </p>
+              <div className="h-px w-8 bg-white/20"></div>
+           </div>
+           
+           {/* Lien Site : Style discret */}
+           <a 
+              href="https://www.lemonde-enbouteille.be/salle" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="font-mono text-[9px] text-neutral-500 hover:text-amber-500 uppercase tracking-widest transition-colors"
+           >
+              www.lemonde-enbouteille.be
+           </a>
+        </div>
+
       </div>
-    );
-  }
+    </div>
+  );
+}
 
   // --- STRUCTURE PRINCIPALE (OPTIMISÉE MOBILE 'dvh') ---
   return (
