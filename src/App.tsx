@@ -54,9 +54,9 @@ const EVENT_TYPES = [
   },
   {
     id: 'seminaire',
-    title: 'Séminaire', // CORRIGÉ : Titre raccourci pour l'affichage
+    title: 'Séminaire',
     subtitle: 'Stratégie',
-    desc: 'Décisions clés & Conférences.', // CORRIGÉ : Détail déplacé ici
+    desc: 'Décisions clés & Conférences.',
     image: 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=2940&auto=format&fit=crop'
   },
   {
@@ -102,10 +102,11 @@ const FORMATS = [
   }
 ];
 
+// --- MODIFICATION ICI : TEXTES DESCRIPTIFS AJOUTÉS ---
 const EXPERIENCES = [
   { 
     id: 'none', 
-    title: 'Location Sèche', 
+    title: 'Location', 
     price: 0, 
     sub: 'L\'espace nu',
     description: "Mise à disposition exclusive de l'espace. Idéal pour vos réunions autonomes ou présentations.",
@@ -160,7 +161,7 @@ const SERVICES = [
     title: 'Corporate Branding', 
     price: 40, 
     icon: <Monitor size={20}/>, 
-    desc: "Votre logo, marque d'identité et mise en avant", // CORRIGÉ : Guillemets doubles
+    desc: "Votre logo, marque d'identité et mise en avant", 
     category: 'tech'
   },
   { 
@@ -194,7 +195,7 @@ const SERVICES = [
     title: 'Décoration Sur-Mesure', 
     price: 100, 
     icon: <Palette size={20}/>, 
-    desc: "Création d'une ambiance à l'image de votre évènement", // CORRIGÉ : Guillemets doubles
+    desc: "Création d'une ambiance à l'image de votre évènement", 
     category: 'deco'
   },
   { 
@@ -718,7 +719,7 @@ export default function App() {
                       <LayoutTemplate size={28} className={`mb-4 ${isDryHire ? 'text-black' : 'text-neutral-500'}`} />
                       <h4 className="text-xl md:text-2xl font-serif mb-2">Location</h4>
                       <p className={`text-xs md:text-sm ${isDryHire ? 'text-neutral-700' : 'text-neutral-400'}`}>
-                        Mise à disposition de l'espace. 
+                        Mise à disposition de l'espace uniquement. 
                       </p>
                    </button>
 
@@ -736,6 +737,7 @@ export default function App() {
                    </button>
                 </div>
 
+                {/* EXPERIENCE GRID */}
                 {!isDryHire && (
                   <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 pb-20 md:pb-0">
                      <h3 className="text-sm font-mono uppercase tracking-widest text-neutral-500 mb-6">Sélectionnez l'expérience</h3>
@@ -744,28 +746,36 @@ export default function App() {
                            <div 
                              key={exp.id}
                              onClick={() => setData({...data, experience: exp})}
-                             className={`relative h-48 md:h-64 border cursor-pointer transition-all duration-300 group overflow-hidden ${
+                             className={`relative h-64 md:h-80 border cursor-pointer transition-all duration-300 group overflow-hidden ${
                                 data.experience.id === exp.id 
                                 ? 'border-amber-600 shadow-[0_0_30px_-10px_rgba(217,119,6,0.3)]' 
                                 : 'border-white/10 hover:border-white/30'
                              }`}
                            >
+                              {/* Image de fond */}
                               <div 
-                                className={`absolute inset-0 bg-cover bg-center transition-all duration-700 ${data.experience.id === exp.id ? 'opacity-40 scale-105' : 'opacity-20 grayscale group-hover:grayscale-0 group-hover:opacity-30'}`}
+                                className={`absolute inset-0 bg-cover bg-center transition-all duration-700 ${data.experience.id === exp.id ? 'opacity-30 scale-105' : 'opacity-20 grayscale group-hover:grayscale-0 group-hover:opacity-30'}`}
                                 style={{ backgroundImage: `url(${exp.image})` }}
                               />
-                              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
+                              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent"></div>
 
+                              {/* Contenu Texte */}
                               <div className="absolute inset-0 p-6 flex flex-col justify-end z-10">
-                                 <div className="text-[10px] font-mono text-neutral-400 uppercase tracking-widest mb-1">{exp.sub}</div>
-                                 <div className={`text-xl font-serif leading-tight mb-2 ${data.experience.id === exp.id ? 'text-white' : 'text-neutral-300'}`}>{exp.title}</div>
-                                 <div className={`text-lg font-mono ${data.experience.id === exp.id ? 'text-amber-500' : 'text-neutral-500'}`}>
+                                 <div className="text-[10px] font-mono text-amber-500 uppercase tracking-widest mb-2">{exp.sub}</div>
+                                 <div className={`text-2xl font-serif leading-tight mb-3 ${data.experience.id === exp.id ? 'text-white' : 'text-neutral-200'}`}>{exp.title}</div>
+                                 
+                                 {/* Description ajoutée ici */}
+                                 <p className="text-xs text-neutral-400 leading-relaxed mb-4 opacity-80 max-w-[90%]">
+                                    {exp.description}
+                                 </p>
+
+                                 <div className={`text-lg font-mono ${data.experience.id === exp.id ? 'text-amber-500' : 'text-white'}`}>
                                     {exp.price > 0 ? `${exp.price}€` : 'Sur Devis'}
                                  </div>
                               </div>
                               
                               {data.experience.id === exp.id && (
-                                 <div className="absolute top-4 right-4 bg-amber-600 text-white p-1 rounded-full"><Check size={14}/></div>
+                                 <div className="absolute top-4 right-4 bg-amber-600 text-white p-1 rounded-full animate-in zoom-in duration-300"><Check size={14}/></div>
                               )}
                            </div>
                         ))}
