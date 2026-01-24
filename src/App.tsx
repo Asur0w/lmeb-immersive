@@ -98,16 +98,17 @@ const FORMATS = [
     subtitle: 'Mixte',
     desc: 'Zone de confort assises et zone de flux debout.',
     setupFee: 0,
-    image: 'https://www.lemonde-enbouteille.be/web/image/26782-133bd9dc/78-DSC09371.webp'
+    image: 'https://www.lemonde-enbouteille.be/web/image/26778-34e20e4e/94-DSC09399.svg'
   }
 ];
 
 const EXPERIENCES = [
   { 
     id: 'none', 
-    title: 'Location', 
+    title: 'Location Sèche', 
     price: 0, 
     sub: 'L\'espace nu',
+    description: "Mise à disposition exclusive de l'espace. Idéal pour vos réunions autonomes ou présentations.",
     image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2301&auto=format&fit=crop'
   },
   { 
@@ -115,6 +116,7 @@ const EXPERIENCES = [
     title: 'Tour du Monde', 
     price: 40, 
     sub: 'Dégustation 5 vins',
+    description: "Une exploration sensorielle guidée à travers 5 vins d'exception. Le format classique et élégant pour découvrir nos pépites du terroir.",
     image: 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?q=80&w=2940&auto=format&fit=crop'
   },
   { 
@@ -122,13 +124,15 @@ const EXPERIENCES = [
     title: 'Casino du Vin', 
     price: 46, 
     sub: 'Animation Ludique',
+    description: "L'ambiance feutrée de la Black List. Dégustation à l'aveugle, tables de jeu, jetons et enchères. Misez sur vos sens dans ce format participatif.",
     image: 'https://images.unsplash.com/photo-1596838132731-3301c3fd4317?q=80&w=2940&auto=format&fit=crop'
   },
   { 
     id: 'gastro', 
     title: 'Instant Gourmand', 
     price: -1, // Sur Devis
-    sub: 'Repas',
+    sub: 'Challenge Culinaire',
+    description: "Une immersion autour de la gastronomie. Quiz culinaire interactif, découverte d'ingrédients mystères et accords mets-vins sur mesure.",
     image: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=2940&auto=format&fit=crop'
   }
 ];
@@ -173,7 +177,7 @@ const SERVICES = [
     price: 25, 
     isPerHead: true, 
     icon: <Utensils size={20}/>, 
-    desc: 'Planches fromages/charcuteries.',
+    desc: 'Planches fromages/charcuteries avec tous les accompagnements.',
     category: 'food'
   },
   { 
@@ -449,10 +453,13 @@ export default function App() {
   if (step === 0) {
     return (
       <div className="relative h-screen w-full bg-[#050505] overflow-hidden flex flex-col items-center justify-center p-6 md:p-8 text-white">
+        {/* FOND AMBIANCE */}
         <div className="absolute inset-0 z-0 opacity-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
         <div className="absolute inset-0 z-0 opacity-40 bg-[url('https://www.lemonde-enbouteille.be/web/image/16056-b2829e5f/79-DSC09373.webp')] bg-cover bg-center mix-blend-overlay"></div>
 
-        <div className="relative z-10 text-center space-y-8 md:space-y-12 animate-in fade-in zoom-in duration-1000 max-w-4xl mx-auto w-full">
+        <div className="relative z-10 text-center space-y-8 md:space-y-12 animate-in fade-in zoom-in duration-1000 max-w-4xl mx-auto w-full flex flex-col items-center">
+          
+          {/* LIGNE DÉCO */}
           <div className="w-px h-16 md:h-24 bg-gradient-to-b from-transparent via-amber-600 to-transparent mx-auto"></div>
           
           <div>
@@ -484,9 +491,22 @@ export default function App() {
           >
             <div className="absolute inset-0 bg-amber-600/10 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500 ease-out"></div>
             <span className="relative font-mono text-xs uppercase tracking-[0.2em] flex items-center justify-center gap-4 text-white group-hover:text-amber-500 transition-colors">
-              Initialiser <ArrowRight size={14} />
+              Composer mon événement <ArrowRight size={14} />
             </span>
           </button>
+
+          {/* NOUVEAU BLOC : SOCIAL PROOF (ÉLÉGANT) */}
+          <div className="pt-6 md:pt-8 opacity-0 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500 fill-mode-forwards">
+             <div className="flex items-center justify-center gap-1 mb-3">
+                {[1,2,3,4,5].map(i => (
+                    <Star key={i} size={10} className="text-amber-600 fill-amber-600 opacity-60" />
+                ))}
+             </div>
+             <p className="font-mono text-[9px] md:text-[10px] text-neutral-500 uppercase tracking-widest">
+                Déjà plébiscité par de nombreuses sociétés & clients privés
+             </p>
+          </div>
+
         </div>
       </div>
     );
@@ -711,7 +731,7 @@ export default function App() {
                          <h4 className="text-xl md:text-2xl font-serif">Expérience Immersive</h4>
                       </div>
                       <p className={`text-xs md:text-sm ${!isDryHire ? 'text-white/90' : 'text-neutral-400'}`}>
-                        Une animation sensorielle incluse (Vin, Casino, Repas).
+                        Une animation sensorielle incluse (Vin, Casino, Gastronomie).
                       </p>
                    </button>
                 </div>
