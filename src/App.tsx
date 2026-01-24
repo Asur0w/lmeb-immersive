@@ -451,41 +451,45 @@ export default function App() {
   // --- ECRAN ACCUEIL ---
   if (step === 0) {
     return (
-      <div className="relative h-[100dvh] w-full bg-[#050505] flex flex-col items-center justify-center p-6 md:p-8 text-white overflow-y-auto overflow-x-hidden">
+      <div className="relative h-[100dvh] w-full bg-[#050505] flex flex-col items-center justify-center p-6 text-white overflow-hidden">
         
+        {/* FOND AMBIANCE */}
         <div className="absolute inset-0 z-0 opacity-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] pointer-events-none"></div>
         <div className="absolute inset-0 z-0 opacity-40 bg-[url('https://www.lemonde-enbouteille.be/web/image/16056-b2829e5f/79-DSC09373.webp')] bg-cover bg-center mix-blend-overlay pointer-events-none"></div>
 
-        <div className="relative z-10 text-center space-y-8 md:space-y-12 animate-in fade-in zoom-in duration-1000 max-w-4xl mx-auto w-full flex flex-col items-center py-10">
+        {/* CONTENU CENTRAL COMPACTÉ */}
+        <div className="relative z-10 text-center w-full max-w-4xl mx-auto flex flex-col items-center justify-center h-full">
           
-          <div className="w-px h-16 md:h-24 bg-gradient-to-b from-transparent via-amber-600 to-transparent mx-auto"></div>
+          {/* LIGNE DÉCO (Réduite en hauteur pour gagner de la place) */}
+          <div className="w-px h-12 md:h-20 bg-gradient-to-b from-transparent via-amber-600 to-transparent mx-auto mb-6 md:mb-8"></div>
           
-          <div>
+          <div className="animate-in fade-in zoom-in duration-1000">
             <img 
               src="https://www.lemonde-enbouteille.be/web/image/26768-edef09a5/LOGO%20l%27immersive-24.png" 
               alt="Logo L'Immersive" 
-              className="w-32 md:w-48 mx-auto mb-6 opacity-90 drop-shadow-2xl" 
+              className="w-28 md:w-40 mx-auto mb-4 md:mb-6 opacity-90 drop-shadow-2xl" 
             />
             
-            <h1 className="text-5xl md:text-7xl lg:text-[8rem] font-serif tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-neutral-500 leading-none mb-4">
+            <h1 className="text-5xl md:text-7xl lg:text-[7rem] font-serif tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-neutral-500 leading-none mb-3">
               L'IMMERSIVE
             </h1>
-            <p className="font-mono text-[10px] md:text-xs uppercase tracking-[0.4em] md:tracking-[0.6em] text-amber-500">
+            <p className="font-mono text-[9px] md:text-xs uppercase tracking-[0.4em] md:tracking-[0.6em] text-amber-500 mb-8 md:mb-10">
               Le Monde en Bouteille
             </p>
           </div>
 
-          <div className="border-l border-amber-600/30 pl-6 md:pl-8 text-left max-w-lg mx-auto backdrop-blur-sm py-4">
+          {/* TEXTE D'ACCROCHE */}
+          <div className="border-l border-amber-600/30 pl-6 text-left max-w-md mx-auto backdrop-blur-sm py-2 mb-10 md:mb-12 animate-in slide-in-from-bottom-4 duration-1000 delay-200">
              <p className="text-neutral-400 font-light leading-relaxed text-xs md:text-sm">
-               Une adresse confidentielle à Namur. 
-               Ici, la technologie sublime le terroir pour des événements qui marquent.
-               Ne louez pas une salle, vivez une expérience.
+               Une adresse confidentielle à Namur. <br className="hidden md:block"/>
+               Technologie & Terroir pour des événements qui marquent.
              </p>
           </div>
 
+          {/* BOUTON D'ACTION */}
           <button 
             onClick={() => goToStep(1)}
-            className="group relative px-8 py-4 md:px-10 md:py-5 bg-white/5 border border-white/10 hover:border-amber-600/50 transition-all duration-500 w-full md:w-auto cursor-pointer z-50"
+            className="group relative px-8 py-4 md:px-10 md:py-5 bg-white/5 border border-white/10 hover:border-amber-600/50 transition-all duration-500 w-full md:w-auto cursor-pointer z-50 animate-in slide-in-from-bottom-8 duration-1000 delay-300"
           >
             <div className="absolute inset-0 bg-amber-600/10 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500 ease-out"></div>
             <span className="relative font-mono text-xs uppercase tracking-[0.2em] flex items-center justify-center gap-4 text-white group-hover:text-amber-500 transition-colors">
@@ -493,14 +497,10 @@ export default function App() {
             </span>
           </button>
 
-          <div className="pt-6 md:pt-8 flex flex-col items-center">
-             <div className="flex items-center justify-center gap-1 mb-3">
-                {[1,2,3,4,5].map(i => (
-                    <Star key={i} size={12} className="text-amber-600 fill-amber-600 opacity-80" />
-                ))}
-             </div>
-             <p className="font-mono text-[9px] md:text-[10px] text-neutral-400 uppercase tracking-widest text-center px-4">
-                Déjà plébiscité par de nombreuses sociétés & clients privés
+          {/* SOCIAL PROOF (INTEGRÉ & LUXE) */}
+          <div className="mt-8 md:mt-12 opacity-80 animate-in fade-in duration-1000 delay-700">
+             <p className="font-serif italic text-xs md:text-sm text-neutral-500">
+                Plébiscité par les entreprises & clients privés
              </p>
           </div>
 
@@ -508,7 +508,7 @@ export default function App() {
       </div>
     );
   }
-
+  
   // --- STRUCTURE PRINCIPALE (OPTIMISÉE MOBILE 'dvh') ---
   return (
     <div className="relative h-[100dvh] w-full bg-[#080808] text-white overflow-hidden font-sans flex flex-col md:flex-row">
