@@ -448,22 +448,19 @@ export default function App() {
     )
 }
 
-  // --- ECRAN ACCUEIL ---
+  //// --- ECRAN ACCUEIL (CORRIGÉ : TEXTE RÉALISTE) ---
   if (step === 0) {
     return (
-      <div className="relative h-[100dvh] w-full bg-[#050505] flex flex-col items-center justify-center p-6 text-white overflow-hidden">
+      <div className="relative h-[100dvh] w-full bg-[#050505] flex flex-col items-center justify-center p-6 md:p-8 text-white overflow-hidden">
         
-        {/* FOND AMBIANCE */}
         <div className="absolute inset-0 z-0 opacity-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] pointer-events-none"></div>
         <div className="absolute inset-0 z-0 opacity-40 bg-[url('https://www.lemonde-enbouteille.be/web/image/16056-b2829e5f/79-DSC09373.webp')] bg-cover bg-center mix-blend-overlay pointer-events-none"></div>
 
-        {/* CONTENU CENTRAL COMPACTÉ */}
         <div className="relative z-10 text-center w-full max-w-4xl mx-auto flex flex-col items-center justify-center h-full">
           
-          {/* LIGNE DÉCO (Réduite en hauteur pour gagner de la place) */}
           <div className="w-px h-12 md:h-20 bg-gradient-to-b from-transparent via-amber-600 to-transparent mx-auto mb-6 md:mb-8"></div>
           
-          <div className="animate-in fade-in zoom-in duration-1000">
+          <div className="animate-fade-in-up">
             <img 
               src="https://www.lemonde-enbouteille.be/web/image/26768-edef09a5/LOGO%20l%27immersive-24.png" 
               alt="Logo L'Immersive" 
@@ -478,18 +475,18 @@ export default function App() {
             </p>
           </div>
 
-          {/* TEXTE D'ACCROCHE */}
-          <div className="border-l border-amber-600/30 pl-6 text-left max-w-md mx-auto backdrop-blur-sm py-2 mb-10 md:mb-12 animate-in slide-in-from-bottom-4 duration-1000 delay-200">
+          <div className="border-l border-amber-600/30 pl-6 text-left max-w-lg mx-auto backdrop-blur-sm py-2 mb-10 md:mb-12 animate-fade-in-up delay-200">
+             {/* TEXTE CORRIGÉ : PLUS DE MUR D'IMAGES, JUSTE LE LIEU ET L'EQUIPEMENT */}
              <p className="text-neutral-400 font-light leading-relaxed text-xs md:text-sm">
                Une adresse confidentielle à Namur. <br className="hidden md:block"/>
-               Technologie & Terroir pour des événements qui marquent.
+               <strong>Un espace événementiel privatif alliant architecture de caractère et équipements connectés.</strong> <br className="hidden md:block"/>
+               Réunions, séminaires ou soirées : ne louez pas une salle, vivez une expérience.
              </p>
           </div>
 
-          {/* BOUTON D'ACTION */}
           <button 
             onClick={() => goToStep(1)}
-            className="group relative px-8 py-4 md:px-10 md:py-5 bg-white/5 border border-white/10 hover:border-amber-600/50 transition-all duration-500 w-full md:w-auto cursor-pointer z-50 animate-in slide-in-from-bottom-8 duration-1000 delay-300"
+            className="group relative px-8 py-4 md:px-10 md:py-5 bg-white/5 border border-white/10 hover:border-amber-600/50 transition-all duration-500 w-full md:w-auto cursor-pointer z-50 animate-fade-in-up delay-300"
           >
             <div className="absolute inset-0 bg-amber-600/10 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500 ease-out"></div>
             <span className="relative font-mono text-xs uppercase tracking-[0.2em] flex items-center justify-center gap-4 text-white group-hover:text-amber-500 transition-colors">
@@ -497,9 +494,9 @@ export default function App() {
             </span>
           </button>
 
-          {/* SOCIAL PROOF (INTEGRÉ & LUXE) */}
-          <div className="mt-8 md:mt-12 opacity-80 animate-in fade-in duration-1000 delay-700">
-             <p className="font-serif italic text-xs md:text-sm text-neutral-500">
+          {/* SOCIAL PROOF */}
+          <div className="mt-8 md:mt-12 animate-fade-in-up delay-500">
+             <p className="font-serif italic text-xs md:text-sm text-neutral-500 opacity-80">
                 Plébiscité par les entreprises & clients privés
              </p>
           </div>
