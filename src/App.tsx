@@ -98,7 +98,7 @@ const FORMATS = [
     subtitle: 'Mixte',
     desc: 'Zone de confort assises et zone de flux debout.',
     setupFee: 0,
-    image: 'https://www.lemonde-enbouteille.be/web/image/26778-34e20e4e/94-DSC09399.svg'
+    image: 'https://www.lemonde-enbouteille.be/web/image/26807-8f38cf40/31-DSC00898.webp'
   }
 ];
 
@@ -508,7 +508,7 @@ export default function App() {
       </div>
     );
   }
-  
+
   // --- STRUCTURE PRINCIPALE (OPTIMISÉE MOBILE 'dvh') ---
   return (
     <div className="relative h-[100dvh] w-full bg-[#080808] text-white overflow-hidden font-sans flex flex-col md:flex-row">
