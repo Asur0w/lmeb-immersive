@@ -173,18 +173,63 @@ export default function App() {
   const autoNext = (target) => goToStep(target);
   const goBack = () => { if (step > 0) goToStep(step - 1); };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!data.contact.email || !data.contact.name || !data.contact.phone) { alert("Merci de compléter vos coordonnées."); return; }
-    if (!isAgreed) { alert("Merci d'accepter les conditions pour continuer."); return; }
+    
+    // 1. Vérification des champs
+    if (!data.contact.email || !data.contact.name || !data.contact.phone) { 
+        alert("Merci de compléter vos coordonnées (Nom, Email, Téléphone)."); 
+        return; 
+    }
+    
+    // 2. Vérification GDPR
+    if (!isAgreed) { 
+        alert("Merci d'accepter les conditions (case à cocher) pour envoyer la demande."); 
+        return; 
+    }
+
+    // 3. Lancement du chargement
     setIsSending(true);
-    // @ts-ignore
-    window.emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ADMIN_ID, { ...data, total: totalAmount }, EMAILJS_PUBLIC_KEY);
-    // @ts-ignore
-    window.emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_CLIENT_ID, { ...data, total: totalAmount }, EMAILJS_PUBLIC_KEY).then(() => {
+
+    const templateParams = {
+        name: data.contact.name, 
+        email: data.contact.email, 
+        phone: data.contact.phone, 
+        message: data.contact.message,
+        date: data.date + (data.endDate ? ` au ${data.endDate}` : ''), 
+        pax: data.pax,
+        type: data.eventType?.title || "Non défini", 
+        time_slot: data.timeSlot?.title || "Non défini", 
+        format: data.format?.title || "Non défini",
+        experience: isDryHire ? "Location Sèche" : data.experience?.title,
+        services: data.selectedServices.map(id => SERVICES.find(s => s.id === id)?.title).join(', '),
+        total: totalAmount, 
+        is_custom: isCustom ? "OUI (Devis requis)" : "NON"
+    };
+
+    try {
+        // @ts-ignore
+        // On attend que l'envoi ADMIN se fasse
+        await window.emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ADMIN_ID, templateParams, EMAILJS_PUBLIC_KEY);
+        
+        // @ts-ignore
+        // On attend que l'envoi CLIENT se fasse (optionnel, on pourrait ne pas attendre celui-ci pour aller plus vite)
+        await window.emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_CLIENT_ID, templateParams, EMAILJS_PUBLIC_KEY);
+
+        // Suivi API (Optionnel, ne bloque pas si ça échoue)
         fetch('https://api.counterapi.dev/v1/lmeb-immersive/leads/up').catch(console.error);
-        setIsSending(false); setIsSent(true);
-    });
+
+        // SUCCÈS
+        setIsSent(true);
+
+    } catch (error) {
+        // ERREUR
+        console.error("ERREUR EMAILJS:", error);
+        alert("Une erreur est survenue lors de l'envoi. Vérifiez votre connexion ou réessayez. (Détails dans la console F12)");
+    } finally {
+        // DANS TOUS LES CAS (Réussite ou Échec), on arrête le chargement
+        setIsSending(false);
+    }
   };
 
   // --- RENDER ---
