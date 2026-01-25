@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+// J'AI RETIRÉ LES ICONES PROBLEMATIQUES DE CETTE LISTE :
 import { ArrowRight, ChevronRight, ChevronLeft, Check, Clock, Calendar, Users, Briefcase, Wine, Coffee, Music, Monitor, Minus, Plus, Sparkles, Sun, Moon, Sunrise, Star, Utensils, Wifi, Gift, Palette, LayoutTemplate, Droplets, Map, Mail, Loader, Send } from 'lucide-react';
 
 // --- CONFIGURATION EMAIL ---
@@ -130,7 +131,7 @@ const EXPERIENCES = [
   { 
     id: 'gastro', 
     title: 'Instant Gourmand', 
-    price: -1, 
+    price: -1, // Sur Devis
     sub: 'Repas',
     image: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=2940&auto=format&fit=crop'
   }
@@ -507,7 +508,7 @@ export default function App() {
                     </span>
                   </button>
 
-                  {/* BOUTON SAVE THE DATE (TEXTE SIMPLE SANS ICONE) */}
+                  {/* BOUTON SAVE THE DATE (SANS ICONE CAUSE DE BUG) */}
                   <button 
                     onClick={handleSaveTheDate}
                     className="flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.25em] text-neutral-500 hover:text-white transition-colors border-b border-transparent hover:border-white pb-1"
