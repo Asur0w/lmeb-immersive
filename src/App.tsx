@@ -130,7 +130,7 @@ const EXPERIENCES = [
   { 
     id: 'gastro', 
     title: 'Instant Gourmand', 
-    price: -1, // Sur Devis
+    price: -1, 
     sub: 'Repas',
     image: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=2940&auto=format&fit=crop'
   }
