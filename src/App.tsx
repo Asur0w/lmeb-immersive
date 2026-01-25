@@ -29,7 +29,7 @@ const FORMATS = [
 ];
 
 const EXPERIENCES = [
-  { id: 'none', title: 'Location', price: 0, sub: 'L\'espace nu', description: "Mise à disposition exclusive de l'espace. Idéal pour vos réunions autonomes ou présentations.", image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2301&auto=format&fit=crop' },
+  { id: 'none', title: 'Location Sèche', price: 0, sub: 'L\'espace nu', description: "Mise à disposition exclusive de l'espace. Idéal pour vos réunions autonomes ou présentations.", image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2301&auto=format&fit=crop' },
   { id: 'world', title: 'Tour du Monde', price: 40, sub: 'Dégustation 5 vins', description: "Une exploration sensorielle guidée à travers 5 vins d'exception. Le format classique et élégant pour découvrir nos pépites du terroir.", image: 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?q=80&w=2940&auto=format&fit=crop' },
   { id: 'casino', title: 'Casino du Vin', price: 46, sub: 'Animation Ludique', description: "L'ambiance feutrée de la Black List. Dégustation à l'aveugle, tables de jeu, jetons et enchères. Misez sur vos sens dans ce format participatif.", image: 'https://images.unsplash.com/photo-1596838132731-3301c3fd4317?q=80&w=2940&auto=format&fit=crop' },
   { id: 'gastro', title: 'Instant Gourmand', price: -1, sub: 'Repas', description: "Une immersion autour de la gastronomie. Quiz culinaire interactif, découverte d'ingrédients mystères et accords mets-vins sur mesure.", image: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=2940&auto=format&fit=crop' }
@@ -223,7 +223,7 @@ export default function App() {
           </div>
 
           <div className="border-l border-amber-600/30 pl-6 text-left max-w-xl backdrop-blur-sm py-2 mb-10">
-             <p className="text-neutral-300 font-light text-xs md:text-sm leading-relaxed">Une adresse confidentielle à Namur. <br className="hidden md:block"/><strong>Un espace événementiel privatif alliant expérience de caractère. Salle conçue avec des équipements connectés.</strong></p>
+             <p className="text-neutral-300 font-light text-xs md:text-sm leading-relaxed">Une adresse confidentielle à Namur. <br className="hidden md:block"/><strong>Un espace événementiel privatif alliant architecture de caractère et équipements connectés.</strong></p>
           </div>
           
           <button onClick={() => goToStep(1)} className="group relative px-10 py-5 bg-white/5 border border-white/10 hover:border-amber-600/50 transition-all duration-500 w-full md:w-auto">
@@ -268,16 +268,25 @@ export default function App() {
     <div className="relative h-[100dvh] w-full bg-[#080808] text-white overflow-hidden flex flex-col md:flex-row">
       
       {/* --------------------
-          PDF MANIFESTE LUXURY (PRINT)
+          PDF MANIFESTE LUXURY (PRINT) - DESIGN BUGATTI/LVMH
           -------------------- */}
       <div className="hidden print:block fixed inset-0 z-[9999] bg-[#FAFAFA] text-[#0A0A0A] w-full h-full p-0 overflow-hidden">
          <div className="h-full w-full relative flex flex-col p-[1.5cm]">
+             
+             {/* CADRE FIN ELEGANT */}
              <div className="absolute inset-[1cm] border-[0.5px] border-[#0A0A0A]/20 pointer-events-none"></div>
-             <div className="flex justify-between items-start mb-24 z-10">
+
+             {/* FILIGRANE DE FOND (TRES LEGER) */}
+             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.02] pointer-events-none select-none">
+                 <h1 className="text-[150px] font-serif whitespace-nowrap -rotate-12 tracking-widest">L'IMMERSIVE</h1>
+             </div>
+
+             {/* HEADER */}
+             <div className="flex justify-between items-start mb-20 z-10">
                  <div className="flex flex-col">
                      <h1 className="text-5xl font-serif tracking-tight text-black mb-4">L'IMMERSIVE</h1>
                      <div className="flex items-center gap-4">
-                         <div className="h-[1px] w-8 bg-black"></div>
+                         <div className="h-[1px] w-12 bg-black"></div>
                          <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-[#444]">Le Monde en Bouteille</span>
                      </div>
                  </div>
@@ -286,27 +295,85 @@ export default function App() {
                     <div className="font-serif text-xl text-black">MÉMOIRE — {new Date().getFullYear()}</div>
                  </div>
              </div>
-             <div className="flex-1 grid grid-cols-12 gap-12 z-10">
-                 <div className="col-span-7 pr-12 flex flex-col justify-center border-r border-black/5">
-                     <p className="font-mono text-[9px] uppercase tracking-[0.4em] text-amber-900 mb-8">Intention du projet</p>
-                     <p className="font-serif text-3xl leading-snug text-black mb-8 italic">"Pour {data.contact.name || 'votre événement'}, nous avons conçu une parenthèse hors du temps, où l'architecture rencontre l'émotion."</p>
-                     <div className="mt-auto pt-12">
-                         <div className="flex justify-between items-end border-b border-black/10 pb-2 mb-4"><span className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#666]">Date</span><span className="font-serif text-lg">{data.date}</span></div>
-                         <div className="flex justify-between items-end border-b border-black/10 pb-2 mb-4"><span className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#666]">Horaire</span><span className="font-serif text-lg">{data.timeSlot?.label}</span></div>
-                         <div className="flex justify-between items-end border-b border-black/10 pb-2"><span className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#666]">Convives</span><span className="font-serif text-lg">{data.pax} Personnes</span></div>
+
+             {/* CONTENT - LAYOUT ASYMETRIQUE */}
+             <div className="flex-1 grid grid-cols-12 gap-16 z-10 items-start">
+                 
+                 {/* COLONNE GAUCHE (Narratif) */}
+                 <div className="col-span-7 pr-12 flex flex-col h-full border-r border-black/5">
+                     <p className="font-mono text-[9px] uppercase tracking-[0.4em] text-amber-900 mb-12">Intention du projet</p>
+                     
+                     <p className="font-serif text-4xl leading-snug text-black mb-12 italic">
+                         "Pour {data.contact.name || 'votre événement'}, nous avons conçu une parenthèse hors du temps, où l'architecture rencontre l'émotion."
+                     </p>
+
+                     <div className="mt-auto">
+                         <div className="grid grid-cols-3 gap-8 border-t border-black/10 pt-8">
+                             <div>
+                                 <span className="block font-mono text-[8px] uppercase tracking-[0.2em] text-[#888] mb-2">Date</span>
+                                 <span className="font-serif text-lg">{data.date}</span>
+                             </div>
+                             <div>
+                                 <span className="block font-mono text-[8px] uppercase tracking-[0.2em] text-[#888] mb-2">Horaire</span>
+                                 <span className="font-serif text-lg">{data.timeSlot?.label}</span>
+                             </div>
+                             <div>
+                                 <span className="block font-mono text-[8px] uppercase tracking-[0.2em] text-[#888] mb-2">Convives</span>
+                                 <span className="font-serif text-lg">{data.pax} Pers.</span>
+                             </div>
+                         </div>
                      </div>
                  </div>
-                 <div className="col-span-5 flex flex-col justify-center pl-4">
-                     <div className="mb-12"><p className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#888] mb-4">Configuration Spatiale</p><p className="font-serif text-2xl mb-2">{data.format?.title}</p><p className="text-xs font-light text-[#444] leading-relaxed">{data.format?.desc}</p></div>
-                     <div className="mb-12"><p className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#888] mb-4">Expérience Sensorielle</p><p className="font-serif text-2xl mb-2">{data.experience.title}</p><div className="flex flex-col gap-2 mt-4">{data.selectedServices.map(id => (<div key={id} className="flex items-center gap-3"><div className="w-1 h-1 bg-amber-600 rounded-full"></div><span className="text-xs font-mono uppercase tracking-widest text-[#333]">{SERVICES.find(s => s.id === id)?.title}</span></div>))}</div></div>
+
+                 {/* COLONNE DROITE (Technique) */}
+                 <div className="col-span-5 flex flex-col justify-center pl-4 space-y-16">
+                     
+                     {/* Bloc 1 */}
+                     <div>
+                         <div className="flex items-center gap-3 mb-4">
+                             <div className="w-2 h-2 bg-black rounded-full"></div>
+                             <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#888]">Configuration Spatiale</p>
+                         </div>
+                         <p className="font-serif text-3xl mb-2">{data.format?.title}</p>
+                         <p className="text-xs font-light text-[#444] leading-relaxed max-w-xs">{data.format?.desc}</p>
+                     </div>
+
+                     {/* Bloc 2 */}
+                     <div>
+                         <div className="flex items-center gap-3 mb-4">
+                             <div className="w-2 h-2 bg-black rounded-full"></div>
+                             <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#888]">Expérience Sensorielle</p>
+                         </div>
+                         <p className="font-serif text-3xl mb-4">{data.experience.title}</p>
+                         
+                         <div className="space-y-3 pl-1 border-l border-black/10">
+                             {data.selectedServices.map(id => (
+                                 <div key={id} className="pl-4">
+                                     <span className="block text-xs font-mono uppercase tracking-widest text-[#333]">{SERVICES.find(s => s.id === id)?.title}</span>
+                                 </div>
+                             ))}
+                         </div>
+                     </div>
                  </div>
              </div>
-             <div className="mt-auto pt-16 z-10">
+
+             {/* FOOTER */}
+             <div className="mt-auto pt-12 z-10 border-t border-black/5">
                  <div className="flex justify-between items-end">
-                     <div><p className="font-serif text-6xl text-black leading-none">{totalAmount}<span className="text-2xl align-top ml-2">€</span></p><p className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#666] mt-2">Investissement Global Estimé (TVAC)</p></div>
-                     <div className="text-right"><div className="w-32 h-px bg-black mb-4 ml-auto"></div><p className="font-mono text-[8px] uppercase tracking-[0.2em] text-[#888]">Signature & Accord</p><div className="h-16"></div></div>
+                     <div>
+                         <p className="font-serif text-7xl text-black leading-none">{totalAmount}<span className="text-2xl align-top ml-3">€</span></p>
+                         <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#666] mt-4">Investissement Global Estimé (TVAC)</p>
+                     </div>
+                     
+                     <div className="text-right flex flex-col items-end">
+                         <div className="w-48 h-px bg-black mb-16 opacity-20"></div>
+                         <p className="font-mono text-[8px] uppercase tracking-[0.2em] text-[#888]">Signature & Accord pour exécution</p>
+                     </div>
                  </div>
-                 <div className="w-full text-center mt-12"><p className="font-mono text-[7px] uppercase tracking-[0.4em] text-[#AAA]">Namur — Rue de la Croix — Belgique</p></div>
+                 
+                 <div className="w-full text-center mt-16 opacity-40">
+                     <p className="font-mono text-[7px] uppercase tracking-[0.4em]">Namur — Rue de la Croix — Belgique — www.lemonde-enbouteille.be</p>
+                 </div>
              </div>
          </div>
       </div>
@@ -433,7 +500,7 @@ export default function App() {
                 <div className="mb-8 md:mb-10"><span className="text-amber-600 font-mono text-xs uppercase tracking-widest mb-4 block">05 — Immersion</span><h3 className="text-3xl md:text-4xl font-serif mb-2">Niveau d'Expérience</h3></div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-8 md:mb-12">
                    <button onClick={() => { setIsDryHire(true); setData({...data, experience: EXPERIENCES[0]}); }} className={`p-6 md:p-8 border text-left transition-all duration-300 group ${isDryHire ? 'border-white bg-white text-black' : 'border-white/10 hover:border-white/30 bg-[#0a0a0a]'}`}>
-                      <LayoutTemplate size={28} className={`mb-4 ${isDryHire ? 'text-black' : 'text-neutral-500'}`} /><h4 className="text-xl md:text-2xl font-serif mb-2">Location</h4><p className={`text-xs md:text-sm ${isDryHire ? 'text-neutral-700' : 'text-neutral-400'}`}>Mise à disposition de l'espace uniquement.</p>
+                      <LayoutTemplate size={28} className={`mb-4 ${isDryHire ? 'text-black' : 'text-neutral-500'}`} /><h4 className="text-xl md:text-2xl font-serif mb-2">Location Sèche</h4><p className={`text-xs md:text-sm ${isDryHire ? 'text-neutral-700' : 'text-neutral-400'}`}>Mise à disposition de l'espace uniquement.</p>
                    </button>
                    <button onClick={() => { setIsDryHire(false); setData({...data, experience: EXPERIENCES[1]}); }} className={`p-6 md:p-8 border text-left transition-all duration-300 group ${!isDryHire ? 'border-amber-600 bg-amber-600 text-white' : 'border-white/10 hover:border-amber-600/50 bg-[#0a0a0a]'}`}>
                       <div className="flex items-center gap-3 mb-2"><Sparkles size={20} className={!isDryHire ? 'text-white' : 'text-amber-500'} /><h4 className="text-xl md:text-2xl font-serif">Expérience Immersive</h4></div><p className={`text-xs md:text-sm ${!isDryHire ? 'text-white/90' : 'text-neutral-400'}`}>Une animation sensorielle incluse (Vin, Casino, Gastronomie).</p>
