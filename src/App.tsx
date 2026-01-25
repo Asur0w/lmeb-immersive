@@ -36,13 +36,14 @@ const EXPERIENCES = [
 ];
 
 const SERVICES = [
-  { id: 'tech', title: 'Pack Tech & Connectivité', price: 0, icon: <Wifi size={20}/>, desc: 'Écrans, Son, Wifi HD.' },
-  { id: 'host', title: 'Maître de Maison', price: 150, icon: <Users size={20}/>, desc: 'Service et gestion.' },
-  { id: 'softs', title: 'Forfait Softs', price: 'dynamic', icon: <Droplets size={20}/>, desc: 'Eaux et softs à discrétion.' },
-  { id: 'food_light', title: 'Grignotage', price: 25, isPerHead: true, icon: <Utensils size={20}/>, desc: 'Planches fromages/charcuteries.' },
-  { id: 'food_full', title: 'Repas', price: -1, isPerHead: true, icon: <Utensils size={20}/>, desc: 'Préparation culinaire sur-mesure.' },
-  { id: 'deco', title: 'Décoration', price: 100, icon: <Palette size={20}/>, desc: "Création d'une ambiance." },
-  { id: 'gift', title: 'Coffret Souvenir', price: 15, isPerHead: true, icon: <Gift size={20}/>, desc: 'Cadeau invité.' }
+  { id: 'tech', title: 'Pack Tech & Connectivité', price: 0, fakePrice: 100, icon: <Wifi size={20}/>, desc: 'Écrans, Son, Wifi HD.', category: 'tech' },
+  { id: 'host', title: 'Maître de Maison', price: 150, icon: <Users size={20}/>, desc: 'Service et gestion.', category: 'staff' },
+  { id: 'branding', title: 'Corporate Branding', price: 40, icon: <Monitor size={20}/>, desc: "Votre logo, marque d'identité et mise en avant sur nos écrans.", category: 'tech' },
+  { id: 'softs', title: 'Forfait Softs', price: 'dynamic', icon: <Droplets size={20}/>, desc: 'Eaux et softs à discrétion.', category: 'food' },
+  { id: 'food_light', title: 'Grignotage', price: 25, isPerHead: true, icon: <Utensils size={20}/>, desc: 'Planches fromages/charcuteries.', category: 'food' },
+  { id: 'food_full', title: 'Repas', price: -1, isPerHead: true, icon: <Utensils size={20}/>, desc: 'Préparation culinaire sur-mesure.', category: 'food' },
+  { id: 'deco', title: 'Décoration', price: 100, icon: <Palette size={20}/>, desc: "Création d'une ambiance.", category: 'deco' },
+  { id: 'gift', title: 'Coffret Souvenir', price: 15, isPerHead: true, icon: <Gift size={20}/>, desc: 'Cadeau invité.', category: 'gift' }
 ];
 
 // --- COMPONENTS ---
@@ -205,39 +206,45 @@ export default function App() {
 
   if (step === 0) {
     return (
-      <div className="relative h-[100dvh] w-full bg-[#050505] flex flex-col items-center justify-center p-6 text-white overflow-hidden print:hidden">
+      <div className="relative h-[100dvh] w-full bg-[#050505] overflow-hidden print:hidden text-white flex flex-col">
         <div className="absolute inset-0 z-0 opacity-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] pointer-events-none"></div>
         <div className="absolute inset-0 z-0 opacity-60 bg-[url('https://www.lemonde-enbouteille.be/web/image/16056-b2829e5f/79-DSC09373.webp')] bg-cover bg-center mix-blend-overlay"></div>
         
-        <div className="relative z-10 text-center flex flex-col items-center w-full max-w-4xl">
-          <div className="w-px h-24 bg-gradient-to-b from-transparent via-amber-600 to-transparent mb-10"></div>
+        {/* Container Principal avec Flexbox Intelligent */}
+        <div className="relative z-10 flex flex-col items-center justify-between h-full w-full max-w-4xl mx-auto py-12 px-6">
           
-          {/* BOUTON ADMIN */}
-          <div onClick={handleLogoClick} className="cursor-pointer mb-12 select-none relative z-[100] group">
-            <img src="https://www.lemonde-enbouteille.be/web/image/26768-edef09a5/LOGO%20l%27immersive-24.png" alt="Logo" className="w-48 mx-auto mb-8 opacity-90 drop-shadow-2xl transition-transform duration-700 group-hover:scale-105" />
-            <h1 className="text-6xl md:text-8xl lg:text-9xl font-serif tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-neutral-400 leading-none mb-4">L'IMMERSIVE</h1>
-            <p className="font-mono text-xs md:text-sm uppercase tracking-[0.6em] text-amber-500">Le Monde en Bouteille</p>
-          </div>
-
-          <div className="border-l border-amber-600/30 pl-8 text-left max-w-2xl mb-16 backdrop-blur-sm py-4">
-             <p className="text-neutral-300 font-light text-sm md:text-base leading-relaxed">Une adresse confidentielle à Namur. <br className="hidden md:block"/><strong>Un espace événementiel privatif alliant architecture de caractère et équipements connectés.</strong></p>
-          </div>
-          <button onClick={() => goToStep(1)} className="group relative px-12 py-6 bg-white/5 border border-white/10 hover:border-amber-600/50 transition-all duration-500 w-full md:w-auto">
-             <div className="absolute inset-0 bg-amber-600/10 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500 ease-out"></div>
-             <span className="relative font-mono text-sm uppercase tracking-[0.2em] flex items-center justify-center gap-4 text-white group-hover:text-amber-500 transition-colors">Composer mon événement <ArrowRight size={16} /></span>
-          </button>
-
-          {/* FOOTER RESTAURÉ */}
-          <div className="absolute bottom-12 left-0 w-full flex flex-col items-center gap-4 z-50 animate-fade-in-up delay-500">
-             <div className="flex items-center gap-4 opacity-60 hover:opacity-100 transition-opacity duration-500">
-                <div className="h-px w-12 bg-white/30"></div>
-                <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-neutral-300">Confiance : Entreprises & Privés</p>
-                <div className="h-px w-12 bg-white/30"></div>
+          {/* Section Haut (Titre) */}
+          <div className="flex flex-col items-center mt-8 md:mt-16">
+             <div className="w-px h-16 md:h-24 bg-gradient-to-b from-transparent via-amber-600 to-transparent mb-8"></div>
+             {/* BOUTON ADMIN */}
+             <div onClick={handleLogoClick} className="cursor-pointer select-none relative z-[100] group text-center">
+                <img src="https://www.lemonde-enbouteille.be/web/image/26768-edef09a5/LOGO%20l%27immersive-24.png" alt="Logo" className="w-40 md:w-48 mx-auto mb-6 opacity-90 drop-shadow-2xl transition-transform duration-700 group-hover:scale-105" />
+                <h1 className="text-5xl md:text-8xl lg:text-9xl font-serif tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-neutral-400 leading-none mb-4">L'IMMERSIVE</h1>
+                <p className="font-mono text-[10px] md:text-xs uppercase tracking-[0.6em] text-amber-500">Le Monde en Bouteille</p>
              </div>
-             <a href="https://www.lemonde-enbouteille.be/salle" target="_blank" rel="noopener noreferrer" className="text-[10px] font-mono uppercase tracking-[0.2em] text-amber-500/80 hover:text-amber-500 transition-colors border-b border-transparent hover:border-amber-500 pb-1">
-                www.lemonde-enbouteille.be
-             </a>
           </div>
+
+          {/* Section Milieu (Contenu & Bouton) */}
+          <div className="flex flex-col items-center gap-10 md:gap-12">
+             <div className="border-l border-amber-600/30 pl-6 text-left max-w-xl backdrop-blur-sm py-2">
+                <p className="text-neutral-300 font-light text-xs md:text-sm leading-relaxed">Une adresse confidentielle à Namur. <br className="hidden md:block"/><strong>Un espace événementiel privatif alliant architecture de caractère et équipements connectés.</strong></p>
+             </div>
+             <button onClick={() => goToStep(1)} className="group relative px-10 py-5 bg-white/5 border border-white/10 hover:border-amber-600/50 transition-all duration-500 w-full md:w-auto">
+                <div className="absolute inset-0 bg-amber-600/10 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500 ease-out"></div>
+                <span className="relative font-mono text-xs uppercase tracking-[0.2em] flex items-center justify-center gap-4 text-white group-hover:text-amber-500 transition-colors">Composer mon événement <ArrowRight size={14} /></span>
+             </button>
+          </div>
+
+          {/* Section Bas (Footer) - Positionné avec Flexbox pour ne jamais chevaucher */}
+          <div className="flex flex-col items-center gap-4 opacity-70 hover:opacity-100 transition-opacity duration-500 mt-8">
+             <div className="flex items-center gap-4">
+                <div className="h-px w-10 bg-white/20"></div>
+                <p className="font-mono text-[9px] uppercase tracking-[0.25em] text-neutral-400">Confiance : Entreprises & Privés</p>
+                <div className="h-px w-10 bg-white/20"></div>
+             </div>
+             <a href="https://www.lemonde-enbouteille.be/salle" target="_blank" rel="noopener noreferrer" className="font-mono text-[9px] text-neutral-500 hover:text-amber-500 uppercase tracking-widest transition-colors border-b border-transparent hover:border-amber-500 pb-1">www.lemonde-enbouteille.be</a>
+          </div>
+
         </div>
 
         {/* PANNEAU ADMIN */}
@@ -309,7 +316,6 @@ export default function App() {
          </div>
       </div>
 
-      {/* WEB APP */}
       <div className="hidden md:flex flex-col justify-between w-20 border-r border-white/5 bg-[#0a0a0a] z-20 py-8 items-center h-full print:hidden">
         <div className="font-serif font-bold text-xl cursor-pointer text-amber-600" onClick={() => setStep(0)}>L.</div>
         <div className="flex flex-col gap-6 items-center">
@@ -330,7 +336,7 @@ export default function App() {
            </div>
         </div>
 
-        {/* STEP 1 */}
+        {/* STEP 1: TEMPORALITE */}
         {step === 1 && (
           <div className="flex-1 flex flex-col h-full animate-fade-in duration-700 relative">
             <div className="absolute top-0 left-0 p-6 md:p-12 z-50 pointer-events-none bg-gradient-to-b from-black/80 to-transparent w-full">
@@ -355,7 +361,7 @@ export default function App() {
           </div>
         )}
 
-        {/* STEP 2 */}
+        {/* STEP 2: INTENTION */}
         {step === 2 && (
           <div className="flex-1 p-6 md:p-16 flex flex-col justify-center animate-fade-in-right duration-500 overflow-y-auto">
              <div className="max-w-7xl mx-auto w-full">
@@ -377,7 +383,7 @@ export default function App() {
           </div>
         )}
 
-        {/* STEP 3 */}
+        {/* STEP 3: ARCHITECTURE */}
         {step === 3 && (
           <div className="flex-1 flex flex-col justify-center p-6 md:p-16 animate-fade-in-right duration-500 overflow-y-auto">
              <div className="max-w-7xl mx-auto w-full flex flex-col h-full justify-center">
@@ -397,7 +403,7 @@ export default function App() {
           </div>
         )}
 
-        {/* STEP 4 */}
+        {/* STEP 4: CALIBRAGE */}
         {step === 4 && (
           <div className="flex-1 flex flex-col animate-fade-in-right duration-500 justify-center overflow-y-auto">
              <div className="max-w-4xl mx-auto w-full p-6 md:p-8 mt-16 md:mt-0">
@@ -425,7 +431,7 @@ export default function App() {
           </div>
         )}
 
-        {/* STEP 5 */}
+        {/* STEP 5: IMMERSION */}
         {step === 5 && (
           <div className="flex-1 flex flex-col animate-fade-in-right duration-500 overflow-y-auto scrollbar-hide">
              <div className="max-w-6xl mx-auto w-full p-6 md:p-16 mt-16 md:mt-0">
@@ -463,7 +469,7 @@ export default function App() {
           </div>
         )}
 
-        {/* STEP 6 */}
+        {/* STEP 6: SERVICES & FINITIONS */}
         {step === 6 && (
           <div className="flex-1 p-6 md:p-16 overflow-y-auto scrollbar-hide animate-fade-in-right duration-500">
              <div className="max-w-6xl mx-auto w-full h-full flex flex-col">
@@ -472,13 +478,28 @@ export default function App() {
                    {SERVICES.map(srv => {
                      const isSelected = data.selectedServices.includes(srv.id);
                      let priceDisplay = ''; let subDisplay = '';
-                     if (srv.id === 'softs') { priceDisplay = `+${getSoftsPrice(data.pax)}€`; subDisplay = '(Forfait Total)'; } else if (srv.price === 0) { priceDisplay = 'OFFERT'; } else if (srv.price === -1) { priceDisplay = 'SUR DEVIS'; } else { priceDisplay = `+${srv.price}€`; if (srv.isPerHead) subDisplay = '/Pers'; }
+                     
+                     if (srv.id === 'softs') { 
+                        priceDisplay = `+${getSoftsPrice(data.pax)}€`; subDisplay = '(Forfait Total)'; 
+                     } else if (srv.price === 0) { 
+                        priceDisplay = 'OFFERT'; 
+                     } else if (srv.price === -1) { 
+                        priceDisplay = 'SUR DEVIS'; 
+                     } else { 
+                        priceDisplay = `+${srv.price}€`; 
+                        if (srv.isPerHead) subDisplay = '/Pers'; 
+                     }
+
                      return (
                        <button key={srv.id} onClick={() => toggleService(srv.id)} className={`relative p-6 border transition-all duration-300 text-left hover:bg-white/5 ${isSelected ? 'border-amber-600 bg-white/5' : 'border-white/10'}`}>
                          <div className="flex justify-between items-start mb-4"><div className={`p-2 rounded-full ${isSelected ? 'bg-amber-600 text-white' : 'bg-white/10 text-neutral-400'}`}>{srv.icon}</div>{isSelected && <Check size={16} className="text-amber-600"/>}</div>
                          <h4 className={`text-lg font-serif mb-2 ${isSelected ? 'text-white' : 'text-neutral-300'}`}>{srv.title}</h4>
                          <p className="text-xs text-neutral-500 mb-4 h-8">{srv.desc}</p>
-                         <div className="pt-4 border-t border-white/10 flex items-center gap-2">{srv.fakePrice && <span className="text-xs text-neutral-600 line-through decoration-amber-600/50">{srv.fakePrice}€</span>}<span className={`font-mono text-sm ${srv.fakePrice ? 'text-white' : 'text-amber-500'}`}>{priceDisplay}</span>{subDisplay && <span className="text-[10px] text-neutral-600 uppercase">{subDisplay}</span>}</div>
+                         <div className="pt-4 border-t border-white/10 flex items-center gap-2">
+                            {srv.fakePrice && <span className="text-xs text-neutral-600 line-through decoration-amber-600/50">{srv.fakePrice}€</span>}
+                            <span className={`font-mono text-sm ${srv.fakePrice ? 'text-white' : 'text-amber-500'}`}>{priceDisplay}</span>
+                            {subDisplay && <span className="text-[10px] text-neutral-600 uppercase">{subDisplay}</span>}
+                         </div>
                        </button>
                      );
                    })}
@@ -488,7 +509,7 @@ export default function App() {
           </div>
         )}
 
-        {/* ÉTAPE 7 */}
+        {/* ÉTAPE 7 : FINAL */}
         {step === 7 && (
           <div className="flex-1 flex items-center justify-center p-0 md:p-6 animate-in zoom-in-95 duration-700 relative overflow-hidden h-full">
              <div className="absolute inset-0 bg-cover bg-center opacity-30 blur-2xl scale-110" style={{ backgroundImage: `url(${data.timeSlot?.image})` }}></div>
