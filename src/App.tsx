@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, ChevronLeft, Check, Sunrise, Sun, Moon, Star, Utensils, Wifi, Gift, Palette, LayoutTemplate, Droplets, Monitor, Users, Loader, Send, FileText, Share2, Sparkles, Minus, Plus, Fingerprint } from 'lucide-react';
+import { ArrowRight, ChevronLeft, Check, Sunrise, Sun, Moon, Star, Utensils, Wifi, Gift, Palette, LayoutTemplate, Droplets, Monitor, Users, Loader, Send, FileText, Share2, Sparkles, Minus, Plus } from 'lucide-react';
 
 // --- CONFIGURATION EMAIL ---
 const EMAILJS_SERVICE_ID = "service_z8iw21s"; 
@@ -206,45 +206,40 @@ export default function App() {
 
   if (step === 0) {
     return (
-      <div className="relative h-[100dvh] w-full bg-[#050505] overflow-hidden print:hidden text-white flex flex-col">
+      <div className="relative h-[100dvh] w-full bg-[#050505] overflow-hidden print:hidden text-white font-sans flex flex-col">
         <div className="absolute inset-0 z-0 opacity-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] pointer-events-none"></div>
         <div className="absolute inset-0 z-0 opacity-60 bg-[url('https://www.lemonde-enbouteille.be/web/image/16056-b2829e5f/79-DSC09373.webp')] bg-cover bg-center mix-blend-overlay"></div>
         
-        {/* Container Principal avec Flexbox Intelligent */}
-        <div className="relative z-10 flex flex-col items-center justify-between h-full w-full max-w-4xl mx-auto py-12 px-6">
+        {/* CONTAINER PRINCIPAL CENTRÉ ET SURÉLEVÉ */}
+        <div className="relative z-10 flex flex-col items-center justify-center h-full w-full max-w-4xl mx-auto px-6 pb-20"> 
           
-          {/* Section Haut (Titre) */}
-          <div className="flex flex-col items-center mt-8 md:mt-16">
-             <div className="w-px h-16 md:h-24 bg-gradient-to-b from-transparent via-amber-600 to-transparent mb-8"></div>
-             {/* BOUTON ADMIN */}
-             <div onClick={handleLogoClick} className="cursor-pointer select-none relative z-[100] group text-center">
-                <img src="https://www.lemonde-enbouteille.be/web/image/26768-edef09a5/LOGO%20l%27immersive-24.png" alt="Logo" className="w-40 md:w-48 mx-auto mb-6 opacity-90 drop-shadow-2xl transition-transform duration-700 group-hover:scale-105" />
-                <h1 className="text-5xl md:text-8xl lg:text-9xl font-serif tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-neutral-400 leading-none mb-4">L'IMMERSIVE</h1>
-                <p className="font-mono text-[10px] md:text-xs uppercase tracking-[0.6em] text-amber-500">Le Monde en Bouteille</p>
-             </div>
+          <div className="w-px h-16 bg-gradient-to-b from-transparent via-amber-600 to-transparent mb-6"></div>
+          
+          {/* LOGO & TITRE */}
+          <div onClick={handleLogoClick} className="cursor-pointer select-none relative z-[100] group text-center mb-8">
+            <img src="https://www.lemonde-enbouteille.be/web/image/26768-edef09a5/LOGO%20l%27immersive-24.png" alt="Logo" className="w-40 md:w-48 mx-auto mb-6 opacity-90 drop-shadow-2xl transition-transform duration-700 group-hover:scale-105" />
+            <h1 className="text-5xl md:text-8xl lg:text-9xl font-serif tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-neutral-400 leading-none mb-4">L'IMMERSIVE</h1>
+            <p className="font-mono text-[10px] md:text-xs uppercase tracking-[0.6em] text-amber-500">Le Monde en Bouteille</p>
           </div>
 
-          {/* Section Milieu (Contenu & Bouton) */}
-          <div className="flex flex-col items-center gap-10 md:gap-12">
-             <div className="border-l border-amber-600/30 pl-6 text-left max-w-xl backdrop-blur-sm py-2">
-                <p className="text-neutral-300 font-light text-xs md:text-sm leading-relaxed">Une adresse confidentielle à Namur. <br className="hidden md:block"/><strong>Un espace événementiel privatif alliant architecture de caractère et équipements connectés.</strong></p>
-             </div>
-             <button onClick={() => goToStep(1)} className="group relative px-10 py-5 bg-white/5 border border-white/10 hover:border-amber-600/50 transition-all duration-500 w-full md:w-auto">
-                <div className="absolute inset-0 bg-amber-600/10 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500 ease-out"></div>
-                <span className="relative font-mono text-xs uppercase tracking-[0.2em] flex items-center justify-center gap-4 text-white group-hover:text-amber-500 transition-colors">Composer mon événement <ArrowRight size={14} /></span>
-             </button>
+          <div className="border-l border-amber-600/30 pl-6 text-left max-w-xl backdrop-blur-sm py-2 mb-10">
+             <p className="text-neutral-300 font-light text-xs md:text-sm leading-relaxed">Une adresse confidentielle à Namur. <br className="hidden md:block"/><strong>Un espace événementiel privatif alliant architecture de caractère et équipements connectés.</strong></p>
           </div>
+          
+          <button onClick={() => goToStep(1)} className="group relative px-10 py-5 bg-white/5 border border-white/10 hover:border-amber-600/50 transition-all duration-500 w-full md:w-auto">
+             <div className="absolute inset-0 bg-amber-600/10 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500 ease-out"></div>
+             <span className="relative font-mono text-xs uppercase tracking-[0.2em] flex items-center justify-center gap-4 text-white group-hover:text-amber-500 transition-colors">Composer mon événement <ArrowRight size={14} /></span>
+          </button>
+        </div>
 
-          {/* Section Bas (Footer) - Positionné avec Flexbox pour ne jamais chevaucher */}
-          <div className="flex flex-col items-center gap-4 opacity-70 hover:opacity-100 transition-opacity duration-500 mt-8">
-             <div className="flex items-center gap-4">
+        {/* FOOTER FIXE EN BAS */}
+        <div className="absolute bottom-8 left-0 w-full flex flex-col items-center gap-4 z-50 animate-fade-in-up delay-500">
+             <div className="flex items-center gap-4 opacity-60 hover:opacity-100 transition-opacity duration-500">
                 <div className="h-px w-10 bg-white/20"></div>
                 <p className="font-mono text-[9px] uppercase tracking-[0.25em] text-neutral-400">Confiance : Entreprises & Privés</p>
                 <div className="h-px w-10 bg-white/20"></div>
              </div>
              <a href="https://www.lemonde-enbouteille.be/salle" target="_blank" rel="noopener noreferrer" className="font-mono text-[9px] text-neutral-500 hover:text-amber-500 uppercase tracking-widest transition-colors border-b border-transparent hover:border-amber-500 pb-1">www.lemonde-enbouteille.be</a>
-          </div>
-
         </div>
 
         {/* PANNEAU ADMIN */}
