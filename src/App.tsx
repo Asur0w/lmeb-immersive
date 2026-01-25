@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, ChevronRight, ChevronLeft, Check, Clock, Calendar, Users, Briefcase, Wine, Coffee, Music, Monitor, Minus, Plus, Sparkles, Sun, Moon, Sunrise, Star, Utensils, Wifi, Gift, Palette, LayoutTemplate, Droplets, Map, Mail, Loader, Send, Activity, Printer, Share2 } from 'lucide-react';
+import { ArrowRight, ChevronRight, ChevronLeft, Check, Clock, Calendar, Users, Briefcase, Wine, Coffee, Music, Monitor, Minus, Plus, Sparkles, Sun, Moon, Sunrise, Star, Utensils, Wifi, Gift, Palette, LayoutTemplate, Droplets, Map, Mail, Loader, Send } from 'lucide-react';
 
 // --- CONFIGURATION EMAIL ---
 const EMAILJS_SERVICE_ID = "service_z8iw21s"; 
@@ -269,7 +269,7 @@ export default function App() {
     format: null,
     pax: 10,
     date: '',
-    endDate: '', // Multi-dates
+    endDate: '', 
     experience: EXPERIENCES[0],
     selectedServices: ['tech'],
     contact: { name: '', email: '', phone: '', message: '' }
@@ -513,7 +513,7 @@ export default function App() {
                     onClick={handleSaveTheDate}
                     className="flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.25em] text-neutral-500 hover:text-white transition-colors border-b border-transparent hover:border-white pb-1"
                   >
-                    <Share2 size={10} /> Copier l'invitation
+                    Copier l'invitation
                   </button>
 
                   <a 
@@ -601,7 +601,7 @@ export default function App() {
             <div className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-xl flex items-center justify-center animate-fade-in-up" onClick={() => setShowAdmin(false)}>
                <div className="border border-white/10 p-8 w-80 text-center shadow-2xl relative bg-[#0a0a0a]" onClick={e => e.stopPropagation()}>
                   <div className="text-amber-600 font-mono text-xs uppercase tracking-widest mb-8 flex items-center justify-center gap-2">
-                      <Activity size={12}/> DATA FLUX
+                      DATA FLUX
                   </div>
                   
                   <div className="space-y-4">
@@ -919,9 +919,9 @@ export default function App() {
                      className={`p-6 md:p-8 border text-left transition-all duration-300 group ${isDryHire ? 'border-white bg-white text-black' : 'border-white/10 hover:border-white/30 bg-[#0a0a0a]'}`}
                    >
                       <LayoutTemplate size={28} className={`mb-4 ${isDryHire ? 'text-black' : 'text-neutral-500'}`} />
-                      <h4 className="text-xl md:text-2xl font-serif mb-2">Location</h4>
+                      <h4 className="text-xl md:text-2xl font-serif mb-2">Location Sèche</h4>
                       <p className={`text-xs md:text-sm ${isDryHire ? 'text-neutral-700' : 'text-neutral-400'}`}>
-                        Mise à disposition de l'espace.
+                        Mise à disposition de l'espace uniquement. 
                       </p>
                    </button>
 
