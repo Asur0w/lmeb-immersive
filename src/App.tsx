@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, ChevronRight, ChevronLeft, Check, Clock, Calendar, Users, Briefcase, Wine, Coffee, Music, Monitor, Minus, Plus, Sparkles, Sun, Moon, Sunrise, Star, Utensils, Wifi, Gift, Palette, LayoutTemplate, Droplets, Map, Mail, Loader, Send, Activity, Printer, Share2, Download } from 'lucide-react';
+import { ArrowRight, ChevronRight, ChevronLeft, Check, Clock, Calendar, Users, Briefcase, Wine, Coffee, Music, Monitor, Minus, Plus, Sparkles, Sun, Moon, Sunrise, Star, Utensils, Wifi, Gift, Palette, LayoutTemplate, Droplets, Map, Mail, Loader, Send, Activity, Printer, Share2 } from 'lucide-react';
 
 // --- CONFIGURATION EMAIL ---
 const EMAILJS_SERVICE_ID = "service_z8iw21s"; 
@@ -269,7 +269,7 @@ export default function App() {
     format: null,
     pax: 10,
     date: '',
-    endDate: '', // NOUVEAU : Date de fin
+    endDate: '', // Multi-dates
     experience: EXPERIENCES[0],
     selectedServices: ['tech'],
     contact: { name: '', email: '', phone: '', message: '' }
@@ -277,7 +277,7 @@ export default function App() {
 
   const [isSending, setIsSending] = useState(false);
   const [isSent, setIsSent] = useState(false);
-  const [isMultiDay, setIsMultiDay] = useState(false); // NOUVEAU : Toggle multi-jours
+  const [isMultiDay, setIsMultiDay] = useState(false);
 
   // --- STATS SECRÈTES ---
   const [secretClicks, setSecretClicks] = useState(0);
@@ -300,7 +300,7 @@ export default function App() {
     }
   }, [step]);
 
-  // 3. TRACKING CHOIX EXPÉRIENCE (DATA ANALYSIS)
+  // 3. TRACKING CHOIX EXPÉRIENCE
   const trackExperienceChoice = (expId) => {
       fetch(`https://api.counterapi.dev/v1/lmeb-immersive/choice_${expId}/up`).catch(console.error);
   };
@@ -508,7 +508,7 @@ export default function App() {
                     </span>
                   </button>
 
-                  {/* NOUVEAU BOUTON : SAVE THE DATE */}
+                  {/* BOUTON SAVE THE DATE */}
                   <button 
                     onClick={handleSaveTheDate}
                     className="flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.25em] text-neutral-500 hover:text-white transition-colors border-b border-transparent hover:border-white pb-1"
@@ -575,6 +575,7 @@ export default function App() {
             </span>
           </button>
 
+          {/* FOOTER INTEGRE ET MINIMALISTE */}
           <div className="mt-12 md:mt-16 animate-fade-in-up delay-500 flex flex-col items-center gap-3 opacity-60 hover:opacity-100 transition-opacity duration-500">
              
              <div className="flex items-center gap-3">
@@ -1098,7 +1099,7 @@ export default function App() {
                         
                         <div className="flex justify-between items-center group">
                            <div>
-                              <div className="text-white font-medium">Location {data.timeSlot?.title}</div>
+                              <div className="text-white font-medium">Location — {data.timeSlot?.title}</div>
                               <div className="text-xs text-neutral-500">{data.timeSlot?.label}</div>
                            </div>
                            <div className="font-mono text-neutral-300">{data.timeSlot?.price} €</div>
