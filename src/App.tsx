@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-// J'AI RETIRÉ LES ICONES PROBLEMATIQUES DE CETTE LISTE :
-import { ArrowRight, ChevronRight, ChevronLeft, Check, Clock, Calendar, Users, Briefcase, Wine, Coffee, Music, Monitor, Minus, Plus, Sparkles, Sun, Moon, Sunrise, Star, Utensils, Wifi, Gift, Palette, LayoutTemplate, Droplets, Map, Mail, Loader, Send } from 'lucide-react';
+// J'ai mis des icônes très standards pour éviter tout crash
+import { ArrowRight, ChevronRight, ChevronLeft, Check, Clock, Calendar, Users, Briefcase, Wine, Coffee, Music, Monitor, Minus, Plus, Sparkles, Sun, Moon, Sunrise, Star, Utensils, Wifi, Gift, Palette, LayoutTemplate, Droplets, Map, Mail, Loader, Send, FileText, Link } from 'lucide-react';
 
 // --- CONFIGURATION EMAIL ---
 const EMAILJS_SERVICE_ID = "service_z8iw21s"; 
@@ -131,7 +131,7 @@ const EXPERIENCES = [
   { 
     id: 'gastro', 
     title: 'Instant Gourmand', 
-    price: -1, // Sur Devis
+    price: -1, 
     sub: 'Repas',
     image: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=2940&auto=format&fit=crop'
   }
@@ -279,61 +279,12 @@ export default function App() {
   const [isSent, setIsSent] = useState(false);
   const [isMultiDay, setIsMultiDay] = useState(false); // NOUVEAU : Toggle multi-jours
 
-  // --- STATS SECRÈTES ---
-  const [secretClicks, setSecretClicks] = useState(0);
-  const [showAdmin, setShowAdmin] = useState(false);
-  const [stats, setStats] = useState({ visits: 0, finalStep: 0, leads: 0, choices: {} });
-
-  // 1. TRACKING VISITEURS
-  useEffect(() => {
-    if (!sessionStorage.getItem('has_visited')) {
-       fetch('https://api.counterapi.dev/v1/lmeb-immersive/visits/up').catch(console.error);
-       sessionStorage.setItem('has_visited', 'true');
-    }
-  }, []);
-
-  // 2. TRACKING "FIN DU PARCOURS"
-  useEffect(() => {
-    if (step === 7 && !sessionStorage.getItem('reached_final')) {
-        fetch('https://api.counterapi.dev/v1/lmeb-immersive/finalstep/up').catch(console.error);
-        sessionStorage.setItem('reached_final', 'true');
-    }
-  }, [step]);
-
-  // 3. TRACKING CHOIX EXPÉRIENCE (DATA ANALYSIS)
-  const trackExperienceChoice = (expId) => {
-      fetch(`https://api.counterapi.dev/v1/lmeb-immersive/choice_${expId}/up`).catch(console.error);
-  };
-
-  // 4. FONCTION ACTIVATION ADMIN (5 CLICS)
-  const handleLogoClick = () => {
-     setSecretClicks(prev => prev + 1);
-     if (secretClicks + 1 === 5) {
-        Promise.all([
-            fetch('https://api.counterapi.dev/v1/lmeb-immersive/visits').then(r => r.json()),
-            fetch('https://api.counterapi.dev/v1/lmeb-immersive/finalstep').then(r => r.json()),
-            fetch('https://api.counterapi.dev/v1/lmeb-immersive/leads').then(r => r.json()),
-            fetch('https://api.counterapi.dev/v1/lmeb-immersive/choice_casino').then(r => r.json()),
-            fetch('https://api.counterapi.dev/v1/lmeb-immersive/choice_world').then(r => r.json())
-        ]).then(([d1, d2, d3, d4, d5]) => {
-            setStats({ 
-                visits: d1.count || 0, 
-                finalStep: d2.count || 0,
-                leads: d3.count || 0,
-                choices: { casino: d4.count || 0, world: d5.count || 0 }
-            });
-            setShowAdmin(true);
-            setSecretClicks(0);
-        }).catch(e => console.error(e));
-     }
-  };
-
-  // 5. FONCTION PRINT/PDF
+  // 1. FONCTION PRINT/PDF
   const handlePrint = () => {
       window.print();
   };
 
-  // 6. FONCTION SAVE THE DATE
+  // 2. FONCTION SAVE THE DATE
   const handleSaveTheDate = () => {
       const text = `📅 Invitation : Événement @ L'Immersive (Namur)\n\n📍 Lieu : Le Monde en Bouteille, Namur\n📆 Date : ${data.date} ${data.endDate ? 'au ' + data.endDate : ''}\n✨ Expérience : ${data.experience.title}\n\nhttps://www.lemonde-enbouteille.be/salle`;
       navigator.clipboard.writeText(text);
@@ -455,7 +406,6 @@ export default function App() {
 
     Promise.all([sendAdmin, sendClient])
       .then(() => {
-          fetch('https://api.counterapi.dev/v1/lmeb-immersive/leads/up').catch(console.error);
           setIsSending(false);
           setIsSent(true);
       })
@@ -508,12 +458,12 @@ export default function App() {
                     </span>
                   </button>
 
-                  {/* BOUTON SAVE THE DATE (SANS ICONE CAUSE DE BUG) */}
+                  {/* BOUTON SAVE THE DATE (Icone LINK) */}
                   <button 
                     onClick={handleSaveTheDate}
                     className="flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.25em] text-neutral-500 hover:text-white transition-colors border-b border-transparent hover:border-white pb-1"
                   >
-                    Copier l'invitation
+                    <Link size={10} /> Copier l'invitation
                   </button>
 
                   <a 
@@ -542,7 +492,7 @@ export default function App() {
           
           <div className="w-px h-12 md:h-20 bg-gradient-to-b from-transparent via-amber-600 to-transparent mx-auto mb-6 md:mb-8"></div>
           
-          <div className="animate-fade-in-up cursor-default select-none" onClick={handleLogoClick}>
+          <div className="animate-fade-in-up cursor-default select-none">
             <img 
               src="https://www.lemonde-enbouteille.be/web/image/26768-edef09a5/LOGO%20l%27immersive-24.png" 
               alt="Logo L'Immersive" 
@@ -595,41 +545,6 @@ export default function App() {
                 www.lemonde-enbouteille.be
              </a>
           </div>
-
-          {/* PANNEAU ADMIN SECRET */}
-          {showAdmin && (
-            <div className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-xl flex items-center justify-center animate-fade-in-up" onClick={() => setShowAdmin(false)}>
-               <div className="border border-white/10 p-8 w-80 text-center shadow-2xl relative bg-[#0a0a0a]" onClick={e => e.stopPropagation()}>
-                  <div className="text-amber-600 font-mono text-xs uppercase tracking-widest mb-8 flex items-center justify-center gap-2">
-                      DATA FLUX
-                  </div>
-                  
-                  <div className="space-y-4">
-                      <div className="flex justify-between items-center p-3 bg-white/5 border border-white/5">
-                          <div className="text-[10px] text-neutral-500 uppercase tracking-wider">Trafic</div>
-                          <div className="text-xl font-serif text-white">{stats.visits}</div>
-                      </div>
-                      <div className="flex justify-between items-center p-3 bg-white/5 border border-white/5">
-                          <div className="text-[10px] text-neutral-400 uppercase tracking-wider">Final Step</div>
-                          <div className="text-xl font-serif text-white">{stats.finalStep}</div>
-                      </div>
-                      <div className="flex justify-between items-center p-3 bg-amber-900/10 border border-amber-600/30">
-                          <div className="text-[10px] text-amber-600 uppercase tracking-wider font-bold">Devis Reçus</div>
-                          <div className="text-xl font-serif text-amber-500">{stats.leads}</div>
-                      </div>
-                      
-                      <div className="pt-2 grid grid-cols-2 gap-2">
-                          <div className="text-[9px] text-neutral-500">Casino: <span className="text-white">{stats.choices?.casino}</span></div>
-                          <div className="text-[9px] text-neutral-500">World: <span className="text-white">{stats.choices?.world}</span></div>
-                      </div>
-                  </div>
-
-                  <div className="mt-6 pt-6 border-t border-white/10 text-[10px] text-neutral-600 font-mono">
-                     Taux de conversion : {stats.visits > 0 ? ((stats.leads / stats.visits) * 100).toFixed(1) : 0}%
-                  </div>
-               </div>
-            </div>
-          )}
 
         </div>
       </div>
@@ -947,7 +862,7 @@ export default function App() {
                         {EXPERIENCES.filter(e => e.id !== 'none').map((exp) => (
                            <div 
                              key={exp.id}
-                             onClick={() => { setData({...data, experience: exp}); trackExperienceChoice(exp.id); }}
+                             onClick={() => { setData({...data, experience: exp}); }}
                              className={`relative h-64 md:h-80 border cursor-pointer transition-all duration-300 group overflow-hidden ${
                                 data.experience.id === exp.id 
                                 ? 'border-amber-600 shadow-[0_0_30px_-10px_rgba(217,119,6,0.3)]' 
@@ -1158,12 +1073,12 @@ export default function App() {
                          {isCustom && <span className="text-sm font-sans text-neutral-400 border border-neutral-600 px-2 py-0.5 rounded">+ Devis</span>}
                       </div>
                       
-                      {/* BOUTON IMPRESSION PDF (TEXTE SEULEMENT) */}
+                      {/* BOUTON IMPRESSION PDF (Icône FileText) */}
                       <button 
                         onClick={handlePrint}
                         className="mt-6 flex items-center justify-center gap-2 w-full text-[10px] uppercase tracking-widest text-neutral-500 hover:text-white transition-colors"
                       >
-                        Télécharger le devis officiel
+                        <FileText size={12} /> Télécharger le devis officiel
                       </button>
                    </div>
                 </div>
