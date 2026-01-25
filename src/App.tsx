@@ -190,7 +190,7 @@ export default function App() {
         type: data.eventType?.title || "Non défini", 
         time_slot: data.timeSlot?.title || "Non défini", 
         format: data.format?.title || "Non défini",
-        experience: isDryHire ? "Location Sèche" : data.experience?.title,
+        experience: isDryHire ? "Location" : data.experience?.title,
         services: data.selectedServices.map(id => SERVICES.find(s => s.id === id)?.title).join(', '),
         total: totalAmount, 
         is_custom: isCustom ? "OUI (Devis requis)" : "NON"
@@ -376,7 +376,7 @@ export default function App() {
                  
                  <div className="w-full text-center mt-8">
                      <p className="font-mono text-[7px] uppercase tracking-[0.3em] text-neutral-400">
-                         Namur — Rue de la Croix — Belgique — www.lemonde-enbouteille.be
+                         Bouge — Chaussée de Louvain, 430 — Belgique — www.lemonde-enbouteille.be
                      </p>
                  </div>
              </div>
@@ -505,7 +505,7 @@ export default function App() {
                 <div className="mb-8 md:mb-10"><span className="text-amber-600 font-mono text-xs uppercase tracking-widest mb-4 block">05 — Immersion</span><h3 className="text-3xl md:text-4xl font-serif mb-2">Niveau d'Expérience</h3></div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-8 md:mb-12">
                    <button onClick={() => { setIsDryHire(true); setData({...data, experience: EXPERIENCES[0]}); }} className={`p-6 md:p-8 border text-left transition-all duration-300 group ${isDryHire ? 'border-white bg-white text-black' : 'border-white/10 hover:border-white/30 bg-[#0a0a0a]'}`}>
-                      <LayoutTemplate size={28} className={`mb-4 ${isDryHire ? 'text-black' : 'text-neutral-500'}`} /><h4 className="text-xl md:text-2xl font-serif mb-2">Location Sèche</h4><p className={`text-xs md:text-sm ${isDryHire ? 'text-neutral-700' : 'text-neutral-400'}`}>Mise à disposition de l'espace uniquement.</p>
+                      <LayoutTemplate size={28} className={`mb-4 ${isDryHire ? 'text-black' : 'text-neutral-500'}`} /><h4 className="text-xl md:text-2xl font-serif mb-2">Location</h4><p className={`text-xs md:text-sm ${isDryHire ? 'text-neutral-700' : 'text-neutral-400'}`}>Mise à disposition de l'espace uniquement.</p>
                    </button>
                    <button onClick={() => { setIsDryHire(false); setData({...data, experience: EXPERIENCES[1]}); }} className={`p-6 md:p-8 border text-left transition-all duration-300 group ${!isDryHire ? 'border-amber-600 bg-amber-600 text-white' : 'border-white/10 hover:border-amber-600/50 bg-[#0a0a0a]'}`}>
                       <div className="flex items-center gap-3 mb-2"><Sparkles size={20} className={!isDryHire ? 'text-white' : 'text-amber-500'} /><h4 className="text-xl md:text-2xl font-serif">Expérience Immersive</h4></div><p className={`text-xs md:text-sm ${!isDryHire ? 'text-white/90' : 'text-neutral-400'}`}>Une animation sensorielle incluse (Vin, Casino, Gastronomie).</p>
