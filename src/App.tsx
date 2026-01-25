@@ -36,38 +36,35 @@ const EXPERIENCES = [
 ];
 
 const SERVICES = [
-  { id: 'tech', title: 'Pack Tech & Connectivité', price: 0, fakePrice: 100, icon: <Wifi size={20}/>, desc: 'Écrans, Son, Wifi HD.', category: 'tech' },
-  { id: 'host', title: 'Maître de Maison / Animation', price: 150, icon: <Users size={20}/>, desc: 'Service, gestion et animation.', category: 'staff' },
-  { id: 'branding', title: 'Corporate Branding', price: 40, icon: <Monitor size={20}/>, desc: "Votre logo, marque d'identité et mise en avant", category: 'tech' },
-  { id: 'softs', title: 'Forfait Softs', price: 'dynamic', icon: <Droplets size={20}/>, desc: 'Eaux et softs à discrétion.', category: 'food' },
-  { id: 'food_light', title: 'Restauration : Grignotage', price: 25, isPerHead: true, icon: <Utensils size={20}/>, desc: 'Planches fromages/charcuteries avec tous les accompagnements.', category: 'food' },
-  { id: 'food_full', title: 'Restauration : Repas', price: -1, isPerHead: true, icon: <Utensils size={20}/>, desc: 'Préparation culinaire sur-mesure (Tapas, Menu ou Cuisine conviviale).', category: 'food' },
-  { id: 'deco', title: 'Décoration Sur-Mesure', price: 100, icon: <Palette size={20}/>, desc: "Création d'une ambiance à l'image de votre évènement", category: 'deco' },
-  { id: 'gift', title: 'Coffret Souvenir', price: 15, isPerHead: true, icon: <Gift size={20}/>, desc: 'Laissez une trace de votre évènement pour vos invités.', category: 'gift' }
+  { id: 'tech', title: 'Pack Tech & Connectivité', price: 0, icon: <Wifi size={20}/>, desc: 'Écrans, Son, Wifi HD.' },
+  { id: 'host', title: 'Maître de Maison', price: 150, icon: <Users size={20}/>, desc: 'Service et gestion.' },
+  { id: 'softs', title: 'Forfait Softs', price: 'dynamic', icon: <Droplets size={20}/>, desc: 'Eaux et softs à discrétion.' },
+  { id: 'food_light', title: 'Grignotage', price: 25, isPerHead: true, icon: <Utensils size={20}/>, desc: 'Planches fromages/charcuteries.' },
+  { id: 'food_full', title: 'Repas', price: -1, isPerHead: true, icon: <Utensils size={20}/>, desc: 'Préparation culinaire sur-mesure.' },
+  { id: 'deco', title: 'Décoration', price: 100, icon: <Palette size={20}/>, desc: "Création d'une ambiance." },
+  { id: 'gift', title: 'Coffret Souvenir', price: 15, isPerHead: true, icon: <Gift size={20}/>, desc: 'Cadeau invité.' }
 ];
 
-// --- UI COMPONENTS ---
+// --- COMPONENTS ---
 const ProgressBar = ({ current, total }) => (
-  <div className="absolute top-0 left-0 h-1 bg-gradient-to-r from-amber-700 to-amber-500 transition-all duration-700 ease-out z-50 print:hidden" style={{ width: `${(current / total) * 100}%` }} />
+  <div className="absolute top-0 left-0 h-1 bg-amber-600 transition-all duration-1000 z-50 print:hidden" style={{ width: `${(current / total) * 100}%` }}></div>
 );
 
 const BackButton = ({ onClick }) => (
-  <button onClick={onClick} className="absolute bottom-8 left-6 md:left-8 z-40 flex items-center gap-2 text-neutral-500 hover:text-white transition-colors uppercase text-[10px] tracking-widest font-mono group mix-blend-difference bg-black/20 p-2 rounded backdrop-blur-sm md:bg-transparent md:p-0 cursor-pointer print:hidden">
-    <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Retour
+  <button onClick={onClick} className="absolute bottom-8 left-8 z-40 flex items-center gap-2 text-neutral-500 hover:text-white uppercase text-[10px] tracking-widest font-mono print:hidden group">
+    <ChevronLeft size={16} className="group-hover:-translate-x-1 transition-transform" /> Retour
   </button>
 );
 
 const StepIndicator = ({ step, setStep }) => (
   <div className="hidden md:flex flex-col justify-between w-20 border-r border-white/5 bg-[#0a0a0a] z-20 py-8 items-center h-full print:hidden">
-    <div className="font-serif font-bold text-xl cursor-pointer text-amber-600 hover:scale-110 transition-transform" onClick={() => setStep(0)}>L.</div>
-    <div className="flex flex-col gap-6 items-center w-full">
+    <div className="font-serif font-bold text-xl cursor-pointer text-amber-600" onClick={() => setStep(0)}>L.</div>
+    <div className="flex flex-col gap-6 items-center">
       {[1, 2, 3, 4, 5, 6, 7].map((s) => (
-        <button key={s} disabled={step < s} onClick={() => setStep(s)} className={`relative w-full text-center py-2 text-[10px] font-mono transition-all duration-300 group ${step === s ? 'text-white font-bold' : step > s ? 'text-neutral-500 hover:text-white cursor-pointer' : 'text-neutral-800 cursor-not-allowed'}`}>
-          {step === s && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-4 bg-amber-600 rounded-r-full"></div>} 0{s}
-        </button>
+        <button key={s} disabled={step < s} onClick={() => setStep(s)} className={`text-[10px] font-mono transition-all ${step === s ? 'text-white font-bold scale-125' : 'text-neutral-700 hover:text-neutral-400'}`}>0{s}</button>
       ))}
     </div>
-    <div className="text-[10px] text-neutral-700 writing-vertical rotate-180 tracking-widest">LE MONDE EN BOUTEILLE</div>
+    <div className="text-[9px] text-neutral-700 rotate-180 writing-vertical tracking-widest uppercase">Namur</div>
   </div>
 );
 
@@ -94,7 +91,7 @@ export default function App() {
   const [showAdmin, setShowAdmin] = useState(false);
   const [stats, setStats] = useState({ visits: 0, finalStep: 0, leads: 0, choices: {} });
 
-  // TRACKING & ADMIN LOGIC FIX
+  // TRACKING
   useEffect(() => {
     if (!sessionStorage.getItem('has_visited')) {
        fetch('https://api.counterapi.dev/v1/lmeb-immersive/visits/up').catch(console.error);
@@ -102,8 +99,18 @@ export default function App() {
     }
   }, []);
 
-  useEffect(() => {
-    if (secretClicks >= 5) {
+  // --- LOGIQUE ADMIN CORRIGÉE ---
+  const handleLogoClick = (e) => {
+    e.preventDefault(); // Empêche la sélection de texte
+    e.stopPropagation(); // Empêche le clic de passer à travers
+    
+    const newCount = secretClicks + 1;
+    setSecretClicks(newCount);
+
+    console.log("Clic logo :", newCount); // Ouvre la console F12 pour vérifier si ça clique
+
+    if (newCount >= 5) {
+        // CHARGEMENT DES STATS
         Promise.all([
             fetch('https://api.counterapi.dev/v1/lmeb-immersive/visits').then(r => r.json()),
             fetch('https://api.counterapi.dev/v1/lmeb-immersive/finalstep').then(r => r.json()),
@@ -111,27 +118,58 @@ export default function App() {
             fetch('https://api.counterapi.dev/v1/lmeb-immersive/choice_casino').then(r => r.json()),
             fetch('https://api.counterapi.dev/v1/lmeb-immersive/choice_world').then(r => r.json())
         ]).then(([d1, d2, d3, d4, d5]) => {
-            setStats({ visits: d1.count || 0, finalStep: d2.count || 0, leads: d3.count || 0, choices: { casino: d4.count || 0, world: d5.count || 0 } });
+            setStats({ 
+                visits: d1.count || 0, 
+                finalStep: d2.count || 0, 
+                leads: d3.count || 0, 
+                choices: { casino: d4.count || 0, world: d5.count || 0 } 
+            });
             setShowAdmin(true);
             setSecretClicks(0);
-        }).catch(e => console.error(e));
+        }).catch(e => {
+            console.error(e);
+            // Fallback si l'API échoue, on ouvre quand même
+            setShowAdmin(true); 
+            setSecretClicks(0);
+        });
     }
-    // Reset clicks if not reached 5 within 2 seconds
-    const timer = setTimeout(() => setSecretClicks(0), 2000);
-    return () => clearTimeout(timer);
-  }, [secretClicks]);
 
-  const handleLogoClick = () => setSecretClicks(prev => prev + 1);
+    // Reset si pas de clic pendant 5 secondes (Délai plus long)
+    setTimeout(() => {
+        if (newCount < 5) setSecretClicks(0);
+    }, 5000);
+  };
 
   const trackExperienceChoice = (expId) => {
       fetch(`https://api.counterapi.dev/v1/lmeb-immersive/choice_${expId}/up`).catch(console.error);
   };
 
-  const handlePrint = () => window.print();
+  // INVITATION LUXE
   const handleSaveTheDate = () => {
-      const text = `✨ L'IMMERSIVE — NAMUR\n_________________________________\n\nVous êtes convié(e) à une expérience hors du temps.\n\n📅 Date : ${data.date} ${data.endDate ? 'au ' + data.endDate : ''}\n📍 Lieu : Le Monde en Bouteille, Namur\n🍷 Expérience : ${data.experience.title}\n\n"Le luxe est une affaire de détails."\n\nDécouvrir : https://www.lemonde-enbouteille.be/salle`;
-      navigator.clipboard.writeText(text);
-      alert("L'invitation de prestige a été copiée.");
+    const text = `
+M O N D E  E N  B O U T E I L L E
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+I N V I T A T I O N  P R I V É E
+
+Vous êtes attendu(e) pour vivre une expérience singulière.
+
+DATE
+${data.date} ${data.endDate ? '— ' + data.endDate : ''}
+
+LIEU
+L'Immersive, Namur
+(Accès confidentiel)
+
+THÈME
+${data.experience.title}
+
+"Le temps s'arrête là où l'expérience commence."
+
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+https://www.lemonde-enbouteille.be/salle
+    `.trim();
+    navigator.clipboard.writeText(text);
+    alert("Invitation copiée dans le presse-papier.");
   };
 
   const getSoftsPrice = (pax) => (pax <= 8 ? 20 : pax <= 16 ? 30 : pax <= 30 ? 40 : 45);
@@ -152,170 +190,207 @@ export default function App() {
           else total += srv.isPerHead ? (srv.price * data.pax) : srv.price;
       }
     });
-    return { total: total, custom };
+    return { total, custom };
   };
 
   const { total: totalAmount, custom: isCustom } = calculateTotal();
 
   const toggleService = (id) => {
     const current = data.selectedServices; let newServices = [...current];
-    if (id === 'food_light' && current.includes('food_full')) newServices = newServices.filter(x => x !== 'food_full');
-    if (id === 'food_full' && current.includes('food_light')) newServices = newServices.filter(x => x !== 'food_light');
     if (newServices.includes(id)) newServices = newServices.filter(x => x !== id);
     else newServices.push(id);
     setData({...data, selectedServices: newServices});
   };
 
-  const goToStep = (target) => {
-    if (isAnimating) return;
-    setIsAnimating(true); setStep(target);
-    setTimeout(() => setIsAnimating(false), 800);
+  const goToStep = (target) => { 
+    if (!isAnimating) { 
+      setIsAnimating(true); 
+      setStep(target); 
+      setTimeout(() => setIsAnimating(false), 800); 
+    } 
   };
   const autoNext = (target) => goToStep(target);
   const goBack = () => { if (step > 0) goToStep(step - 1); };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!data.contact.email || !data.contact.name || !data.contact.phone) { alert("Merci de compléter vos coordonnées."); return; }
     setIsSending(true);
-    const templateParams = {
-        name: data.contact.name, email: data.contact.email, phone: data.contact.phone, message: data.contact.message,
-        date: data.date + (data.endDate ? ` au ${data.endDate}` : ''), pax: data.pax,
-        type: data.eventType?.title || "Non défini", time_slot: data.timeSlot?.title || "Non défini", format: data.format?.title || "Non défini",
-        experience: isDryHire ? "Location" : data.experience?.title,
-        services: data.selectedServices.map(id => SERVICES.find(s => s.id === id)?.title).join(', '),
-        total: totalAmount, is_custom: isCustom ? "OUI (Devis requis)" : "NON"
-    };
     // @ts-ignore
-    const sendAdmin = window.emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ADMIN_ID, templateParams, EMAILJS_PUBLIC_KEY);
+    window.emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ADMIN_ID, { ...data, total: totalAmount }, EMAILJS_PUBLIC_KEY);
     // @ts-ignore
-    const sendClient = window.emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_CLIENT_ID, templateParams, EMAILJS_PUBLIC_KEY);
-    Promise.all([sendAdmin, sendClient]).then(() => {
-          fetch('https://api.counterapi.dev/v1/lmeb-immersive/leads/up').catch(console.error);
-          setIsSending(false); setIsSent(true);
-      }).catch((error) => { console.error("Erreur d'envoi", error); setIsSending(false); alert("Erreur d'envoi."); });
+    window.emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_CLIENT_ID, { ...data, total: totalAmount }, EMAILJS_PUBLIC_KEY).then(() => {
+        fetch('https://api.counterapi.dev/v1/lmeb-immersive/leads/up').catch(console.error);
+        setIsSending(false); setIsSent(true);
+    });
   };
 
   if (isSent) {
     return (
-      <div className="relative h-[100dvh] w-full bg-[#050505] overflow-hidden flex flex-col items-center justify-center p-6 text-white print:hidden">
+      <div className="relative h-[100dvh] w-full bg-[#050505] flex flex-col items-center justify-center p-6 text-white text-center print:hidden">
            <div className="absolute inset-0 z-0 opacity-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
            <div className="absolute inset-0 z-0 opacity-30 bg-[url('https://www.lemonde-enbouteille.be/web/image/16056-b2829e5f/79-DSC09373.webp')] bg-cover bg-center blur-sm mix-blend-overlay"></div>
-           <div className="relative z-10 max-w-xl w-full bg-black/40 backdrop-blur-xl border border-white/10 p-12 md:p-16 flex flex-col items-center text-center shadow-2xl animate-fade-in-up">
-              <div className="mb-8 relative"><div className="absolute inset-0 bg-amber-600 blur-xl opacity-20 animate-pulse"></div><div className="w-20 h-20 rounded-full border border-amber-600/50 flex items-center justify-center bg-black/50 relative z-10"><Check size={32} className="text-amber-500" /></div></div>
-              <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-amber-600 mb-4">Confirmation</div>
-              <h2 className="text-4xl md:text-5xl font-serif mb-6 text-transparent bg-clip-text bg-gradient-to-b from-white to-neutral-400">Demande Transmise</h2>
-              <div className="w-12 h-px bg-white/20 mb-8"></div>
-              <p className="font-light text-neutral-300 leading-relaxed text-sm mb-10">Merci <span className="text-white font-medium">{data.contact.name}</span>.<br/>Votre vision a été capturée. Une confirmation vient d'être envoyée à votre adresse email.<br/><br/><span className="text-xs font-mono text-neutral-500">Nous reviendrons vers vous sous 24h avec une proposition chiffrée.</span></p>
-              <div className="flex flex-col gap-4 w-full md:w-auto items-center">
-                  <button onClick={() => window.location.reload()} className="group relative px-8 py-4 bg-white/5 border border-white/10 hover:border-amber-600/50 transition-all duration-500 cursor-pointer w-full"><div className="absolute inset-0 bg-amber-600/10 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500 ease-out"></div><span className="relative font-mono text-[10px] uppercase tracking-[0.2em] text-white group-hover:text-amber-500 transition-colors">Retour à l'accueil</span></button>
-                  <button onClick={handleSaveTheDate} className="flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.25em] text-neutral-500 hover:text-white transition-colors border-b border-transparent hover:border-white pb-1"><Share2 size={10} /> Copier l'invitation Prestige</button>
-                  <a href="https://www.lemonde-enbouteille.be/salle" target="_blank" rel="noopener noreferrer" className="font-mono text-[9px] uppercase tracking-[0.25em] text-neutral-500 hover:text-white transition-colors border-b border-white/10 hover:border-white pb-1">Voir le lieu officiel</a>
-              </div>
+           <Sparkles className="text-amber-600 mb-8 opacity-50 relative z-10" size={48} />
+           <h2 className="text-4xl font-serif mb-6 relative z-10">Demande Transmise</h2>
+           <p className="text-neutral-400 font-light mb-12 max-w-sm relative z-10">Votre vision a été capturée. Nous reviendrons vers vous sous 24h.</p>
+           <div className="flex flex-col gap-4 relative z-10">
+              <button onClick={() => window.location.reload()} className="px-10 py-4 bg-white/5 border border-white/10 text-[10px] font-mono uppercase tracking-widest hover:bg-amber-600 transition-all">Retour</button>
+              <button onClick={handleSaveTheDate} className="text-[10px] font-mono text-neutral-500 hover:text-white flex items-center justify-center gap-2 uppercase tracking-widest transition-colors"><Share2 size={12}/> Copier l'invitation prestige</button>
            </div>
       </div>
-    )
-}
+    );
+  }
 
   if (step === 0) {
     return (
-      <div className="relative h-[100dvh] w-full bg-[#050505] flex flex-col items-center justify-center p-6 md:p-8 text-white overflow-hidden print:hidden">
-        <div className="absolute inset-0 z-0 opacity-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] pointer-events-none"></div>
-        <div className="absolute inset-0 z-0 opacity-40 bg-[url('https://www.lemonde-enbouteille.be/web/image/16056-b2829e5f/79-DSC09373.webp')] bg-cover bg-center mix-blend-overlay pointer-events-none"></div>
-        <div className="relative z-10 text-center w-full max-w-4xl mx-auto flex flex-col items-center justify-center h-full">
-          <div className="w-px h-12 md:h-20 bg-gradient-to-b from-transparent via-amber-600 to-transparent mx-auto mb-6 md:mb-8"></div>
-          <div className="animate-fade-in-up cursor-default select-none" onClick={handleLogoClick}>
-            <img src="https://www.lemonde-enbouteille.be/web/image/26768-edef09a5/LOGO%20l%27immersive-24.png" alt="Logo L'Immersive" className="w-28 md:w-40 mx-auto mb-4 md:mb-6 opacity-90 drop-shadow-2xl" />
-            <h1 className="text-5xl md:text-7xl lg:text-[7rem] font-serif tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-neutral-500 leading-none mb-3">L'IMMERSIVE</h1>
-            <p className="font-mono text-[9px] md:text-xs uppercase tracking-[0.4em] md:tracking-[0.6em] text-amber-500 mb-8 md:mb-10">Le Monde en Bouteille</p>
+      <div className="relative h-[100dvh] w-full bg-[#050505] flex flex-col items-center justify-center p-6 text-white overflow-hidden print:hidden">
+        <div className="absolute inset-0 z-0 opacity-40 bg-[url('https://www.lemonde-enbouteille.be/web/image/16056-b2829e5f/79-DSC09373.webp')] bg-cover bg-center mix-blend-overlay"></div>
+        <div className="relative z-10 text-center flex flex-col items-center">
+          <div className="w-px h-20 bg-gradient-to-b from-transparent via-amber-600 to-transparent mb-8"></div>
+          
+          {/* BOUTON ADMIN SECURISE */}
+          <div onClick={handleLogoClick} className="cursor-pointer mb-8 select-none relative z-[100] group">
+            <img src="https://www.lemonde-enbouteille.be/web/image/26768-edef09a5/LOGO%20l%27immersive-24.png" alt="Logo" className="w-28 mx-auto mb-6 group-hover:opacity-80 transition-opacity" />
+            <h1 className="text-7xl font-serif tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-neutral-500 mb-2">L'IMMERSIVE</h1>
+            <p className="font-mono text-[9px] uppercase tracking-[0.6em] text-amber-500">Le Monde en Bouteille</p>
           </div>
-          <div className="border-l border-amber-600/30 pl-6 text-left max-w-lg mx-auto backdrop-blur-sm py-2 mb-10 md:mb-12 animate-fade-in-up delay-200">
-             <p className="text-neutral-400 font-light leading-relaxed text-xs md:text-sm">Une adresse confidentielle à Namur. <br className="hidden md:block"/><strong>Un espace événementiel privatif alliant architecture de caractère et équipements connectés.</strong> <br className="hidden md:block"/>Réunions, séminaires ou soirées : ne louez pas une salle, vivez une expérience.</p>
+
+          <div className="border-l border-amber-600/30 pl-6 text-left max-w-lg mb-12">
+             <p className="text-neutral-400 font-light text-sm leading-relaxed">Une adresse confidentielle à Namur. <br/><strong>Un espace événementiel privatif alliant architecture de caractère et équipements connectés.</strong></p>
           </div>
-          <button onClick={() => goToStep(1)} className="group relative px-8 py-4 md:px-10 md:py-5 bg-white/5 border border-white/10 hover:border-amber-600/50 transition-all duration-500 w-full md:w-auto cursor-pointer z-50 animate-fade-in-up delay-300">
-            <div className="absolute inset-0 bg-amber-600/10 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500 ease-out"></div>
-            <span className="relative font-mono text-xs uppercase tracking-[0.2em] flex items-center justify-center gap-4 text-white group-hover:text-amber-500 transition-colors">Composer mon événement <ArrowRight size={14} /></span>
-          </button>
-          <div className="mt-12 md:mt-16 animate-fade-in-up delay-500 flex flex-col items-center gap-3 opacity-60 hover:opacity-100 transition-opacity duration-500">
-             <div className="flex items-center gap-3"><div className="h-px w-8 bg-white/20"></div><p className="font-mono text-[9px] uppercase tracking-[0.2em] text-neutral-400">Confiance : Entreprises & Privés</p><div className="h-px w-8 bg-white/20"></div></div>
-             <a href="https://www.lemonde-enbouteille.be/salle" target="_blank" rel="noopener noreferrer" className="font-mono text-[9px] text-neutral-500 hover:text-amber-500 uppercase tracking-widest transition-colors">www.lemonde-enbouteille.be</a>
-          </div>
-          {/* PANNEAU ADMIN */}
-          {showAdmin && (
-            <div className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-xl flex items-center justify-center animate-fade-in-up" onClick={() => setShowAdmin(false)}>
-               <div className="border border-white/10 p-8 w-80 text-center shadow-2xl relative bg-[#0a0a0a]" onClick={e => e.stopPropagation()}>
-                  <div className="text-amber-600 font-mono text-xs uppercase tracking-widest mb-8 flex items-center justify-center gap-2">DATA FLUX</div>
-                  <div className="space-y-4">
-                      <div className="flex justify-between items-center p-3 bg-white/5 border border-white/5"><div className="text-[10px] text-neutral-500 uppercase tracking-wider">Trafic</div><div className="text-xl font-serif text-white">{stats.visits}</div></div>
-                      <div className="flex justify-between items-center p-3 bg-white/5 border border-white/5"><div className="text-[10px] text-neutral-400 uppercase tracking-wider">Final Step</div><div className="text-xl font-serif text-white">{stats.finalStep}</div></div>
-                      <div className="flex justify-between items-center p-3 bg-amber-900/10 border border-amber-600/30"><div className="text-[10px] text-amber-600 uppercase tracking-wider font-bold">Devis Reçus</div><div className="text-xl font-serif text-amber-500">{stats.leads}</div></div>
-                      <div className="pt-2 grid grid-cols-2 gap-2">
-                          <div className="text-[9px] text-neutral-500">Casino: <span className="text-white">{stats.choices?.casino}</span></div>
-                          <div className="text-[9px] text-neutral-500">World: <span className="text-white">{stats.choices?.world}</span></div>
-                      </div>
-                  </div>
-                  <div className="mt-6 pt-6 border-t border-white/10 text-[10px] text-neutral-600 font-mono">Taux de conversion : {stats.visits > 0 ? ((stats.leads / stats.visits) * 100).toFixed(1) : 0}%</div>
-               </div>
-            </div>
-          )}
+          <button onClick={() => goToStep(1)} className="px-12 py-5 bg-white/5 border border-white/10 hover:border-amber-600 transition-all font-mono text-xs uppercase tracking-widest">Composer mon événement</button>
         </div>
+
+        {/* PANNEAU ADMIN */}
+        {showAdmin && (
+          <div className="fixed inset-0 z-[110] bg-black/95 backdrop-blur-xl flex items-center justify-center p-6" onClick={() => setShowAdmin(false)}>
+            <div className="max-w-sm w-full bg-[#111] border border-white/10 p-10 text-center shadow-2xl" onClick={e => e.stopPropagation()}>
+               <div className="text-[10px] font-mono tracking-[0.3em] text-amber-600 mb-10 uppercase">Admin Data</div>
+               <div className="space-y-4 text-left">
+                  <div className="flex justify-between"><span className="text-xs text-neutral-500">Visiteurs</span><span className="text-white font-mono">{stats.visits}</span></div>
+                  <div className="flex justify-between"><span className="text-xs text-neutral-500">Step 7</span><span className="text-white font-mono">{stats.finalStep}</span></div>
+                  <div className="flex justify-between"><span className="text-xs text-neutral-500">Leads</span><span className="text-amber-500 font-mono">{stats.leads}</span></div>
+                  <div className="border-t border-white/10 my-4 pt-4">
+                      <div className="flex justify-between"><span className="text-xs text-neutral-500">Casino</span><span className="text-white font-mono">{stats.choices?.casino}</span></div>
+                      <div className="flex justify-between"><span className="text-xs text-neutral-500">World</span><span className="text-white font-mono">{stats.choices?.world}</span></div>
+                  </div>
+               </div>
+               <button onClick={() => setShowAdmin(false)} className="w-full mt-8 py-3 bg-white text-black font-mono text-xs uppercase hover:bg-neutral-200">Fermer</button>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
 
   return (
-    <div className="relative h-[100dvh] w-full bg-[#080808] text-white overflow-hidden font-sans flex flex-col md:flex-row print:bg-white print:text-black print:h-auto print:overflow-visible">
-      <div className="absolute inset-0 z-0 pointer-events-none opacity-[0.08] bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay print:hidden"></div>
-      <ProgressBar current={step} total={7} />
-      <StepIndicator step={step} setStep={goToStep} />
-      <MobileStepIndicator step={step} />
+    <div className="relative h-[100dvh] w-full bg-[#080808] text-white overflow-hidden flex flex-col md:flex-row">
+      
+      {/* --------------------
+          DESIGN PDF "MANIFESTE" (Visible seulement à l'impression)
+          -------------------- */}
+      <div className="hidden print:block fixed inset-0 z-[9999] bg-white text-black p-0 m-0 w-full h-full overflow-hidden">
+         <div className="h-full w-full p-16 border-[1px] border-black flex flex-col justify-between relative">
+             {/* Filigrane */}
+             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.03] pointer-events-none">
+                 <h1 className="text-[150px] font-serif whitespace-nowrap -rotate-45">L'IMMERSIVE</h1>
+             </div>
 
-      {/* SECTION PRINT : NOTE D'INTENTION (LUXURY PDF) */}
-      <div className="hidden print:block p-20 w-full max-w-5xl mx-auto bg-white text-black font-serif">
-          <div className="flex justify-between items-start mb-32 border-b border-black/5 pb-12">
-            <div><h1 className="text-3xl tracking-[0.2em] mb-2 uppercase">L'IMMERSIVE</h1><p className="text-[10px] font-mono tracking-[0.4em] uppercase text-neutral-400">Namur — Belgique</p></div>
-            <div className="text-right"><p className="text-[10px] font-mono tracking-widest uppercase mb-1">Note d'Intention</p><p className="text-sm italic">{new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</p></div>
-          </div>
-          <div className="mb-24 max-w-2xl">
-            <p className="text-xs font-mono uppercase tracking-[0.3em] text-amber-600 mb-6 italic">Privilège</p>
-            <h2 className="text-4xl mb-8 leading-tight">Pour {data.contact.name || 'votre événement'}</h2>
-            <p className="text-lg leading-relaxed text-neutral-600 italic">"Certains lieux ne se contentent pas d'accueillir vos moments, ils les transcendent."</p>
-          </div>
-          <div className="grid grid-cols-2 gap-20 mb-24 border-t border-neutral-100 pt-12">
-            <div>
-              <p className="text-[10px] font-mono uppercase tracking-widest text-neutral-400 mb-4 tracking-[0.2em]">CONFIGURATION</p>
-              <div className="space-y-4 text-sm italic">
-                <div className="flex justify-between"><span>Espace & Moment</span><span>{data.timeSlot?.title}</span></div>
-                <div className="flex justify-between"><span>Audience</span><span>{data.pax} Invités</span></div>
-              </div>
-            </div>
-            <div>
-              <p className="text-[10px] font-mono uppercase tracking-widest text-neutral-400 mb-4 tracking-[0.2em]">EXPÉRIENCE</p>
-              <div className="text-sm italic mb-4">{data.experience.title}</div>
-              <div className="space-y-1">{data.selectedServices.map(id => (<div key={id} className="text-[10px] text-neutral-500 uppercase tracking-wider">+ {SERVICES.find(s => s.id === id)?.title}</div>))}</div>
-            </div>
-          </div>
-          <div className="border-t-2 border-black pt-12 flex justify-between items-end">
-            <div><p className="text-[10px] font-mono uppercase tracking-widest text-neutral-400 mb-2">Investissement estimé</p><p className="text-5xl">{totalAmount} € <span className="text-lg text-neutral-400">TVAC</span></p></div>
-            <div className="text-right text-[10px] font-mono uppercase tracking-[0.5em] text-neutral-300 italic">L'Immersive — Technologie & Terroir</div>
-          </div>
+             {/* Header */}
+             <div className="flex justify-between items-start">
+                 <div>
+                     <h1 className="text-4xl font-serif tracking-widest mb-2 uppercase">L'Immersive</h1>
+                     <div className="h-px w-12 bg-black mb-2"></div>
+                     <p className="font-mono text-[9px] uppercase tracking-[0.3em]">Le Monde en Bouteille</p>
+                 </div>
+                 <div className="text-right">
+                     <p className="font-mono text-[9px] uppercase tracking-[0.2em] mb-1">MÉMOIRE D'INTENTION</p>
+                     <p className="font-serif italic text-lg">{new Date().toLocaleDateString()}</p>
+                 </div>
+             </div>
+
+             {/* Body */}
+             <div className="flex-1 flex flex-col justify-center gap-16">
+                 <div className="text-center px-12">
+                     <p className="font-serif italic text-2xl leading-relaxed mb-6">
+                         "Pour {data.contact.name || 'votre événement'}, nous avons imaginé un moment suspendu."
+                     </p>
+                     <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-neutral-500">
+                         {data.eventType?.title} — {data.pax} Personnes — {data.timeSlot?.title}
+                     </p>
+                 </div>
+
+                 <div className="grid grid-cols-2 gap-12 border-t border-b border-black/10 py-12">
+                     <div className="pr-12 border-r border-black/10">
+                         <h3 className="font-mono text-[10px] uppercase tracking-[0.2em] mb-6">L'Atmosphère</h3>
+                         <p className="font-serif text-xl mb-2">{data.format?.title}</p>
+                         <p className="text-xs text-neutral-600 leading-relaxed">{data.format?.desc}</p>
+                     </div>
+                     <div className="pl-6">
+                         <h3 className="font-mono text-[10px] uppercase tracking-[0.2em] mb-6">L'Expérience</h3>
+                         <p className="font-serif text-xl mb-2">{data.experience.title}</p>
+                         <ul className="text-xs text-neutral-600 space-y-2 mt-4">
+                             {data.selectedServices.map(id => (
+                                 <li key={id} className="flex items-center gap-2">
+                                     <span className="w-1 h-1 bg-black rounded-full"></span>
+                                     {SERVICES.find(s => s.id === id)?.title}
+                                 </li>
+                             ))}
+                         </ul>
+                     </div>
+                 </div>
+             </div>
+
+             {/* Footer */}
+             <div className="flex justify-between items-end">
+                 <div className="text-xs font-mono uppercase tracking-widest text-neutral-500">
+                     Document confidentiel<br/>Valable 15 jours
+                 </div>
+                 <div className="text-right">
+                     <p className="font-mono text-[9px] uppercase tracking-[0.2em] mb-2">Investissement Estimé</p>
+                     <p className="text-5xl font-serif">{totalAmount} € <span className="text-lg">TVAC</span></p>
+                 </div>
+             </div>
+         </div>
       </div>
 
-      <div className="flex-1 relative flex flex-col z-10 w-full h-full overflow-hidden print:hidden">
+      {/* --------------------
+          APPLICATION WEB
+          -------------------- */}
+      <div className="hidden md:flex flex-col justify-between w-20 border-r border-white/5 bg-[#0a0a0a] z-20 py-8 items-center h-full print:hidden">
+        <div className="font-serif font-bold text-xl cursor-pointer text-amber-600" onClick={() => setStep(0)}>L.</div>
+        <div className="flex flex-col gap-6 items-center">
+          {[1, 2, 3, 4, 5, 6, 7].map((s) => (
+            <button key={s} disabled={step < s} onClick={() => setStep(s)} className={`text-[10px] font-mono transition-all ${step === s ? 'text-white font-bold scale-125' : 'text-neutral-700 hover:text-neutral-400'}`}>0{s}</button>
+          ))}
+        </div>
+        <div className="text-[9px] text-neutral-700 rotate-180 writing-vertical tracking-widest uppercase">Namur</div>
+      </div>
+
+      <div className="flex-1 relative flex flex-col h-full overflow-hidden print:hidden">
+        {step > 0 && <button onClick={goBack} className="absolute bottom-8 left-8 z-40 flex items-center gap-2 text-neutral-500 hover:text-white uppercase text-[10px] tracking-widest font-mono print:hidden"><ChevronLeft size={16}/> Retour</button>}
+        
+        {/* PROGRESS BAR */}
+        <div className="absolute top-0 left-0 h-1 bg-amber-600 transition-all duration-1000 z-50 print:hidden" style={{ width: `${(step/7)*100}%` }}></div>
+
+        {/* HEADER BUDGET */}
         <div className="absolute top-4 right-4 md:top-8 md:right-8 z-50 pointer-events-none">
            <div className="bg-black/60 backdrop-blur-md border border-white/10 rounded-lg px-4 py-2 md:px-6 md:py-3 flex flex-col items-end shadow-2xl pointer-events-auto">
              <div className="font-mono text-[8px] md:text-[10px] uppercase text-neutral-400 tracking-widest mb-1">Budget Estimé</div>
-             <div className="font-serif text-lg md:text-2xl text-white tracking-tight flex items-baseline gap-2"><span className={isCustom ? "text-amber-500" : "text-white"}>{totalAmount} €</span>{isCustom && <span className="text-[8px] md:text-[10px] font-sans text-neutral-400 border border-neutral-600 px-1 rounded">+ Devis</span>}</div>
+             <div className="font-serif text-lg md:text-2xl text-white tracking-tight flex items-baseline gap-2">
+                <span className={isCustom ? "text-amber-500" : "text-white"}>{totalAmount} €</span>
+                {isCustom && <span className="text-[8px] md:text-[10px] font-sans text-neutral-400 border border-neutral-600 px-1 rounded">+ Devis</span>}
+             </div>
            </div>
         </div>
-        
-        {step > 1 && <BackButton onClick={goBack} />}
 
+        {/* STEP 1: TEMPORALITE */}
         {step === 1 && (
           <div className="flex-1 flex flex-col h-full animate-fade-in duration-700 relative">
             <div className="absolute top-0 left-0 p-6 md:p-12 z-50 pointer-events-none bg-gradient-to-b from-black/80 to-transparent w-full">
-               <BackButton onClick={() => goToStep(0)} />
-               <div className="mt-16 md:mt-16 pointer-events-auto"><span className="text-amber-500 font-mono text-xs uppercase tracking-widest mb-2 block">01 — Temporalité</span><h2 className="text-3xl md:text-5xl font-serif text-white leading-none">Le Moment<br/>du Choix</h2></div>
+               <div className="mt-16 md:mt-16 pointer-events-auto">
+                 <span className="text-amber-500 font-mono text-xs uppercase tracking-widest mb-2 block">01 — Temporalité</span>
+                 <h2 className="text-3xl md:text-5xl font-serif text-white leading-none">Le Moment<br/>du Choix</h2>
+               </div>
             </div>
             <div className="flex-1 flex flex-col md:flex-row h-full pt-32 md:pt-0 overflow-y-auto md:overflow-hidden">
               {TIME_SLOTS.map((slot) => (
@@ -336,19 +411,23 @@ export default function App() {
           </div>
         )}
 
+        {/* STEP 2: INTENTION */}
         {step === 2 && (
           <div className="flex-1 p-6 md:p-16 flex flex-col justify-center animate-fade-in-right duration-500 overflow-y-auto">
-             <div className="max-w-7xl mx-auto w-full h-full flex flex-col">
-               <div className="mb-6 md:mb-8 flex items-end justify-between border-b border-white/10 pb-6 mt-16 md:mt-0"><div><span className="text-amber-600 font-mono text-xs uppercase tracking-widest mb-2 block">02 — Intention</span><h2 className="text-3xl md:text-4xl font-serif text-white">L'Énergie du Moment</h2></div></div>
-               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 pb-20 md:pb-0">
+             <div className="max-w-7xl mx-auto w-full">
+               <div className="mb-6 md:mb-8 border-b border-white/10 pb-6 mt-16 md:mt-0">
+                  <span className="text-amber-600 font-mono text-xs uppercase tracking-widest mb-2 block">02 — Intention</span>
+                  <h2 className="text-3xl md:text-4xl font-serif text-white">L'Énergie du Moment</h2>
+               </div>
+               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
                  {EVENT_TYPES.map((type) => (
-                   <button key={type.id} onClick={() => { setData({...data, eventType: type}); autoNext(3); }} className="group relative h-48 md:h-96 w-full rounded-sm overflow-hidden border border-white/5 hover:border-amber-600/50 transition-all duration-300 text-left">
+                   <button key={type.id} onClick={() => { setData({...data, eventType: type}); autoNext(3); }} className="group relative h-96 w-full rounded-sm overflow-hidden border border-white/5 hover:border-amber-600/50 transition-all duration-300 text-left">
                      <div className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110 opacity-50 group-hover:opacity-80" style={{ backgroundImage: `url(${type.image})` }} />
                      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
                      <div className="absolute inset-0 p-6 md:p-8 flex flex-col justify-end">
-                        <h3 className="text-2xl md:text-3xl font-serif text-white mb-1 transform translate-y-0 md:translate-y-2 group-hover:translate-y-0 transition-transform duration-500">{type.title}</h3>
-                        <div className="text-amber-500 text-[10px] md:text-xs font-mono uppercase tracking-wider mb-2 md:mb-4 opacity-100 md:opacity-80 group-hover:opacity-100">{type.subtitle}</div>
-                        <p className="text-xs md:text-sm text-neutral-300 font-light opacity-100 md:opacity-0 group-hover:opacity-100 transform translate-y-0 md:translate-y-4 group-hover:translate-y-0 transition-all duration-500 delay-75 leading-relaxed">{type.desc}</p>
+                        <h3 className="text-2xl md:text-3xl font-serif text-white mb-1 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">{type.title}</h3>
+                        <div className="text-amber-500 text-[10px] md:text-xs font-mono uppercase tracking-wider mb-2 opacity-80 group-hover:opacity-100">{type.subtitle}</div>
+                        <p className="text-xs text-neutral-300 font-light opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 leading-relaxed">{type.desc}</p>
                      </div>
                    </button>
                  ))}
@@ -357,18 +436,21 @@ export default function App() {
           </div>
         )}
 
+        {/* STEP 3: ARCHITECTURE */}
         {step === 3 && (
           <div className="flex-1 flex flex-col justify-center p-6 md:p-16 animate-fade-in-right duration-500 overflow-y-auto">
-             <div className="max-w-7xl mx-auto w-full h-full flex flex-col">
+             <div className="max-w-7xl mx-auto w-full flex flex-col h-full justify-center">
                <div className="mb-6 md:mb-8 border-b border-white/10 pb-6 mt-16 md:mt-0"><span className="text-amber-600 font-mono text-xs uppercase tracking-widest mb-2 block">03 — Architecture</span><h2 className="text-3xl md:text-4xl font-serif text-white">Configuration de l'Espace</h2></div>
-               <div className="flex-1 flex flex-col gap-4 md:gap-6 pb-20 md:pb-0">
-                  {FORMATS.map((fmt) => (
-                    <button key={fmt.id} onClick={() => { setData({...data, format: fmt}); autoNext(4); }} className="group relative flex-1 min-h-[120px] md:min-h-0 border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-all duration-300 flex items-center overflow-hidden hover:border-amber-600/30">
-                       <div className="w-1/3 h-full relative overflow-hidden"><div className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-105 opacity-60 group-hover:grayscale-0" style={{ backgroundImage: `url(${fmt.image})` }} /></div>
-                       <div className="flex-1 p-6 md:p-8 text-left flex items-center justify-between">
-                          <div><h3 className="text-xl md:text-3xl font-serif text-white mb-1 md:mb-2 group-hover:text-amber-500 transition-colors">{fmt.title}</h3><div className="flex items-center gap-4 text-[10px] md:text-xs font-mono uppercase tracking-widest text-neutral-500"><span>{fmt.subtitle}</span></div></div>
-                          <div className="text-sm text-neutral-400 font-light leading-relaxed max-w-xs text-right hidden md:block">{fmt.desc}</div>
-                          <ArrowRight size={20} className="text-white/20 group-hover:text-amber-600 transition-colors transform group-hover:translate-x-2 duration-300 ml-4 md:ml-8"/>
+               <div className="flex flex-col gap-4 md:gap-6">
+                  {FORMATS.map((f) => (
+                    <button key={f.id} onClick={() => { setData({...data, format: f}); autoNext(4); }} className="group relative flex-1 min-h-[160px] border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-all duration-300 flex items-center overflow-hidden hover:border-amber-600/30">
+                       <div className="w-1/3 h-full relative overflow-hidden"><div className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-105 opacity-60 group-hover:grayscale-0" style={{ backgroundImage: `url(${f.image})` }} /></div>
+                       <div className="flex-1 p-8 text-left flex items-center justify-between">
+                          <div>
+                              <h3 className="text-3xl font-serif text-white mb-2 group-hover:text-amber-500 transition-colors">{f.title}</h3>
+                              <p className="text-xs text-neutral-400 font-light leading-relaxed max-w-md">{f.desc}</p>
+                          </div>
+                          <ArrowRight size={24} className="text-white/20 group-hover:text-amber-600 transition-colors transform group-hover:translate-x-2 duration-300 ml-8"/>
                        </div>
                     </button>
                   ))}
@@ -377,35 +459,35 @@ export default function App() {
           </div>
         )}
 
+        {/* STEP 4: CALIBRAGE */}
         {step === 4 && (
           <div className="flex-1 flex flex-col animate-fade-in-right duration-500 justify-center overflow-y-auto">
              <div className="max-w-4xl mx-auto w-full p-6 md:p-8 mt-16 md:mt-0">
                 <div className="text-center mb-10 md:mb-16"><span className="text-amber-600 font-mono text-xs uppercase tracking-widest mb-4 block">04 — Calibrage</span><h3 className="text-4xl md:text-5xl font-serif mb-4 text-white">L'Horizon</h3><p className="text-neutral-500 max-w-md mx-auto text-sm">Combien d'invités pour ce moment ?</p></div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
-                   <div className="flex flex-col items-center gap-6 p-8 md:p-10 border border-white/10 bg-white/[0.02]">
+                   <div className="flex flex-col items-center gap-6 p-8 border border-white/10 bg-white/[0.02]">
                         <span className="text-xs font-mono uppercase tracking-widest text-neutral-500">Volume Invités</span>
                         <div className="flex items-center gap-6 md:gap-8">
-                           <button onClick={() => setData({...data, pax: Math.max(2, data.pax - 1)})} className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-white/20 flex items-center justify-center hover:bg-white hover:text-black transition-colors"><Minus size={18}/></button>
-                           <span className="text-5xl md:text-6xl font-serif text-white w-20 md:w-24 text-center">{data.pax}</span>
-                           <button onClick={() => setData({...data, pax: Math.min(50, data.pax + 1)})} className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-white/20 flex items-center justify-center hover:bg-white hover:text-black transition-colors"><Plus size={18}/></button>
+                           <button onClick={() => setData({...data, pax: Math.max(1, data.pax-1)})} className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:bg-white hover:text-black transition-colors"><Minus size={18}/></button>
+                           <span className="text-6xl font-serif text-white w-24 text-center">{data.pax}</span>
+                           <button onClick={() => setData({...data, pax: Math.min(50, data.pax+1)})} className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:bg-white hover:text-black transition-colors"><Plus size={18}/></button>
                         </div>
                    </div>
-                   <div className="flex flex-col items-center gap-6 p-8 md:p-10 border border-white/10 bg-white/[0.02] relative">
+                   <div className="flex flex-col items-center gap-6 p-8 border border-white/10 bg-white/[0.02] relative">
                         <span className="text-xs font-mono uppercase tracking-widest text-neutral-500">{isMultiDay ? 'Dates (Début - Fin)' : 'Date Cible'}</span>
                         <div className="w-full flex flex-col gap-4">
-                          <input type="date" min={new Date().toISOString().split('T')[0]} onChange={(e) => setData({...data, date: e.target.value})} className="bg-transparent text-xl md:text-2xl text-center font-serif text-white w-full outline-none border-b border-white/10 pb-2 focus:border-amber-600 transition-colors uppercase [color-scheme:dark]" />
-                          {isMultiDay && (<input type="date" min={data.date || new Date().toISOString().split('T')[0]} onChange={(e) => setData({...data, endDate: e.target.value})} className="bg-transparent text-xl md:text-2xl text-center font-serif text-amber-500 w-full outline-none border-b border-white/10 pb-2 focus:border-amber-600 transition-colors uppercase [color-scheme:dark] animate-fade-in-up" />)}
+                          <input type="date" min={new Date().toISOString().split('T')[0]} onChange={(e) => setData({...data, date: e.target.value})} className="bg-transparent text-2xl font-serif text-white w-full outline-none border-b border-white/10 pb-4 text-center uppercase [color-scheme:dark]" />
+                          {isMultiDay && (<input type="date" min={data.date || new Date().toISOString().split('T')[0]} onChange={(e) => setData({...data, endDate: e.target.value})} className="bg-transparent text-2xl font-serif text-amber-500 w-full outline-none border-b border-white/10 pb-4 text-center uppercase [color-scheme:dark] animate-fade-in-up" />)}
                         </div>
                         <div className="absolute bottom-2 right-2"><button onClick={() => setIsMultiDay(!isMultiDay)} className={`text-[10px] uppercase tracking-widest px-2 py-1 border transition-colors ${isMultiDay ? 'bg-amber-600 border-amber-600 text-white' : 'border-white/20 text-neutral-500 hover:border-white'}`}>{isMultiDay ? '- 1 jour' : '+ Jours'}</button></div>
                    </div>
                 </div>
-                <div className="mt-12 md:mt-16 text-center pb-20 md:pb-0">
-                  <button onClick={() => goToStep(5)} className="inline-flex items-center gap-3 bg-white text-black px-10 py-4 md:px-12 md:py-4 hover:bg-amber-500 hover:text-white transition-colors font-mono text-xs uppercase tracking-widest shadow-lg rounded-sm w-full md:w-auto justify-center">Valider le Calibrage <ArrowRight size={14}/></button>
-                </div>
+                <div className="mt-12 md:mt-16 text-center pb-20"><button onClick={() => goToStep(5)} className="inline-flex items-center gap-3 bg-white text-black px-10 py-4 md:px-12 md:py-4 hover:bg-amber-500 hover:text-white transition-colors font-mono text-xs uppercase tracking-widest shadow-lg rounded-sm w-full md:w-auto justify-center">Valider le Calibrage <ArrowRight size={14}/></button></div>
              </div>
           </div>
         )}
 
+        {/* STEP 5: IMMERSION */}
         {step === 5 && (
           <div className="flex-1 flex flex-col animate-fade-in-right duration-500 overflow-y-auto scrollbar-hide">
              <div className="max-w-6xl mx-auto w-full p-6 md:p-16 mt-16 md:mt-0">
@@ -443,6 +525,7 @@ export default function App() {
           </div>
         )}
 
+        {/* STEP 6: SERVICES & FINITIONS */}
         {step === 6 && (
           <div className="flex-1 p-6 md:p-16 overflow-y-auto scrollbar-hide animate-fade-in-right duration-500">
              <div className="max-w-6xl mx-auto w-full h-full flex flex-col">
@@ -487,7 +570,7 @@ export default function App() {
                    <div className="pt-8 mt-12 border-t border-white/10 text-center pb-8 md:pb-0">
                       <div className="text-xs text-neutral-500 uppercase tracking-widest mb-3">Total Estimé TVAC</div>
                       <div className="flex items-baseline justify-center gap-3"><span className="text-4xl md:text-5xl font-serif text-amber-500">{totalAmount} €</span>{isCustom && <span className="text-sm font-sans text-neutral-400 border border-neutral-600 px-2 py-0.5 rounded">+ Devis</span>}</div>
-                      <button onClick={handlePrint} className="mt-6 flex items-center justify-center gap-2 w-full text-[10px] uppercase tracking-widest text-neutral-500 hover:text-white transition-colors"><FileText size={12} /> Télécharger le devis officiel</button>
+                      <button onClick={() => window.print()} className="mt-6 flex items-center justify-center gap-2 w-full text-[10px] uppercase tracking-widest text-neutral-500 hover:text-white transition-colors"><FileText size={12} /> Télécharger la Note d'Intention</button>
                    </div>
                 </div>
                 <div className="w-full md:w-1/2 p-6 md:p-10 flex flex-col justify-center bg-black/40 relative overflow-y-auto">
@@ -508,7 +591,7 @@ export default function App() {
         )}
       </div>
 
-      {/* STYLE CSS (Index.css injecté ici pour s'assurer que tu as tout) */}
+      {/* --- STYLE CSS --- */}
       <style dangerouslySetInnerHTML={{__html: `
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Space+Grotesk:wght@300;400;500&display=swap');
         .font-serif { font-family: 'Playfair Display', serif; }
