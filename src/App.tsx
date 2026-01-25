@@ -7,7 +7,7 @@ const EMAILJS_TEMPLATE_ADMIN_ID = "template_3i47cv7"; // Demande de projet
 const EMAILJS_TEMPLATE_CLIENT_ID = "template_2keg8go"; // Accusé réception
 const EMAILJS_PUBLIC_KEY = "s1sthtiZPEDfGRote"; 
 
-// --- DATA ---
+// --- DATA (TES DONNÉES) ---
 
 const TIME_SLOTS = [
   {
@@ -82,7 +82,7 @@ const FORMATS = [
     subtitle: 'Standard',
     desc: 'Notre disposition signature. Équilibrée & chaleureuse.',
     setupFee: 0,
-    image: 'https://www.lemonde-enbouteille.be/web/image/26776-c184953c/90-DSC09392.webp'
+    image: 'https://www.lemonde-enbouteille.be/web/image/26813-d579cd53/104-DSC09412.webp'
   },
   {
     id: 'cocktail',
@@ -98,7 +98,7 @@ const FORMATS = [
     subtitle: 'Mixte',
     desc: 'Zone de confort assises et zone de flux debout.',
     setupFee: 0,
-    image: 'https://www.lemonde-enbouteille.be/web/image/26778-34e20e4e/94-DSC09399.svg'
+    image: 'https://www.lemonde-enbouteille.be/web/image/26807-8f38cf40/31-DSC00898.webp'
   }
 ];
 
@@ -108,7 +108,6 @@ const EXPERIENCES = [
     title: 'Location', 
     price: 0, 
     sub: 'L\'espace nu',
-    description: "Mise à disposition exclusive de l'espace. Idéal pour vos réunions autonomes ou présentations.",
     image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2301&auto=format&fit=crop'
   },
   { 
@@ -116,7 +115,6 @@ const EXPERIENCES = [
     title: 'Tour du Monde', 
     price: 40, 
     sub: 'Dégustation 5 vins',
-    description: "Une exploration sensorielle guidée à travers 5 vins d'exception. Le format classique et élégant pour découvrir nos pépites du terroir.",
     image: 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?q=80&w=2940&auto=format&fit=crop'
   },
   { 
@@ -124,15 +122,13 @@ const EXPERIENCES = [
     title: 'Casino du Vin', 
     price: 46, 
     sub: 'Animation Ludique',
-    description: "L'ambiance feutrée de la Black List. Dégustation à l'aveugle, tables de jeu, jetons et enchères. Misez sur vos sens dans ce format participatif.",
     image: 'https://images.unsplash.com/photo-1596838132731-3301c3fd4317?q=80&w=2940&auto=format&fit=crop'
   },
   { 
     id: 'gastro', 
     title: 'Instant Gourmand', 
     price: -1, // Sur Devis
-    sub: 'Challenge Culinaire',
-    description: "Une immersion autour de la gastronomie. Quiz culinaire interactif, découverte d'ingrédients mystères et accords mets-vins sur mesure.",
+    sub: 'Repas',
     image: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=2940&auto=format&fit=crop'
   }
 ];
@@ -284,7 +280,6 @@ export default function App() {
 
   // 1. TRACKING VISITEURS
   useEffect(() => {
-    // Vérifie si déjà visité dans cette session
     if (!sessionStorage.getItem('has_visited')) {
        fetch('https://api.counterapi.dev/v1/lmeb-immersive/visits/up')
          .catch(err => console.error(err));
@@ -292,8 +287,7 @@ export default function App() {
     }
   }, []);
 
-  // 2. TRACKING "FIN DU PARCOURS" (Ta demande)
-  // On compte +1 si l'utilisateur arrive à l'étape 7 (Récap) pour la première fois
+  // 2. TRACKING "FIN DU PARCOURS" (ARRIVÉE ETAPE 7)
   useEffect(() => {
     if (step === 7 && !sessionStorage.getItem('reached_final')) {
         fetch('https://api.counterapi.dev/v1/lmeb-immersive/finalstep/up')
@@ -302,11 +296,10 @@ export default function App() {
     }
   }, [step]);
 
-  // 3. FONCTION D'ACTIVATION SECRÈTE (5 clics sur le logo)
+  // 3. FONCTION ACTIVATION ADMIN (5 CLICS)
   const handleLogoClick = () => {
      setSecretClicks(prev => prev + 1);
      if (secretClicks + 1 === 5) {
-        // Chargement des données
         Promise.all([
             fetch('https://api.counterapi.dev/v1/lmeb-immersive/visits').then(r => r.json()),
             fetch('https://api.counterapi.dev/v1/lmeb-immersive/finalstep').then(r => r.json()),
@@ -438,7 +431,7 @@ export default function App() {
 
     Promise.all([sendAdmin, sendClient])
       .then(() => {
-          // --- TRACKING LEAD (SUCCÈS) ---
+          // --- COMPTEUR LEADS ---
           fetch('https://api.counterapi.dev/v1/lmeb-immersive/leads/up').catch(console.error);
           
           setIsSending(false);
@@ -482,33 +475,20 @@ export default function App() {
                 <span className="text-xs font-mono text-neutral-500">Nous reviendrons vers vous sous 24h avec une proposition chiffrée.</span>
               </p>
 
-              <div className="flex flex-col gap-6 w-full md:w-auto items-center">
-                  <button 
-                    onClick={() => window.location.reload()} 
-                    className="group relative px-8 py-4 bg-white/5 border border-white/10 hover:border-amber-600/50 transition-all duration-500 cursor-pointer w-full"
-                  >
-                    <div className="absolute inset-0 bg-amber-600/10 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500 ease-out"></div>
-                    <span className="relative font-mono text-[10px] uppercase tracking-[0.2em] text-white group-hover:text-amber-500 transition-colors">
-                      Retour à l'accueil
-                    </span>
-                  </button>
-
-                  {/* LIEN OFICIEL - STYLE MONO DISCRET */}
-                  <a 
-                    href="https://www.lemonde-enbouteille.be/salle" 
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="font-mono text-[9px] uppercase tracking-[0.25em] text-neutral-500 hover:text-white transition-colors border-b border-white/10 hover:border-white pb-1"
-                  >
-                    Voir le lieu officiel
-                  </a>
-              </div>
+              <button 
+                onClick={() => window.location.reload()} 
+                className="group relative px-8 py-4 bg-white/5 border border-white/10 hover:border-amber-600/50 transition-all duration-500 cursor-pointer"
+              >
+                <div className="absolute inset-0 bg-amber-600/10 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500 ease-out"></div>
+                <span className="relative font-mono text-[10px] uppercase tracking-[0.2em] text-white group-hover:text-amber-500 transition-colors">
+                  Retour à l'accueil
+                </span>
+              </button>
            </div>
       </div>
     )
 }
 
-  // --- ECRAN ACCUEIL ---
   if (step === 0) {
     return (
       <div className="relative h-[100dvh] w-full bg-[#050505] flex flex-col items-center justify-center p-6 md:p-8 text-white overflow-hidden">
@@ -516,37 +496,37 @@ export default function App() {
         <div className="absolute inset-0 z-0 opacity-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] pointer-events-none"></div>
         <div className="absolute inset-0 z-0 opacity-40 bg-[url('https://www.lemonde-enbouteille.be/web/image/16056-b2829e5f/79-DSC09373.webp')] bg-cover bg-center mix-blend-overlay pointer-events-none"></div>
 
-        <div className="relative z-10 text-center w-full max-w-4xl mx-auto flex flex-col items-center justify-center h-full">
+        <div className="relative z-10 text-center space-y-8 md:space-y-12 animate-fade-in duration-1000 max-w-4xl mx-auto w-full flex flex-col items-center">
           
-          <div className="w-px h-12 md:h-20 bg-gradient-to-b from-transparent via-amber-600 to-transparent mx-auto mb-6 md:mb-8"></div>
+          <div className="w-px h-16 md:h-24 bg-gradient-to-b from-transparent via-amber-600 to-transparent mx-auto"></div>
           
-          {/* ZONE LOGO CLIQUABLE POUR ADMIN */}
-          <div className="animate-fade-in-up cursor-default select-none" onClick={handleLogoClick}>
+          {/* LOGO CLIQUABLE POUR ADMIN */}
+          <div className="cursor-default select-none" onClick={handleLogoClick}>
             <img 
               src="https://www.lemonde-enbouteille.be/web/image/26768-edef09a5/LOGO%20l%27immersive-24.png" 
               alt="Logo L'Immersive" 
-              className="w-28 md:w-40 mx-auto mb-4 md:mb-6 opacity-90 drop-shadow-2xl" 
+              className="w-32 md:w-48 mx-auto mb-6 opacity-90 drop-shadow-2xl" 
             />
             
-            <h1 className="text-5xl md:text-7xl lg:text-[7rem] font-serif tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-neutral-500 leading-none mb-3">
+            <h1 className="text-5xl md:text-7xl lg:text-[8rem] font-serif tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-neutral-500 leading-none mb-4">
               L'IMMERSIVE
             </h1>
-            <p className="font-mono text-[9px] md:text-xs uppercase tracking-[0.4em] md:tracking-[0.6em] text-amber-500 mb-8 md:mb-10">
+            <p className="font-mono text-[10px] md:text-xs uppercase tracking-[0.4em] md:tracking-[0.6em] text-amber-500">
               Le Monde en Bouteille
             </p>
           </div>
 
-          <div className="border-l border-amber-600/30 pl-6 text-left max-w-lg mx-auto backdrop-blur-sm py-2 mb-10 md:mb-12 animate-fade-in-up delay-200">
+          <div className="border-l border-amber-600/30 pl-6 md:pl-8 text-left max-w-lg mx-auto backdrop-blur-sm py-4">
              <p className="text-neutral-400 font-light leading-relaxed text-xs md:text-sm">
-               Une adresse confidentielle à Namur. <br className="hidden md:block"/>
-               <strong>Un espace événementiel privatif alliant architecture de caractère et équipements connectés.</strong> <br className="hidden md:block"/>
-               Réunions, séminaires ou soirées : ne louez pas une salle, vivez une expérience.
+               Une adresse confidentielle à Namur. 
+               Ici, la technologie sublime le terroir pour des événements qui marquent.
+               Ne louez pas une salle, vivez une expérience.
              </p>
           </div>
 
           <button 
             onClick={() => goToStep(1)}
-            className="group relative px-8 py-4 md:px-10 md:py-5 bg-white/5 border border-white/10 hover:border-amber-600/50 transition-all duration-500 w-full md:w-auto cursor-pointer z-50 animate-fade-in-up delay-300"
+            className="group relative px-8 py-4 md:px-10 md:py-5 bg-white/5 border border-white/10 hover:border-amber-600/50 transition-all duration-500 w-full md:w-auto cursor-pointer"
           >
             <div className="absolute inset-0 bg-amber-600/10 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500 ease-out"></div>
             <span className="relative font-mono text-xs uppercase tracking-[0.2em] flex items-center justify-center gap-4 text-white group-hover:text-amber-500 transition-colors">
@@ -554,28 +534,19 @@ export default function App() {
             </span>
           </button>
 
-          {/* FOOTER INTEGRE ET MINIMALISTE */}
-          <div className="mt-12 md:mt-16 animate-fade-in-up delay-500 flex flex-col items-center gap-3 opacity-60 hover:opacity-100 transition-opacity duration-500">
-             
-             <div className="flex items-center gap-3">
-                <div className="h-px w-8 bg-white/20"></div>
-                <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-neutral-400">
-                   Confiance : Entreprises & Privés
-                </p>
-                <div className="h-px w-8 bg-white/20"></div>
+          {/* SOCIAL PROOF */}
+          <div className="pt-6 md:pt-8 opacity-80 animate-fade-in-up">
+             <div className="flex items-center justify-center gap-1 mb-3">
+                {[1,2,3,4,5].map(i => (
+                    <Star key={i} size={10} className="text-amber-600 fill-amber-600 opacity-60" />
+                ))}
              </div>
-             
-             <a 
-                href="https://www.lemonde-enbouteille.be/salle" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="font-mono text-[9px] text-neutral-500 hover:text-amber-500 uppercase tracking-widest transition-colors"
-             >
-                www.lemonde-enbouteille.be
-             </a>
+             <p className="font-mono text-[9px] md:text-[10px] text-neutral-500 uppercase tracking-widest">
+                Déjà plébiscité par de nombreuses sociétés & clients privés
+             </p>
           </div>
 
-          {/* PANNEAU SECRET (Admin) */}
+          {/* PANNEAU ADMIN SECRET */}
           {showAdmin && (
             <div className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-xl flex items-center justify-center animate-fade-in-up" onClick={() => setShowAdmin(false)}>
                <div className="border border-white/10 p-8 w-80 text-center shadow-2xl relative bg-[#0a0a0a]" onClick={e => e.stopPropagation()}>
@@ -590,7 +561,7 @@ export default function App() {
                           <div className="text-xl font-serif text-white">{stats.visits}</div>
                       </div>
 
-                      {/* STAT 2: DERNIERE ETAPE (Ta demande) */}
+                      {/* STAT 2: FIN DU PARCOURS (Ta demande) */}
                       <div className="flex justify-between items-center p-3 bg-white/5 border border-white/5">
                           <div className="text-[10px] text-neutral-400 uppercase tracking-wider">Final Step</div>
                           <div className="text-xl font-serif text-white">{stats.finalStep}</div>
@@ -615,7 +586,6 @@ export default function App() {
     );
   }
 
-  // --- STRUCTURE PRINCIPALE (OPTIMISÉE MOBILE 'dvh') ---
   return (
     <div className="relative h-[100dvh] w-full bg-[#080808] text-white overflow-hidden font-sans flex flex-col md:flex-row">
       <div className="absolute inset-0 z-0 pointer-events-none opacity-[0.08] bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay"></div>
@@ -820,7 +790,7 @@ export default function App() {
                      className={`p-6 md:p-8 border text-left transition-all duration-300 group ${isDryHire ? 'border-white bg-white text-black' : 'border-white/10 hover:border-white/30 bg-[#0a0a0a]'}`}
                    >
                       <LayoutTemplate size={28} className={`mb-4 ${isDryHire ? 'text-black' : 'text-neutral-500'}`} />
-                      <h4 className="text-xl md:text-2xl font-serif mb-2">Location</h4>
+                      <h4 className="text-xl md:text-2xl font-serif mb-2">Location Sèche</h4>
                       <p className={`text-xs md:text-sm ${isDryHire ? 'text-neutral-700' : 'text-neutral-400'}`}>
                         Mise à disposition de l'espace uniquement. 
                       </p>
@@ -867,9 +837,12 @@ export default function App() {
                                  <div className="text-[10px] font-mono text-amber-500 uppercase tracking-widest mb-2">{exp.sub}</div>
                                  <div className={`text-2xl font-serif leading-tight mb-3 ${data.experience.id === exp.id ? 'text-white' : 'text-neutral-200'}`}>{exp.title}</div>
                                  
-                                 <p className="text-xs text-neutral-400 leading-relaxed mb-4 opacity-80 max-w-[90%]">
-                                    {exp.description}
-                                 </p>
+                                 {/* Description ajoutée ici */}
+                                 {exp.description && (
+                                     <p className="text-xs text-neutral-400 leading-relaxed mb-4 opacity-80 max-w-[90%]">
+                                        {exp.description}
+                                     </p>
+                                 )}
 
                                  <div className={`text-lg font-mono ${data.experience.id === exp.id ? 'text-amber-500' : 'text-white'}`}>
                                     {exp.price > 0 ? `${exp.price}€` : 'Sur Devis'}
