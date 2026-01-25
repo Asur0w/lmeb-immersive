@@ -173,18 +173,43 @@ export default function App() {
   const autoNext = (target) => goToStep(target);
   const goBack = () => { if (step > 0) goToStep(step - 1); };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!data.contact.email || !data.contact.name || !data.contact.phone) { alert("Merci de compléter vos coordonnées."); return; }
     if (!isAgreed) { alert("Merci d'accepter les conditions pour continuer."); return; }
+    
     setIsSending(true);
-    // @ts-ignore
-    window.emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ADMIN_ID, { ...data, total: totalAmount }, EMAILJS_PUBLIC_KEY);
-    // @ts-ignore
-    window.emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_CLIENT_ID, { ...data, total: totalAmount }, EMAILJS_PUBLIC_KEY).then(() => {
+    
+    const templateParams = {
+        name: data.contact.name, 
+        email: data.contact.email, 
+        phone: data.contact.phone, 
+        message: data.contact.message,
+        date: data.date + (data.endDate ? ` au ${data.endDate}` : ''), 
+        pax: data.pax,
+        type: data.eventType?.title || "Non défini", 
+        time_slot: data.timeSlot?.title || "Non défini", 
+        format: data.format?.title || "Non défini",
+        experience: isDryHire ? "Location Sèche" : data.experience?.title,
+        services: data.selectedServices.map(id => SERVICES.find(s => s.id === id)?.title).join(', '),
+        total: totalAmount, 
+        is_custom: isCustom ? "OUI (Devis requis)" : "NON"
+    };
+
+    try {
+        // @ts-ignore
+        await window.emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ADMIN_ID, templateParams, EMAILJS_PUBLIC_KEY);
+        // @ts-ignore
+        await window.emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_CLIENT_ID, templateParams, EMAILJS_PUBLIC_KEY);
+        
         fetch('https://api.counterapi.dev/v1/lmeb-immersive/leads/up').catch(console.error);
-        setIsSending(false); setIsSent(true);
-    });
+        setIsSent(true);
+    } catch (error) {
+        console.error("Erreur envoi", error);
+        alert("Une erreur est survenue lors de l'envoi.");
+    } finally {
+        setIsSending(false);
+    }
   };
 
   // --- RENDER ---
@@ -268,117 +293,91 @@ export default function App() {
     <div className="relative h-[100dvh] w-full bg-[#080808] text-white overflow-hidden flex flex-col md:flex-row">
       
       {/* --------------------
-          PDF MANIFESTE LUXURY (PRINT) - VERSION IMMERSIVE ULTIME
+          PDF MANIFESTE LUXURY (PRINT) - VERSION ARCHITECTE
           -------------------- */}
-      <div className="hidden print:block fixed inset-0 z-[9999] bg-white text-black p-0 m-0 w-full h-full overflow-hidden">
-         <div className="w-[210mm] h-[297mm] relative flex flex-col justify-between">
+      <div className="hidden print:block fixed inset-0 z-[9999] bg-white text-black p-0 m-0 overflow-hidden">
+         <div className="w-[210mm] h-[297mm] relative flex flex-col p-[15mm] mx-auto bg-white">
              
-             {/* HEADER AVEC ESPACE IMMERSIF */}
-             <div className="px-[20mm] pt-[20mm]">
-                 <div className="flex justify-between items-start border-b-[2px] border-black pb-8">
-                     <div>
-                         <h1 className="text-7xl font-serif tracking-tighter text-black mb-2">L'IMMERSIVE</h1>
-                         <p className="font-mono text-[9px] uppercase tracking-[0.4em] text-neutral-500">Le Monde en Bouteille — Namur</p>
-                     </div>
-                     <div className="text-right flex flex-col items-end pt-4">
-                        <div className="font-mono text-[9px] uppercase tracking-[0.2em] mb-1 bg-black text-white px-2 py-1">Document Officiel</div>
-                        <div className="font-mono text-xs text-neutral-600">REF-{new Date().getFullYear()}-{(new Date().getMonth()+1).toString().padStart(2,'0')}{new Date().getDate().toString().padStart(2,'0')}</div>
-                     </div>
-                 </div>
-             </div>
-
-             {/* CORPS PRINCIPAL : NARRATIF & TECHNIQUE */}
-             <div className="flex-1 flex px-[20mm] py-16 gap-16">
-                 
-                 {/* COLONNE GAUCHE : L'HISTOIRE */}
-                 <div className="w-[55%] flex flex-col pr-8 border-r border-black/10">
-                     <div className="mb-20">
-                         <div className="flex items-center gap-3 mb-8">
-                             <div className="w-8 h-[1px] bg-amber-600"></div>
-                             <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-neutral-500">Bénéficiaire : {data.contact.name}</p>
-                         </div>
-                         <p className="font-serif text-5xl leading-[1.1] text-black italic">
-                             "Une parenthèse hors du temps, où l'architecture de caractère rencontre l'art de recevoir."
-                         </p>
-                     </div>
-
-                     <div className="mt-auto">
-                         <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-neutral-400 mb-6">Paramètres de l'événement</p>
-                         <div className="grid grid-cols-2 gap-y-8 gap-x-4">
-                             <div>
-                                 <span className="block font-serif text-2xl mb-1">{data.date}</span>
-                                 <span className="block font-mono text-[10px] text-neutral-500 uppercase tracking-wider">Date Sélectionnée</span>
-                             </div>
-                             <div>
-                                 <span className="block font-serif text-2xl mb-1">{data.timeSlot?.label}</span>
-                                 <span className="block font-mono text-[10px] text-neutral-500 uppercase tracking-wider">Créneau</span>
-                             </div>
-                             <div>
-                                 <span className="block font-serif text-2xl mb-1">{data.pax} Personnes</span>
-                                 <span className="block font-mono text-[10px] text-neutral-500 uppercase tracking-wider">Audience</span>
-                             </div>
-                             <div>
-                                 <span className="block font-serif text-2xl mb-1">{data.eventType?.title}</span>
-                                 <span className="block font-mono text-[10px] text-neutral-500 uppercase tracking-wider">Format</span>
-                             </div>
-                         </div>
-                     </div>
-                 </div>
-
-                 {/* COLONNE DROITE : LES DÉTAILS */}
-                 <div className="w-[45%] flex flex-col space-y-16 pt-4">
-                     <div>
-                         <div className="flex items-center justify-between border-b border-black/10 pb-2 mb-4">
-                             <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-neutral-400">Atmosphère</p>
-                             <div className="w-2 h-2 bg-black rounded-full"></div>
-                         </div>
-                         <p className="font-serif text-3xl mb-2">{data.format?.title}</p>
-                         <p className="text-xs text-neutral-600 leading-relaxed font-light">{data.format?.desc}</p>
-                     </div>
-
-                     <div>
-                         <div className="flex items-center justify-between border-b border-black/10 pb-2 mb-4">
-                             <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-neutral-400">Expérience</p>
-                             <div className="w-2 h-2 bg-amber-600 rounded-full"></div>
-                         </div>
-                         <p className="font-serif text-3xl mb-2">{data.experience.title}</p>
-                     </div>
-
-                     <div>
-                         <div className="flex items-center justify-between border-b border-black/10 pb-2 mb-4">
-                             <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-neutral-400">Inclusions & Services</p>
-                             <Plus size={10} className="text-black"/>
-                         </div>
-                         <ul className="space-y-3">
-                             {data.selectedServices.map(id => (
-                                 <li key={id} className="flex items-baseline gap-3">
-                                     <div className="w-1 h-1 bg-neutral-300 rounded-full"></div>
-                                     <span className="font-mono text-[10px] uppercase tracking-widest text-black">{SERVICES.find(s => s.id === id)?.title}</span>
-                                 </li>
-                             ))}
-                         </ul>
-                     </div>
-                 </div>
-             </div>
-
-             {/* PIED DE PAGE : TOTAL MASSIP (Black Block) */}
-             <div className="w-full bg-[#050505] text-white px-[20mm] py-[15mm] flex justify-between items-center">
+             {/* HEADER */}
+             <div className="flex justify-between items-end border-b-[3px] border-black pb-6 mb-8">
                  <div>
-                     <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-neutral-500 mb-2">Investissement Global Estimé</p>
-                     <p className="font-serif text-7xl leading-none">{totalAmount} € <span className="text-lg font-sans text-neutral-500 font-normal ml-2">TVAC</span></p>
+                     <h1 className="text-5xl font-serif tracking-tighter text-black uppercase mb-1">L'IMMERSIVE</h1>
+                     <p className="font-mono text-[9px] uppercase tracking-[0.4em] text-neutral-600">Le Monde en Bouteille — Namur</p>
+                 </div>
+                 <div className="text-right">
+                    <p className="font-mono text-[9px] uppercase tracking-[0.2em] mb-1 text-neutral-500">Document Réf.</p>
+                    <p className="font-mono text-sm font-bold">{new Date().getFullYear()}-{(new Date().getMonth()+1).toString().padStart(2,'0')}-{new Date().getDate().toString().padStart(2,'0')}</p>
+                 </div>
+             </div>
+
+             {/* CLIENT & CITATION (Plus petite et raffinée) */}
+             <div className="mb-10 pl-4 border-l-2 border-amber-600/50">
+                 <p className="font-mono text-[8px] uppercase tracking-[0.3em] text-neutral-500 mb-2">Bénéficiaire : {data.contact.name}</p>
+                 <p className="font-serif text-2xl leading-snug italic text-black opacity-90 max-w-2xl">
+                     "Une parenthèse hors du temps, où l'architecture de caractère rencontre l'art de recevoir."
+                 </p>
+             </div>
+
+             {/* GRILLE DE DÉTAILS (STYLE TECHNIQUE) */}
+             <div className="flex-1">
+                 {/* Ligne 1 - Temporalité */}
+                 <div className="flex border-t border-black/10 py-3 items-center">
+                     <div className="w-32 font-mono text-[9px] uppercase tracking-[0.2em] text-neutral-500">Date & Heure</div>
+                     <div className="flex-1 font-serif text-lg text-black">{data.date} <span className="mx-2 text-neutral-300">|</span> {data.timeSlot?.label}</div>
+                 </div>
+                 {/* Ligne 2 - Format */}
+                 <div className="flex border-t border-black/10 py-3 items-center">
+                     <div className="w-32 font-mono text-[9px] uppercase tracking-[0.2em] text-neutral-500">Format</div>
+                     <div className="flex-1 font-serif text-lg text-black">{data.eventType?.title} <span className="text-sm font-mono text-neutral-500 ml-2">({data.pax} Pers.)</span></div>
+                 </div>
+                 {/* Ligne 3 - Configuration */}
+                 <div className="flex border-t border-black/10 py-3 items-start">
+                     <div className="w-32 pt-1 font-mono text-[9px] uppercase tracking-[0.2em] text-neutral-500">Atmosphère</div>
+                     <div className="flex-1">
+                         <div className="font-serif text-lg mb-1 text-black">{data.format?.title}</div>
+                         <div className="font-mono text-[9px] text-neutral-600 max-w-md">{data.format?.desc}</div>
+                     </div>
+                 </div>
+                 {/* Ligne 4 - Expérience (Gros morceau) */}
+                 <div className="flex border-t border-black/10 py-4 items-start">
+                     <div className="w-32 pt-1 font-mono text-[9px] uppercase tracking-[0.2em] text-neutral-500">Expérience</div>
+                     <div className="flex-1">
+                         <div className="font-serif text-xl mb-3 text-black">{data.experience.title}</div>
+                         {/* Services Grid */}
+                         <div className="grid grid-cols-2 gap-y-2 gap-x-8">
+                             {data.selectedServices.map(id => (
+                                 <div key={id} className="flex items-center gap-2">
+                                     <div className="w-1.5 h-1.5 border border-black rounded-full"></div>
+                                     <span className="font-mono text-[9px] uppercase tracking-wider text-black">{SERVICES.find(s => s.id === id)?.title}</span>
+                                 </div>
+                             ))}
+                         </div>
+                     </div>
+                 </div>
+             </div>
+
+             {/* PIED DE PAGE : TOTAL NOIR & SIGNATURE */}
+             <div className="mt-auto">
+                 <div className="flex items-stretch border-t-2 border-black mt-8">
+                     {/* Bloc Prix Noir */}
+                     <div className="bg-black text-white p-6 pr-12">
+                         <p className="font-mono text-[8px] uppercase tracking-[0.2em] text-neutral-400 mb-1">Total Estimé (TVAC)</p>
+                         <p className="font-serif text-5xl leading-none">{totalAmount} €</p>
+                     </div>
+                     
+                     {/* Espace Signature */}
+                     <div className="flex-1 border-l border-black/10 p-4 flex flex-col justify-between">
+                         <p className="font-mono text-[8px] uppercase tracking-[0.2em] text-neutral-500 text-right">Signature pour accord</p>
+                         <div className="text-right">
+                             <span className="font-serif italic text-neutral-300 text-sm">L'Immersive</span>
+                         </div>
+                     </div>
                  </div>
                  
-                 <div className="flex gap-12">
-                     <div className="text-right">
-                         <div className="w-48 h-16 border border-white/20 mb-3 bg-white/5"></div>
-                         <p className="font-mono text-[7px] uppercase tracking-[0.2em] text-neutral-500">Signature Client</p>
-                     </div>
-                     <div className="text-right">
-                         <div className="w-48 h-16 border border-white/20 mb-3 flex items-center justify-center bg-white/5">
-                             <span className="font-serif italic text-neutral-600 text-sm">L'Immersive</span>
-                         </div>
-                         <p className="font-mono text-[7px] uppercase tracking-[0.2em] text-neutral-500">Pour Accord</p>
-                     </div>
+                 <div className="w-full text-center mt-8">
+                     <p className="font-mono text-[7px] uppercase tracking-[0.3em] text-neutral-400">
+                         Namur — Rue de la Croix — Belgique — www.lemonde-enbouteille.be
+                     </p>
                  </div>
              </div>
          </div>
@@ -546,7 +545,18 @@ export default function App() {
                    {SERVICES.map(srv => {
                      const isSelected = data.selectedServices.includes(srv.id);
                      let priceDisplay = ''; let subDisplay = '';
-                     if (srv.id === 'softs') { priceDisplay = `+${getSoftsPrice(data.pax)}€`; subDisplay = '(Forfait Total)'; } else if (srv.price === 0) { priceDisplay = 'OFFERT'; } else if (srv.price === -1) { priceDisplay = 'SUR DEVIS'; } else { priceDisplay = `+${srv.price}€`; if (srv.isPerHead) subDisplay = '/Pers'; }
+                     
+                     if (srv.id === 'softs') { 
+                        priceDisplay = `+${getSoftsPrice(data.pax)}€`; subDisplay = '(Forfait Total)'; 
+                     } else if (srv.price === 0) { 
+                        priceDisplay = 'OFFERT'; 
+                     } else if (srv.price === -1) { 
+                        priceDisplay = 'SUR DEVIS'; 
+                     } else { 
+                        priceDisplay = `+${srv.price}€`; 
+                        if (srv.isPerHead) subDisplay = '/Pers'; 
+                     }
+
                      return (
                        <button key={srv.id} onClick={() => toggleService(srv.id)} className={`relative p-6 border transition-all duration-300 text-left hover:bg-white/5 ${isSelected ? 'border-amber-600 bg-white/5' : 'border-white/10'}`}>
                          <div className="flex justify-between items-start mb-4"><div className={`p-2 rounded-full ${isSelected ? 'bg-amber-600 text-white' : 'bg-white/10 text-neutral-400'}`}>{srv.icon}</div>{isSelected && <Check size={16} className="text-amber-600"/>}</div>
@@ -586,7 +596,7 @@ export default function App() {
                    <div className="pt-8 mt-12 border-t border-white/10 text-center pb-8 md:pb-0">
                       <div className="text-xs text-neutral-500 uppercase tracking-widest mb-3">Total Estimé TVAC</div>
                       <div className="flex items-baseline justify-center gap-3"><span className="text-4xl md:text-5xl font-serif text-amber-500">{totalAmount} €</span>{isCustom && <span className="text-sm font-sans text-neutral-400 border border-neutral-600 px-2 py-0.5 rounded">+ Devis</span>}</div>
-                      <button onClick={() => window.print()} className="mt-6 flex items-center justify-center gap-2 w-full text-[10px] uppercase tracking-widest text-neutral-500 hover:text-white transition-colors"><FileText size={12} /> Télécharger la Note d'Intention</button>
+                      <button onClick={() => window.print()} className="mt-6 flex items-center justify-center gap-2 w-full text-[10px] uppercase tracking-widest text-neutral-500 hover:text-white transition-colors"><FileText size={12} /> Télécharger votre demande d'expérience</button>
                    </div>
                 </div>
                 <div className="w-full md:w-1/2 p-6 md:p-10 flex flex-col justify-center bg-black/40 relative overflow-y-auto">
