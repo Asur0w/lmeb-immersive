@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, ChevronLeft, Check, Sunrise, Sun, Moon, Star, Utensils, Wifi, Gift, Palette, LayoutTemplate, Droplets, Monitor, Users, Loader, Send, FileText, Share2, Sparkles, Minus, Plus } from 'lucide-react';
+import { ArrowRight, ChevronLeft, Check, Sunrise, Sun, Moon, Star, Utensils, Wifi, Gift, Palette, LayoutTemplate, Droplets, Monitor, Users, Loader, Send, FileText, Share2, Sparkles, Minus, Plus, Fingerprint } from 'lucide-react';
 
 // --- CONFIGURATION EMAIL ---
 const EMAILJS_SERVICE_ID = "service_z8iw21s"; 
@@ -223,7 +223,7 @@ export default function App() {
           </div>
 
           <div className="border-l border-amber-600/30 pl-6 text-left max-w-xl backdrop-blur-sm py-2 mb-10">
-             <p className="text-neutral-300 font-light text-xs md:text-sm leading-relaxed">Une adresse confidentielle à Namur. <br className="hidden md:block"/><strong>Un espace événementiel privatif alliant architecture de caractère et équipements connectés.</strong></p>
+             <p className="text-neutral-300 font-light text-xs md:text-sm leading-relaxed">Une adresse confidentielle à Namur. <br className="hidden md:block"/><strong>Un espace événementiel privatif alliant expérience de caractère. Salle conçue avec des équipements connectés.</strong></p>
           </div>
           
           <button onClick={() => goToStep(1)} className="group relative px-10 py-5 bg-white/5 border border-white/10 hover:border-amber-600/50 transition-all duration-500 w-full md:w-auto">
@@ -270,86 +270,60 @@ export default function App() {
       {/* --------------------
           PDF MANIFESTE LUXURY (PRINT) - DESIGN BUGATTI/LVMH
           -------------------- */}
-      <div className="hidden print:block fixed inset-0 z-[9999] bg-[#FAFAFA] text-[#0A0A0A] w-full h-full p-0 overflow-hidden">
-         <div className="h-full w-full relative flex flex-col p-[1.5cm]">
+      <div className="hidden print:block fixed inset-0 z-[9999] bg-white text-black p-0 m-0 overflow-hidden">
+         <div className="w-[210mm] h-[297mm] relative flex flex-col p-[15mm] mx-auto">
              
-             {/* CADRE FIN ELEGANT */}
-             <div className="absolute inset-[1cm] border-[0.5px] border-[#0A0A0A]/20 pointer-events-none"></div>
-
-             {/* FILIGRANE DE FOND (TRES LEGER) */}
-             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.02] pointer-events-none select-none">
-                 <h1 className="text-[150px] font-serif whitespace-nowrap -rotate-12 tracking-widest">L'IMMERSIVE</h1>
-             </div>
-
-             {/* HEADER */}
-             <div className="flex justify-between items-start mb-20 z-10">
-                 <div className="flex flex-col">
-                     <h1 className="text-5xl font-serif tracking-tight text-black mb-4">L'IMMERSIVE</h1>
-                     <div className="flex items-center gap-4">
-                         <div className="h-[1px] w-12 bg-black"></div>
-                         <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-[#444]">Le Monde en Bouteille</span>
-                     </div>
+             {/* EN-TÊTE : LOGO & TITRE */}
+             <div className="flex justify-between items-end border-b-2 border-black pb-6 mb-12">
+                 <div>
+                     <h1 className="text-4xl font-serif tracking-tighter text-black uppercase mb-1">L'IMMERSIVE</h1>
+                     <p className="font-mono text-[9px] uppercase tracking-[0.4em] text-neutral-600">Le Monde en Bouteille — Namur</p>
                  </div>
                  <div className="text-right">
-                    <div className="font-mono text-[8px] uppercase tracking-[0.2em] text-[#666] mb-2">Document Réf.</div>
-                    <div className="font-serif text-xl text-black">MÉMOIRE — {new Date().getFullYear()}</div>
+                    <p className="font-mono text-[9px] uppercase tracking-[0.2em] mb-1 text-neutral-500">Document Réf.</p>
+                    <p className="font-mono text-sm font-bold">{new Date().getFullYear()}-{(new Date().getMonth()+1).toString().padStart(2,'0')}-{new Date().getDate().toString().padStart(2,'0')}</p>
                  </div>
              </div>
 
-             {/* CONTENT - LAYOUT ASYMETRIQUE */}
-             <div className="flex-1 grid grid-cols-12 gap-16 z-10 items-start">
-                 
-                 {/* COLONNE GAUCHE (Narratif) */}
-                 <div className="col-span-7 pr-12 flex flex-col h-full border-r border-black/5">
-                     <p className="font-mono text-[9px] uppercase tracking-[0.4em] text-amber-900 mb-12">Intention du projet</p>
-                     
-                     <p className="font-serif text-4xl leading-snug text-black mb-12 italic">
-                         "Pour {data.contact.name || 'votre événement'}, nous avons conçu une parenthèse hors du temps, où l'architecture rencontre l'émotion."
-                     </p>
+             {/* CORPS : INTENTION */}
+             <div className="mb-16 pl-4 border-l border-black/20">
+                 <p className="font-mono text-[8px] uppercase tracking-[0.3em] text-amber-700 mb-4">Pour : {data.contact.name || 'Client'}</p>
+                 <p className="font-serif text-3xl leading-snug italic text-black">
+                     "Une parenthèse hors du temps, où l'architecture de caractère rencontre l'art de recevoir."
+                 </p>
+             </div>
 
-                     <div className="mt-auto">
-                         <div className="grid grid-cols-3 gap-8 border-t border-black/10 pt-8">
-                             <div>
-                                 <span className="block font-mono text-[8px] uppercase tracking-[0.2em] text-[#888] mb-2">Date</span>
-                                 <span className="font-serif text-lg">{data.date}</span>
-                             </div>
-                             <div>
-                                 <span className="block font-mono text-[8px] uppercase tracking-[0.2em] text-[#888] mb-2">Horaire</span>
-                                 <span className="font-serif text-lg">{data.timeSlot?.label}</span>
-                             </div>
-                             <div>
-                                 <span className="block font-mono text-[8px] uppercase tracking-[0.2em] text-[#888] mb-2">Convives</span>
-                                 <span className="font-serif text-lg">{data.pax} Pers.</span>
-                             </div>
-                         </div>
+             {/* GRILLE DE DÉTAILS (STYLE FICHE TECHNIQUE) */}
+             <div className="flex-1">
+                 {/* Ligne 1 */}
+                 <div className="flex border-t border-black/10 py-4 items-center">
+                     <div className="w-32 font-mono text-[9px] uppercase tracking-[0.2em] text-neutral-500">Temporalité</div>
+                     <div className="flex-1 font-serif text-lg">{data.date} <span className="mx-2 text-neutral-300">|</span> {data.timeSlot?.label}</div>
+                 </div>
+                 {/* Ligne 2 */}
+                 <div className="flex border-t border-black/10 py-4 items-center">
+                     <div className="w-32 font-mono text-[9px] uppercase tracking-[0.2em] text-neutral-500">Audience</div>
+                     <div className="flex-1 font-serif text-lg">{data.pax} Convives <span className="text-sm text-neutral-400 italic">({data.eventType?.title})</span></div>
+                 </div>
+                 {/* Ligne 3 */}
+                 <div className="flex border-t border-black/10 py-4 items-center">
+                     <div className="w-32 font-mono text-[9px] uppercase tracking-[0.2em] text-neutral-500">Atmosphère</div>
+                     <div className="flex-1">
+                         <div className="font-serif text-lg mb-1">{data.format?.title}</div>
+                         <div className="font-mono text-[9px] text-neutral-600 max-w-md leading-tight">{data.format?.desc}</div>
                      </div>
                  </div>
-
-                 {/* COLONNE DROITE (Technique) */}
-                 <div className="col-span-5 flex flex-col justify-center pl-4 space-y-16">
-                     
-                     {/* Bloc 1 */}
-                     <div>
-                         <div className="flex items-center gap-3 mb-4">
-                             <div className="w-2 h-2 bg-black rounded-full"></div>
-                             <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#888]">Configuration Spatiale</p>
-                         </div>
-                         <p className="font-serif text-3xl mb-2">{data.format?.title}</p>
-                         <p className="text-xs font-light text-[#444] leading-relaxed max-w-xs">{data.format?.desc}</p>
-                     </div>
-
-                     {/* Bloc 2 */}
-                     <div>
-                         <div className="flex items-center gap-3 mb-4">
-                             <div className="w-2 h-2 bg-black rounded-full"></div>
-                             <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#888]">Expérience Sensorielle</p>
-                         </div>
-                         <p className="font-serif text-3xl mb-4">{data.experience.title}</p>
-                         
-                         <div className="space-y-3 pl-1 border-l border-black/10">
+                 {/* Ligne 4 - Expérience */}
+                 <div className="flex border-t border-black/10 py-4 items-start">
+                     <div className="w-32 pt-1 font-mono text-[9px] uppercase tracking-[0.2em] text-neutral-500">Expérience</div>
+                     <div className="flex-1">
+                         <div className="font-serif text-xl mb-2">{data.experience.title}</div>
+                         {/* Liste des services */}
+                         <div className="grid grid-cols-2 gap-y-2 gap-x-8 mt-4">
                              {data.selectedServices.map(id => (
-                                 <div key={id} className="pl-4">
-                                     <span className="block text-xs font-mono uppercase tracking-widest text-[#333]">{SERVICES.find(s => s.id === id)?.title}</span>
+                                 <div key={id} className="flex items-center gap-2">
+                                     <div className="w-1 h-1 bg-amber-600 rounded-full"></div>
+                                     <span className="font-mono text-[9px] uppercase tracking-wider text-black">{SERVICES.find(s => s.id === id)?.title}</span>
                                  </div>
                              ))}
                          </div>
@@ -357,22 +331,24 @@ export default function App() {
                  </div>
              </div>
 
-             {/* FOOTER */}
-             <div className="mt-auto pt-12 z-10 border-t border-black/5">
-                 <div className="flex justify-between items-end">
+             {/* PIED DE PAGE : TOTAL & SIGNATURE */}
+             <div className="mt-auto">
+                 <div className="flex justify-between items-end border-t-2 border-black pt-6">
                      <div>
-                         <p className="font-serif text-7xl text-black leading-none">{totalAmount}<span className="text-2xl align-top ml-3">€</span></p>
-                         <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#666] mt-4">Investissement Global Estimé (TVAC)</p>
+                         <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-neutral-500 mb-2">Investissement Global Estimé</p>
+                         <p className="font-serif text-6xl text-black leading-none">{totalAmount}<span className="text-xl align-top ml-2">€</span> <span className="text-sm font-sans font-bold text-neutral-400 ml-1">TVAC</span></p>
                      </div>
                      
-                     <div className="text-right flex flex-col items-end">
-                         <div className="w-48 h-px bg-black mb-16 opacity-20"></div>
-                         <p className="font-mono text-[8px] uppercase tracking-[0.2em] text-[#888]">Signature & Accord pour exécution</p>
+                     <div className="text-right w-64">
+                         <div className="border-b border-black/20 pb-12 mb-2"></div>
+                         <p className="font-mono text-[8px] uppercase tracking-[0.2em] text-neutral-400 text-center">Accord & Signature</p>
                      </div>
                  </div>
                  
-                 <div className="w-full text-center mt-16 opacity-40">
-                     <p className="font-mono text-[7px] uppercase tracking-[0.4em]">Namur — Rue de la Croix — Belgique — www.lemonde-enbouteille.be</p>
+                 <div className="w-full text-center mt-12 pt-6 border-t border-black/5">
+                     <p className="font-mono text-[7px] uppercase tracking-[0.3em] text-neutral-400">
+                         L'Immersive — Rue de la Croix, Namur — www.lemonde-enbouteille.be — Document Valable 15 jours
+                     </p>
                  </div>
              </div>
          </div>
@@ -500,7 +476,7 @@ export default function App() {
                 <div className="mb-8 md:mb-10"><span className="text-amber-600 font-mono text-xs uppercase tracking-widest mb-4 block">05 — Immersion</span><h3 className="text-3xl md:text-4xl font-serif mb-2">Niveau d'Expérience</h3></div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-8 md:mb-12">
                    <button onClick={() => { setIsDryHire(true); setData({...data, experience: EXPERIENCES[0]}); }} className={`p-6 md:p-8 border text-left transition-all duration-300 group ${isDryHire ? 'border-white bg-white text-black' : 'border-white/10 hover:border-white/30 bg-[#0a0a0a]'}`}>
-                      <LayoutTemplate size={28} className={`mb-4 ${isDryHire ? 'text-black' : 'text-neutral-500'}`} /><h4 className="text-xl md:text-2xl font-serif mb-2">Location Sèche</h4><p className={`text-xs md:text-sm ${isDryHire ? 'text-neutral-700' : 'text-neutral-400'}`}>Mise à disposition de l'espace uniquement.</p>
+                      <LayoutTemplate size={28} className={`mb-4 ${isDryHire ? 'text-black' : 'text-neutral-500'}`} /><h4 className="text-xl md:text-2xl font-serif mb-2">Location</h4><p className={`text-xs md:text-sm ${isDryHire ? 'text-neutral-700' : 'text-neutral-400'}`}>Mise à disposition de l'espace uniquement.</p>
                    </button>
                    <button onClick={() => { setIsDryHire(false); setData({...data, experience: EXPERIENCES[1]}); }} className={`p-6 md:p-8 border text-left transition-all duration-300 group ${!isDryHire ? 'border-amber-600 bg-amber-600 text-white' : 'border-white/10 hover:border-amber-600/50 bg-[#0a0a0a]'}`}>
                       <div className="flex items-center gap-3 mb-2"><Sparkles size={20} className={!isDryHire ? 'text-white' : 'text-amber-500'} /><h4 className="text-xl md:text-2xl font-serif">Expérience Immersive</h4></div><p className={`text-xs md:text-sm ${!isDryHire ? 'text-white/90' : 'text-neutral-400'}`}>Une animation sensorielle incluse (Vin, Casino, Gastronomie).</p>
