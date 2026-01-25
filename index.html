@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+<html lang="fr">
 <head>
   <meta charset="UTF-8" />
   <link rel="icon" type="image/svg+xml" href="https://www.lemonde-enbouteille.be/web/image/26768-edef09a5/LOGO%20l%27immersive-24.png" />
@@ -14,6 +16,15 @@
 
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <script type="text/javascript">
-    (function(){ emailjs.init({ publicKey: "s1sthtiZPEDfGRote" }); })();
+    (function(){ 
+      // Initialisation avec votre clé publique fournie
+      emailjs.init({ publicKey: "s1sthtiZPEDfGRote" }); 
+    })();
   </script>
 </head>
+<body style="margin: 0; background-color: #050505;">
+  <div id="root"></div>
+
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+</html>

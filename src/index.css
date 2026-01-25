@@ -1,39 +1,41 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Space+Grotesk:wght@300;400;500&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* FORCE LE FOND NOIR IMMÉDIATEMENT */
-html, body, #root {
-  background-color: #050505;
-  color: white;
-  margin: 0;
-  padding: 0;
-  min-height: 100vh;
-  width: 100%;
-}
+/* POLICES */
+.font-serif { font-family: 'Playfair Display', serif; }
+.font-mono { font-family: 'Space Grotesk', sans-serif; }
+.writing-vertical { writing-mode: vertical-rl; }
 
-/* Custom Scrollbar Hide */
+/* HIDE SCROLLBAR */
 .scrollbar-hide {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 .scrollbar-hide::-webkit-scrollbar {
-    display: none; /* Chrome, Safari and Opera */
+    display: none;
 }
 
-/* Animations globales */
-@keyframes grain {
-  0%, 100% { transform: translate(0, 0); }
-  10% { transform: translate(-5%, -10%); }
-  20% { transform: translate(-15%, 5%); }
-  30% { transform: translate(7%, -25%); }
-  40% { transform: translate(-5%, 25%); }
-  50% { transform: translate(-15%, 10%); }
-  60% { transform: translate(15%, 0%); }
-  70% { transform: translate(0%, 15%); }
-  80% { transform: translate(3%, 35%); }
-  90% { transform: translate(-10%, 10%); }
+/* ANIMATIONS */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
-.animate-grain {
-  animation: grain 8s steps(10) infinite;
+@keyframes fadeInRight {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
 }
+@keyframes zoomIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.animate-fade-in { animation: zoomIn 0.7s ease-out forwards; }
+.animate-fade-in-up { animation: fadeInUp 1s ease-out forwards; }
+.animate-fade-in-right { animation: fadeInRight 0.5s ease-out forwards; }
+
+.delay-200 { animation-delay: 200ms; opacity: 0; animation-fill-mode: forwards; }
+.delay-300 { animation-delay: 300ms; opacity: 0; animation-fill-mode: forwards; }
+.delay-500 { animation-delay: 500ms; opacity: 0; animation-fill-mode: forwards; }
