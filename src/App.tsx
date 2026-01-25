@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, ChevronRight, ChevronLeft, Check, Clock, Calendar, Users, Briefcase, Wine, Coffee, Music, Monitor, Minus, Plus, Sparkles, Sun, Moon, Sunrise, Star, Utensils, Wifi, Gift, Palette, LayoutTemplate, Droplets, Map, Mail, Loader, Send, Activity, Printer, Share2, FileText } from 'lucide-react';
+import { ArrowRight, ChevronLeft, Check, Sunrise, Sun, Moon, Star, Utensils, Wifi, Gift, Palette, LayoutTemplate, Droplets, Monitor, Users, Loader, Send, FileText, Share2, Sparkles, Minus, Plus } from 'lucide-react';
 
 // --- CONFIGURATION EMAIL ---
 const EMAILJS_SERVICE_ID = "service_z8iw21s"; 
@@ -23,7 +23,7 @@ const EVENT_TYPES = [
 ];
 
 const FORMATS = [
-  { id: 'standard', title: 'L\'Immersive', subtitle: 'Standard', desc: 'Disposition signature. Équilibrée & chaleureuse.', setupFee: 0, image: 'https://www.lemonde-enbouteille.be/web/image/26813-d579cd53/104-DSC09412.webp' },
+  { id: 'standard', title: 'L\'Immersive', subtitle: 'Standard', desc: 'Notre disposition signature. Équilibrée & chaleureuse.', setupFee: 0, image: 'https://www.lemonde-enbouteille.be/web/image/26813-d579cd53/104-DSC09412.webp' },
   { id: 'cocktail', title: 'Cocktail', subtitle: 'Debout', desc: 'Espace libéré. Mange-debout & circulation fluide.', setupFee: 0, image: 'https://www.lemonde-enbouteille.be/web/image/26780-69c7e9bf/58-DSC00974.webp' },
   { id: 'hybride', title: 'Hybride', subtitle: 'Mixte', desc: 'Zone de confort assises et zone de flux debout.', setupFee: 0, image: 'https://www.lemonde-enbouteille.be/web/image/26807-8f38cf40/31-DSC00898.webp' }
 ];
@@ -39,34 +39,9 @@ const SERVICES = [
   { id: 'tech', title: 'Pack Tech & Connectivité', price: 0, icon: <Wifi size={20}/>, desc: 'Écrans, Son, Wifi HD.' },
   { id: 'host', title: 'Maître de Maison', price: 150, icon: <Users size={20}/>, desc: 'Service et gestion.' },
   { id: 'softs', title: 'Forfait Softs', price: 'dynamic', icon: <Droplets size={20}/>, desc: 'Eaux et softs à discrétion.' },
-  { id: 'food_light', title: 'Grignotage', price: 25, isPerHead: true, icon: <Utensils size={20}/>, desc: 'Planches fromages/charcuteries.' },
-  { id: 'food_full', title: 'Repas', price: -1, isPerHead: true, icon: <Utensils size={20}/>, desc: 'Préparation culinaire sur-mesure.' }
+  { id: 'food_light', title: 'Restauration : Grignotage', price: 25, isPerHead: true, icon: <Utensils size={20}/>, desc: 'Planches fromages/charcuteries.' },
+  { id: 'food_full', title: 'Restauration : Repas', price: -1, isPerHead: true, icon: <Utensils size={20}/>, desc: 'Préparation culinaire sur-mesure.' }
 ];
-
-// --- UI COMPONENTS ---
-const ProgressBar = ({ current, total }) => (
-  <div className="absolute top-0 left-0 h-1 bg-gradient-to-r from-amber-700 to-amber-500 transition-all duration-700 ease-out z-50 print:hidden" style={{ width: `${(current / total) * 100}%` }} />
-);
-
-const BackButton = ({ onClick }) => (
-  <button onClick={onClick} className="absolute bottom-8 left-6 md:left-8 z-40 flex items-center gap-2 text-neutral-500 hover:text-white transition-colors uppercase text-[10px] tracking-widest font-mono group mix-blend-difference bg-black/20 p-2 rounded backdrop-blur-sm md:bg-transparent md:p-0 cursor-pointer print:hidden">
-    <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Retour
-  </button>
-);
-
-const StepIndicator = ({ step, setStep }) => (
-  <div className="hidden md:flex flex-col justify-between w-20 border-r border-white/5 bg-[#0a0a0a] z-20 py-8 items-center h-full print:hidden">
-    <div className="font-serif font-bold text-xl cursor-pointer text-amber-600 hover:scale-110 transition-transform" onClick={() => setStep(0)}>L.</div>
-    <div className="flex flex-col gap-6 items-center w-full">
-      {[1, 2, 3, 4, 5, 6, 7].map((s) => (
-        <button key={s} disabled={step < s} onClick={() => setStep(s)} className={`relative w-full text-center py-2 text-[10px] font-mono transition-all duration-300 group ${step === s ? 'text-white font-bold' : step > s ? 'text-neutral-500 hover:text-white cursor-pointer' : 'text-neutral-800 cursor-not-allowed'}`}>
-          {step === s && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-4 bg-amber-600 rounded-r-full"></div>} 0{s}
-        </button>
-      ))}
-    </div>
-    <div className="text-[10px] text-neutral-700 writing-vertical rotate-180 tracking-widest">LE MONDE EN BOUTEILLE</div>
-  </div>
-);
 
 export default function App() {
   const [step, setStep] = useState(0); 
@@ -82,10 +57,17 @@ export default function App() {
   const [isMultiDay, setIsMultiDay] = useState(false);
   const [secretClicks, setSecretClicks] = useState(0);
   const [showAdmin, setShowAdmin] = useState(false);
-  const [stats, setStats] = useState({ visits: 0, finalStep: 0, leads: 0 });
+  const [stats, setStats] = useState({ visits: 0, leads: 0 });
 
-  // Navigation Débuggée
-  const goToStep = (target) => { if (!isAnimating) { setIsAnimating(true); setStep(target); setTimeout(() => setIsAnimating(false), 800); } };
+  // Navigation Logic
+  const goToStep = (target) => { 
+    if (!isAnimating) { 
+      setIsAnimating(true); 
+      setStep(target); 
+      setTimeout(() => setIsAnimating(false), 800); 
+    } 
+  };
+  const autoNext = (target) => goToStep(target);
   const goBack = () => { if (step > 0) goToStep(step - 1); };
 
   // Admin Logic
@@ -97,7 +79,7 @@ export default function App() {
                 fetch('https://api.counterapi.dev/v1/lmeb-immersive/visits').then(r => r.json()),
                 fetch('https://api.counterapi.dev/v1/lmeb-immersive/leads').then(r => r.json())
             ]).then(([d1, d2]) => {
-                setStats({ visits: d1.count || 0, finalStep: 0, leads: d2.count || 0 });
+                setStats({ visits: d1.count || 0, leads: d2.count || 0 });
                 setShowAdmin(true);
             });
             return 0;
@@ -105,16 +87,6 @@ export default function App() {
         return val;
     });
   };
-
-  const handlePrint = () => window.print();
-  
-  const handleSaveTheDate = () => {
-      const text = `✨ L'IMMERSIVE — NAMUR\n_________________________________\n\nVous êtes convié(e) à une expérience hors du temps.\n\n📅 Date : ${data.date} ${data.endDate ? 'au ' + data.endDate : ''}\n📍 Lieu : Le Monde en Bouteille, Namur\n🍷 Expérience : ${data.experience.title}\n\n"Le luxe est une affaire de détails."\n\nDécouvrir : https://www.lemonde-enbouteille.be/salle`;
-      navigator.clipboard.writeText(text);
-      alert("L'invitation de prestige a été copiée.");
-  };
-
-  const getSoftsPrice = (pax) => (pax <= 8 ? 20 : pax <= 16 ? 30 : pax <= 30 ? 40 : 45);
 
   const calculateTotal = () => {
     let total = 0; let custom = false;
@@ -126,7 +98,7 @@ export default function App() {
     data.selectedServices.forEach(srvId => {
       const srv = SERVICES.find(s => s.id === srvId);
       if (srv) {
-          if (srv.id === 'softs') total += getSoftsPrice(data.pax);
+          if (srv.id === 'softs') total += (data.pax <= 8 ? 20 : data.pax <= 16 ? 30 : data.pax <= 30 ? 40 : 45);
           else if (srv.price === -1) custom = true;
           else total += srv.isPerHead ? (srv.price * data.pax) : srv.price;
       }
@@ -143,43 +115,31 @@ export default function App() {
     setData({...data, selectedServices: newServices});
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setIsSending(true);
-    // @ts-ignore
-    window.emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ADMIN_ID, { ...data, total: totalAmount }, EMAILJS_PUBLIC_KEY).then(() => {
-        setIsSending(false); setIsSent(true);
-    });
-  };
-
-  // --- RENDU LANDING ---
   if (step === 0) {
     return (
       <div className="relative h-[100dvh] w-full bg-[#050505] flex flex-col items-center justify-center p-6 text-white overflow-hidden">
         <div className="absolute inset-0 z-0 opacity-40 bg-[url('https://www.lemonde-enbouteille.be/web/image/16056-b2829e5f/79-DSC09373.webp')] bg-cover bg-center mix-blend-overlay"></div>
-        <div className="relative z-10 text-center w-full max-w-4xl mx-auto flex flex-col items-center justify-center h-full">
-          <div className="w-px h-12 md:h-20 bg-gradient-to-b from-transparent via-amber-600 to-transparent mb-8"></div>
-          <div className="animate-fade-in-up cursor-pointer" onClick={handleLogoClick}>
-            <img src="https://www.lemonde-enbouteille.be/web/image/26768-edef09a5/LOGO%20l%27immersive-24.png" alt="Logo" className="w-28 md:w-40 mx-auto mb-6" />
-            <h1 className="text-5xl md:text-7xl font-serif tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-neutral-500 leading-none mb-3 uppercase italic">L'IMMERSIVE</h1>
-            <p className="font-mono text-[9px] uppercase tracking-[0.6em] text-amber-500 mb-10">Le Monde en Bouteille</p>
+        <div className="relative z-10 text-center flex flex-col items-center">
+          <div className="w-px h-20 bg-gradient-to-b from-transparent via-amber-600 to-transparent mb-8"></div>
+          <div onClick={handleLogoClick} className="cursor-pointer mb-8">
+            <img src="https://www.lemonde-enbouteille.be/web/image/26768-edef09a5/LOGO%20l%27immersive-24.png" alt="Logo" className="w-28 mx-auto mb-6" />
+            <h1 className="text-7xl font-serif tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-neutral-500 mb-2">L'IMMERSIVE</h1>
+            <p className="font-mono text-[9px] uppercase tracking-[0.6em] text-amber-500">Le Monde en Bouteille</p>
           </div>
-          <div className="border-l border-amber-600/30 pl-6 text-left max-w-lg mx-auto backdrop-blur-sm py-2 mb-12">
-             <p className="text-neutral-400 font-light text-xs md:text-sm leading-relaxed italic">Architecture de caractère et équipements connectés. <br/>Réunions, séminaires ou soirées : ne louez pas une salle, vivez une expérience.</p>
+          <div className="border-l border-amber-600/30 pl-6 text-left max-w-lg mb-12">
+             <p className="text-neutral-400 font-light text-sm leading-relaxed">Une adresse confidentielle à Namur. <br/><strong>Un espace événementiel privatif alliant architecture de caractère et équipements connectés.</strong> <br/>Réunions, séminaires ou soirées : ne louez pas une salle, vivez une expérience.</p>
           </div>
-          <button onClick={() => goToStep(1)} className="group relative px-10 py-5 bg-white/5 border border-white/10 hover:border-amber-600/50 transition-all duration-500 w-full md:w-auto">
-            <span className="relative font-mono text-xs uppercase tracking-[0.2em] flex items-center justify-center gap-4">Composer mon événement <ArrowRight size={14} /></span>
-          </button>
+          <button onClick={() => goToStep(1)} className="px-12 py-5 bg-white/5 border border-white/10 hover:border-amber-600 transition-all font-mono text-xs uppercase tracking-widest">Composer mon événement</button>
         </div>
         {showAdmin && (
           <div className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-xl flex items-center justify-center p-6" onClick={() => setShowAdmin(false)}>
-            <div className="max-w-sm w-full bg-[#111] border border-white/10 p-8 text-center" onClick={e => e.stopPropagation()}>
-               <div className="text-[10px] font-mono tracking-[0.3em] text-amber-600 mb-8 uppercase italic">DATA FLUX</div>
-               <div className="space-y-6">
-                  <div className="flex justify-between items-baseline"><span className="text-xs text-neutral-500 uppercase tracking-widest">Trafic</span><span className="text-2xl font-serif">{stats.visits}</span></div>
-                  <div className="flex justify-between items-baseline border-t border-white/5 pt-6"><span className="text-xs text-amber-500 uppercase font-bold tracking-widest">Leads</span><span className="text-4xl font-serif text-amber-500">{stats.leads}</span></div>
+            <div className="max-w-sm w-full bg-[#111] border border-white/10 p-10 text-center shadow-2xl" onClick={e => e.stopPropagation()}>
+               <div className="text-[10px] font-mono tracking-[0.3em] text-amber-600 mb-10 uppercase">Admin Dashboard</div>
+               <div className="space-y-8">
+                  <div className="flex justify-between items-baseline"><span className="text-xs text-neutral-500 uppercase tracking-widest">Visiteurs</span><span className="text-3xl font-serif">{stats.visits}</span></div>
+                  <div className="flex justify-between items-baseline border-t border-white/5 pt-8"><span className="text-xs text-amber-500 uppercase font-bold tracking-widest">Leads</span><span className="text-5xl font-serif text-amber-500">{stats.leads}</span></div>
                </div>
-               <button onClick={() => setShowAdmin(false)} className="w-full mt-10 text-[10px] uppercase py-3 border border-white/10 hover:bg-white hover:text-black transition-all font-mono tracking-widest">Fermer</button>
+               <button onClick={() => setShowAdmin(false)} className="w-full mt-12 text-[10px] uppercase py-4 border border-white/10 hover:bg-white hover:text-black transition-all">Fermer</button>
             </div>
           </div>
         )}
@@ -188,87 +148,54 @@ export default function App() {
   }
 
   return (
-    <div className="relative h-[100dvh] w-full bg-[#080808] text-white overflow-hidden font-sans flex flex-col md:flex-row print:bg-white print:text-black print:h-auto print:overflow-visible">
-      <ProgressBar current={step} total={7} />
-      <StepIndicator step={step} setStep={goToStep} />
-
-      {/* SECTION PRINT : LUXE PDF */}
-      <div className="hidden print:block p-20 w-full max-w-5xl mx-auto bg-white text-black font-serif">
-          <div className="flex justify-between items-start mb-32 border-b border-black/5 pb-12">
-            <div><h1 className="text-3xl tracking-[0.2em] mb-2 uppercase">L'IMMERSIVE</h1><p className="text-[10px] font-mono tracking-[0.4em] uppercase text-neutral-400">Namur — Belgique</p></div>
-            <div className="text-right"><p className="text-[10px] font-mono tracking-widest uppercase mb-1">Note d'Intention</p><p className="text-sm italic">{new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</p></div>
-          </div>
-          <div className="mb-24 max-w-2xl">
-            <p className="text-xs font-mono uppercase tracking-[0.3em] text-amber-600 mb-6 italic">Privilège</p>
-            <h2 className="text-4xl mb-8 leading-tight">Pour {data.contact.name || 'votre événement'}</h2>
-            <p className="text-lg leading-relaxed text-neutral-600 italic">"Certains lieux ne se contentent pas d'accueillir vos moments, ils les transcendent."</p>
-          </div>
-          <div className="grid grid-cols-2 gap-20 mb-24 border-t border-neutral-100 pt-12">
-            <div>
-              <p className="text-[10px] font-mono uppercase tracking-widest text-neutral-400 mb-4 tracking-[0.2em]">CONFIGURATION</p>
-              <div className="space-y-4 text-sm italic">
-                <div className="flex justify-between"><span>Espace</span><span>{data.timeSlot?.title}</span></div>
-                <div className="flex justify-between"><span>Audience</span><span>{data.pax} Invités</span></div>
-              </div>
-            </div>
-            <div>
-              <p className="text-[10px] font-mono uppercase tracking-widest text-neutral-400 mb-4 tracking-[0.2em]">EXPÉRIENCE</p>
-              <div className="text-sm italic mb-4">{data.experience.title}</div>
-              <div className="space-y-1">{data.selectedServices.map(id => (<div key={id} className="text-[10px] text-neutral-500 uppercase tracking-wider">+ {SERVICES.find(s => s.id === id)?.title}</div>))}</div>
-            </div>
-          </div>
-          <div className="border-t-2 border-black pt-12 flex justify-between items-end">
-            <div><p className="text-[10px] font-mono uppercase tracking-widest text-neutral-400 mb-2">Investissement estimé</p><p className="text-5xl">{totalAmount} € <span className="text-lg text-neutral-400">TVAC</span></p></div>
-            <div className="text-right text-[10px] font-mono uppercase tracking-[0.5em] text-neutral-300 italic">L'Immersive — Technologie & Terroir</div>
-          </div>
+    <div className="relative h-[100dvh] w-full bg-[#080808] text-white overflow-hidden flex flex-col md:flex-row print:bg-white print:text-black print:h-auto print:overflow-visible">
+      {/* SIDEBAR NAVIGATION */}
+      <div className="hidden md:flex flex-col justify-between w-20 border-r border-white/5 bg-[#0a0a0a] z-20 py-8 items-center h-full print:hidden">
+        <div className="font-serif font-bold text-xl cursor-pointer text-amber-600" onClick={() => setStep(0)}>L.</div>
+        <div className="flex flex-col gap-6 items-center">
+          {[1, 2, 3, 4, 5, 6, 7].map((s) => (
+            <button key={s} disabled={step < s} onClick={() => setStep(s)} className={`text-[10px] font-mono transition-all ${step === s ? 'text-white font-bold scale-125' : 'text-neutral-700 hover:text-neutral-400'}`}>0{s}</button>
+          ))}
+        </div>
+        <div className="text-[9px] text-neutral-700 rotate-180 writing-vertical tracking-widest uppercase">Namur</div>
       </div>
 
-      {/* CONTENU WEB */}
-      <div className="flex-1 relative flex flex-col z-10 w-full h-full overflow-hidden print:hidden">
-        <div className="absolute top-4 right-4 md:top-8 md:right-8 z-50">
-           <div className="bg-black/60 backdrop-blur-md border border-white/10 rounded-lg px-4 py-2 flex flex-col items-end">
-             <div className="font-mono text-[8px] md:text-[10px] uppercase text-neutral-400 tracking-widest mb-1">Budget Estimé</div>
-             <div className="font-serif text-lg md:text-2xl text-white tracking-tight flex items-baseline gap-2">
-                <span className={isCustom ? "text-amber-500" : "text-white"}>{totalAmount} €</span>
-                {isCustom && <span className="text-[8px] font-sans text-neutral-400 border border-neutral-600 px-1 rounded">+ Devis</span>}
-             </div>
-           </div>
-        </div>
+      <div className="flex-1 relative flex flex-col h-full overflow-hidden">
+        {step > 0 && <button onClick={goBack} className="absolute bottom-8 left-8 z-40 flex items-center gap-2 text-neutral-500 hover:text-white uppercase text-[10px] tracking-widest font-mono print:hidden"><ChevronLeft size={16}/> Retour</button>}
         
-        {step > 0 && <BackButton onClick={goBack} />}
+        {/* PROGRESS BAR */}
+        <div className="absolute top-0 left-0 h-1 bg-amber-600 transition-all duration-1000 z-50 print:hidden" style={{ width: `${(step/7)*100}%` }}></div>
 
+        {/* STEP 1: TEMPORALITE */}
         {step === 1 && (
-          <div className="flex-1 flex flex-col h-full animate-fade-in duration-700 relative">
-            <div className="absolute top-0 left-0 p-6 md:p-12 z-50 bg-gradient-to-b from-black/80 to-transparent w-full">
-               <div className="mt-16"><span className="text-amber-500 font-mono text-xs uppercase tracking-widest mb-2 block italic">01 — Temporalité</span><h2 className="text-3xl md:text-5xl font-serif text-white italic leading-none">Le Moment<br/>du Choix</h2></div>
-            </div>
-            <div className="flex-1 flex flex-col md:flex-row h-full pt-32 md:pt-0">
-              {TIME_SLOTS.map((slot) => (
-                <div key={slot.id} onClick={() => { setData({...data, timeSlot: slot}); goToStep(2); }} className="relative w-full md:w-auto flex-shrink-0 md:flex-1 h-64 md:h-full border-b md:border-b-0 md:border-r border-white/5 cursor-pointer group overflow-hidden">
-                  <div className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 scale-110 group-hover:scale-100" style={{ backgroundImage: `url(${slot.image})` }} />
-                  <div className="absolute inset-0 bg-black/50 group-hover:bg-black/30 transition-all"></div>
-                  <div className="absolute bottom-0 w-full p-6 z-20 flex flex-col justify-center items-center">
-                     <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/90 bg-black/40 px-3 py-1 rounded-full border border-white/10 mb-2">{slot.label}</div>
-                     <h3 className="text-2xl font-serif text-white italic">{slot.title}</h3>
+          <div className="flex-1 flex flex-col md:flex-row h-full animate-fade-in">
+             <div className="absolute top-12 left-12 z-50"><h2 className="text-5xl font-serif italic text-white leading-none">Le Moment<br/>du Choix</h2></div>
+             {TIME_SLOTS.map((slot) => (
+                <div key={slot.id} onClick={() => { setData({...data, timeSlot: slot}); autoNext(2); }} className="relative flex-1 group cursor-pointer overflow-hidden border-r border-white/5">
+                  <div className="absolute inset-0 bg-cover bg-center grayscale group-hover:grayscale-0 transition-all duration-1000" style={{ backgroundImage: `url(${slot.image})` }} />
+                  <div className="absolute inset-0 bg-black/60 group-hover:bg-black/20 transition-all"></div>
+                  <div className="absolute inset-0 flex flex-col justify-center items-center p-8">
+                     <span className="text-[10px] font-mono uppercase tracking-[0.4em] mb-4 text-amber-500">{slot.label}</span>
+                     <h3 className="text-3xl font-serif italic">{slot.title}</h3>
                   </div>
                 </div>
               ))}
-            </div>
           </div>
         )}
 
+        {/* STEP 2: INTENTION */}
         {step === 2 && (
-          <div className="flex-1 p-6 md:p-24 flex flex-col justify-center animate-fade-in-right overflow-y-auto">
-             <div className="max-w-7xl mx-auto w-full">
-               <div className="mb-12 border-b border-white/10 pb-8 mt-16 md:mt-0 italic"><span className="text-amber-600 font-mono text-xs uppercase tracking-widest mb-2 block">02 — Intention</span><h2 className="text-4xl font-serif text-white">L'Énergie du Moment</h2></div>
-               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                 {EVENT_TYPES.map((type) => (
-                   <button key={type.id} onClick={() => { setData({...data, eventType: type}); goToStep(3); }} className="group relative h-96 w-full overflow-hidden border border-white/5 hover:border-amber-600/50 transition-all text-left">
-                     <div className="absolute inset-0 bg-cover bg-center opacity-40 grayscale group-hover:grayscale-0 transition-all duration-1000" style={{ backgroundImage: `url(${type.image})` }} />
-                     <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent p-8 flex flex-col justify-end">
-                        <h3 className="text-2xl font-serif text-white italic mb-1 uppercase tracking-tighter">{type.title}</h3>
-                        <p className="text-xs text-neutral-300 font-light italic leading-relaxed">{type.desc}</p>
-                     </div>
+          <div className="flex-1 p-24 animate-fade-in overflow-y-auto">
+             <div className="max-w-6xl mx-auto">
+               <h2 className="text-4xl font-serif italic mb-16 border-b border-white/5 pb-8">L'Énergie du Moment</h2>
+               <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                 {EVENT_TYPES.map(type => (
+                   <button key={type.id} onClick={() => { setData({...data, eventType: type}); autoNext(3); }} className="group relative h-[450px] overflow-hidden border border-white/5 hover:border-amber-600/50 transition-all">
+                      <div className="absolute inset-0 bg-cover bg-center opacity-30 grayscale group-hover:grayscale-0 transition-all duration-1000" style={{ backgroundImage: `url(${type.image})` }} />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent p-8 flex flex-col justify-end text-left">
+                         <h3 className="text-2xl font-serif italic mb-2 uppercase">{type.title}</h3>
+                         <p className="text-xs text-neutral-400 leading-relaxed font-light">{type.desc}</p>
+                      </div>
                    </button>
                  ))}
                </div>
@@ -276,113 +203,145 @@ export default function App() {
           </div>
         )}
 
-        {/* ÉTAPES 3 À 6 (Condensées pour la fluidité) */}
-        {step >= 3 && step <= 6 && (
-           <div className="flex-1 p-6 md:p-24 flex flex-col justify-center max-w-4xl mx-auto w-full animate-fade-in">
-              {step === 3 && (
-                <>
-                  <h2 className="text-4xl font-serif italic mb-12">Configuration de l'Espace</h2>
-                  <div className="flex flex-col gap-4">
-                    {FORMATS.map(f => (
-                      <button key={f.id} onClick={() => { setData({...data, format: f}); goToStep(4); }} className="flex items-center gap-8 p-6 border border-white/5 hover:border-amber-600/50 transition-all text-left bg-white/[0.02]">
-                        <div className="w-24 h-24 bg-cover bg-center grayscale" style={{backgroundImage: `url(${f.image})`}}></div>
-                        <div><h3 className="text-xl font-serif italic">{f.title}</h3><p className="text-xs text-neutral-500 font-mono uppercase tracking-widest">{f.subtitle}</p></div>
-                        <ArrowRight className="ml-auto opacity-20" size={20}/>
-                      </button>
-                    ))}
-                  </div>
-                </>
-              )}
-              
-              {step === 4 && (
-                <div className="text-center">
-                   <h2 className="text-5xl font-serif italic mb-16 uppercase">L'Horizon</h2>
-                   <div className="flex flex-col md:flex-row gap-12 items-center justify-center">
-                      <div className="p-10 border border-white/10 bg-white/[0.02] w-full">
-                         <p className="text-[10px] font-mono text-neutral-500 uppercase tracking-[0.3em] mb-8 italic">Volume d'invités</p>
-                         <div className="flex items-center justify-center gap-8">
-                            <button onClick={() => setData({...data, pax: Math.max(1, data.pax-1)})} className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:bg-white hover:text-black"><Minus size={14}/></button>
-                            <span className="text-6xl font-serif italic">{data.pax}</span>
-                            <button onClick={() => setData({...data, pax: data.pax+1})} className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:bg-white hover:text-black"><Plus size={14}/></button>
-                         </div>
-                      </div>
-                      <div className="p-10 border border-white/10 bg-white/[0.02] w-full relative">
-                         <p className="text-[10px] font-mono text-neutral-500 uppercase tracking-[0.3em] mb-8 italic">Date</p>
-                         <input type="date" min={new Date().toISOString().split('T')[0]} onChange={(e) => setData({...data, date: e.target.value})} className="bg-transparent text-xl font-serif text-white w-full border-b border-white/20 outline-none pb-2 text-center [color-scheme:dark]" />
-                         <button onClick={() => setIsMultiDay(!isMultiDay)} className="absolute bottom-2 right-2 text-[8px] uppercase tracking-widest text-amber-600">{isMultiDay ? '1 Jour' : '+ Jours'}</button>
-                         {isMultiDay && <input type="date" onChange={(e) => setData({...data, endDate: e.target.value})} className="bg-transparent text-xl font-serif text-white w-full border-b border-white/20 outline-none pb-2 text-center [color-scheme:dark] mt-4 animate-fade-in-up" />}
-                      </div>
-                   </div>
-                   <button onClick={() => goToStep(5)} className="mt-16 bg-white text-black px-12 py-4 uppercase font-mono text-xs tracking-[0.3em] hover:bg-amber-600 transition-all italic">Valider la mesure</button>
-                </div>
-              )}
-
-              {step === 5 && (
-                <>
-                  <h2 className="text-4xl font-serif italic mb-12 uppercase tracking-tighter">Niveau d'Immersion</h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-                     <button onClick={() => { setIsDryHire(true); setData({...data, experience: EXPERIENCES[0]}); }} className={`p-8 border ${isDryHire ? 'border-amber-600 bg-amber-600/5' : 'border-white/5'} text-left transition-all italic`}>Location Exclusive</button>
-                     <button onClick={() => { setIsDryHire(false); setData({...data, experience: EXPERIENCES[1]}); }} className={`p-8 border ${!isDryHire ? 'border-amber-600 bg-amber-600/5' : 'border-white/5'} text-left transition-all italic`}>Expérience Sensorielle</button>
-                  </div>
-                  {!isDryHire && (
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      {EXPERIENCES.filter(e => e.id !== 'none').map(exp => (
-                        <button key={exp.id} onClick={() => setData({...data, experience: exp})} className={`p-6 border ${data.experience.id === exp.id ? 'border-amber-600 text-amber-500' : 'border-white/5 text-neutral-500'} transition-all text-sm italic uppercase tracking-widest`}>{exp.title}</button>
-                      ))}
-                    </div>
-                  )}
-                  <button onClick={() => goToStep(6)} className="mt-12 bg-white text-black py-4 uppercase font-mono text-xs tracking-[0.4em] italic">Étape Finale</button>
-                </>
-              )}
-
-              {step === 6 && (
-                <>
-                  <h2 className="text-4xl font-serif italic mb-12">Finitions & Services</h2>
-                  <div className="grid grid-cols-2 gap-4 mb-12">
-                    {SERVICES.map(s => (
-                      <button key={s.id} onClick={() => toggleService(s.id)} className={`p-6 border text-left flex justify-between items-center transition-all ${data.selectedServices.includes(s.id) ? 'border-amber-600 bg-amber-600/5' : 'border-white/5 text-neutral-500'}`}>
-                        <span className="text-xs uppercase tracking-[0.2em] italic">{s.title}</span>
-                        {data.selectedServices.includes(s.id) && <Check size={14} className="text-amber-500"/>}
-                      </button>
-                    ))}
-                  </div>
-                  <button onClick={() => goToStep(7)} className="bg-white text-black py-5 uppercase font-mono text-xs tracking-[0.5em] italic shadow-2xl">Révéler la vision</button>
-                </>
-              )}
-           </div>
+        {/* STEP 3: ARCHITECTURE (CONFIGURATION) */}
+        {step === 3 && (
+          <div className="flex-1 p-24 animate-fade-in overflow-y-auto">
+             <div className="max-w-5xl mx-auto">
+               <h2 className="text-4xl font-serif italic mb-16">Configuration de l'Espace</h2>
+               <div className="flex flex-col gap-6">
+                  {FORMATS.map(f => (
+                    <button key={f.id} onClick={() => { setData({...data, format: f}); autoNext(4); }} className="group relative flex items-center h-40 border border-white/5 bg-white/[0.02] hover:border-amber-600 transition-all overflow-hidden">
+                       <div className="w-1/3 h-full overflow-hidden"><div className="absolute inset-0 bg-cover bg-center grayscale group-hover:grayscale-0 transition-all duration-1000 opacity-60" style={{ backgroundImage: `url(${f.image})` }} /></div>
+                       <div className="flex-1 p-10 flex justify-between items-center z-10">
+                          <div className="text-left">
+                             <h3 className="text-2xl font-serif italic mb-2">{f.title}</h3>
+                             <p className="text-[10px] font-mono text-neutral-500 uppercase tracking-widest">{f.desc}</p>
+                          </div>
+                          <ArrowRight size={20} className="opacity-20 group-hover:translate-x-4 transition-all"/>
+                       </div>
+                    </button>
+                  ))}
+               </div>
+             </div>
+          </div>
         )}
 
-        {/* ÉTAPE FINAL */}
+        {/* STEP 4: CALIBRAGE (HORIZON) */}
+        {step === 4 && (
+          <div className="flex-1 flex flex-col items-center justify-center p-24 animate-fade-in">
+             <h2 className="text-6xl font-serif italic mb-20 uppercase tracking-tighter">L'Horizon</h2>
+             <div className="flex gap-16 w-full max-w-4xl">
+                <div className="flex-1 p-12 border border-white/10 bg-white/[0.02] text-center">
+                   <p className="text-[10px] font-mono text-neutral-500 uppercase tracking-[0.4em] mb-10">Audience</p>
+                   <div className="flex items-center justify-center gap-8">
+                      <button onClick={() => setData({...data, pax: Math.max(1, data.pax-1)})} className="w-12 h-12 rounded-full border border-white/10 hover:bg-white hover:text-black flex items-center justify-center"><Minus size={16}/></button>
+                      <span className="text-7xl font-serif italic">{data.pax}</span>
+                      <button onClick={() => setData({...data, pax: data.pax+1})} className="w-12 h-12 rounded-full border border-white/10 hover:bg-white hover:text-black flex items-center justify-center"><Plus size={16}/></button>
+                   </div>
+                </div>
+                <div className="flex-1 p-12 border border-white/10 bg-white/[0.02] relative text-center">
+                   <p className="text-[10px] font-mono text-neutral-500 uppercase tracking-[0.4em] mb-10 italic">Calendrier</p>
+                   <input type="date" min={new Date().toISOString().split('T')[0]} onChange={(e) => setData({...data, date: e.target.value})} className="bg-transparent text-2xl font-serif text-white w-full border-b border-white/10 outline-none pb-4 text-center [color-scheme:dark]" />
+                   <div className="mt-8">
+                     <button onClick={() => setIsMultiDay(!isMultiDay)} className="text-[9px] uppercase tracking-[0.3em] text-amber-600 border border-amber-600/30 px-4 py-1 hover:bg-amber-600 hover:text-white transition-all">{isMultiDay ? '- Un jour' : '+ Multi-dates'}</button>
+                   </div>
+                   {isMultiDay && <input type="date" onChange={(e) => setData({...data, endDate: e.target.value})} className="bg-transparent text-2xl font-serif text-white w-full border-b border-white/10 outline-none pb-4 text-center mt-6 [color-scheme:dark] animate-fade-in-up" />}
+                </div>
+             </div>
+             <button onClick={() => goToStep(5)} className="mt-20 bg-white text-black px-16 py-5 uppercase font-mono text-[10px] tracking-[0.4em] hover:bg-amber-600 hover:text-white transition-all italic">Valider la mesure</button>
+          </div>
+        )}
+
+        {/* STEP 5: IMMERSION */}
+        {step === 5 && (
+          <div className="flex-1 p-24 animate-fade-in overflow-y-auto">
+             <div className="max-w-6xl mx-auto">
+                <h2 className="text-4xl font-serif italic mb-16 border-b border-white/5 pb-8 uppercase">Niveau d'Immersion</h2>
+                <div className="grid grid-cols-2 gap-8 mb-12">
+                   <button onClick={() => { setIsDryHire(true); setData({...data, experience: EXPERIENCES[0]}); }} className={`p-10 border text-left transition-all italic flex flex-col gap-4 ${isDryHire ? 'border-amber-600 bg-amber-600/5' : 'border-white/5'}`}>
+                      <LayoutTemplate size={32} /><h3 className="text-2xl font-serif italic">Location Exclusive</h3><p className="text-xs text-neutral-400">Mise à disposition privative de l'espace.</p>
+                   </button>
+                   <button onClick={() => { setIsDryHire(false); setData({...data, experience: EXPERIENCES[1]}); }} className={`p-10 border text-left transition-all italic flex flex-col gap-4 ${!isDryHire ? 'border-amber-600 bg-amber-600/5' : 'border-white/5'}`}>
+                      <Sparkles size={32} /><h3 className="text-2xl font-serif italic">Expérience Sensorielle</h3><p className="text-xs text-neutral-400">Animation guidée (Vin, Casino ou Gastronomie).</p>
+                   </button>
+                </div>
+                {!isDryHire && (
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-fade-in-up">
+                    {EXPERIENCES.filter(e => e.id !== 'none').map(exp => (
+                      <div key={exp.id} onClick={() => setData({...data, experience: exp})} className={`relative h-96 border cursor-pointer group overflow-hidden transition-all ${data.experience.id === exp.id ? 'border-amber-600' : 'border-white/5'}`}>
+                         <div className="absolute inset-0 bg-cover bg-center transition-all duration-1000 grayscale opacity-20 group-hover:opacity-40 group-hover:grayscale-0" style={{ backgroundImage: `url(${exp.image})` }} />
+                         <div className="absolute inset-0 p-8 flex flex-col justify-end text-left bg-gradient-to-t from-black/90 to-transparent">
+                            <span className="text-[10px] font-mono text-amber-500 uppercase mb-2 italic tracking-widest">{exp.sub}</span>
+                            <h3 className="text-2xl font-serif italic mb-3">{exp.title}</h3>
+                            <p className="text-xs text-neutral-500 leading-relaxed mb-6 italic opacity-0 group-hover:opacity-100 transition-opacity duration-500">{exp.description}</p>
+                            <div className="text-lg font-mono text-white">{exp.price > 0 ? `${exp.price}€ / pers.` : 'Sur Devis'}</div>
+                         </div>
+                         {data.experience.id === exp.id && <div className="absolute top-6 right-6 bg-amber-600 p-2 rounded-full"><Check size={14}/></div>}
+                      </div>
+                    ))}
+                  </div>
+                )}
+                <div className="mt-16 flex justify-end"><button onClick={() => goToStep(6)} className="px-16 py-5 bg-white text-black font-mono text-xs uppercase tracking-[0.4em] italic shadow-2xl">Continuer</button></div>
+             </div>
+          </div>
+        )}
+
+        {/* STEP 6: SERVICES & FINITIONS */}
+        {step === 6 && (
+          <div className="flex-1 p-24 animate-fade-in overflow-y-auto">
+             <div className="max-w-6xl mx-auto">
+                <h2 className="text-4xl font-serif italic mb-16">Services & Finitions</h2>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mb-20">
+                   {SERVICES.map(srv => {
+                     const isSelected = data.selectedServices.includes(srv.id);
+                     let price = srv.id === 'softs' ? (data.pax <= 8 ? 20 : data.pax <= 16 ? 30 : data.pax <= 30 ? 40 : 45) : srv.price;
+                     return (
+                       <button key={srv.id} onClick={() => toggleService(srv.id)} className={`relative p-8 border text-left flex flex-col transition-all h-64 ${isSelected ? 'border-amber-600 bg-amber-600/5' : 'border-white/5 hover:bg-white/5'}`}>
+                         <div className="flex justify-between items-start mb-6"><div className={`p-3 rounded-full ${isSelected ? 'bg-amber-600' : 'bg-white/5'}`}>{srv.icon}</div>{isSelected && <Check size={16} className="text-amber-600"/>}</div>
+                         <h4 className="text-lg font-serif italic mb-2">{srv.title}</h4>
+                         <p className="text-[10px] text-neutral-500 uppercase tracking-widest leading-relaxed mb-auto">{srv.desc}</p>
+                         <div className="mt-4 pt-4 border-t border-white/5 font-mono text-amber-500 text-sm">{price === 0 ? 'Offert' : price === -1 ? 'Sur Devis' : `+${price}€ ${srv.isPerHead ? '/Pers' : ''}`}</div>
+                       </button>
+                     );
+                   })}
+                </div>
+                <div className="flex justify-end"><button onClick={() => goToStep(7)} className="px-20 py-6 bg-white text-black font-mono text-xs uppercase tracking-[0.5em] italic hover:bg-amber-600 hover:text-white transition-all shadow-[0_0_50px_rgba(255,255,255,0.1)]">Révéler la vision</button></div>
+             </div>
+          </div>
+        )}
+
+        {/* STEP 7: RECAP LUXE & CONTACT */}
         {step === 7 && (
           <div className="flex-1 flex flex-col md:flex-row h-full">
              <div className="flex-1 p-10 md:p-24 overflow-y-auto scrollbar-hide italic">
                 <div className="max-w-xl animate-fade-in">
-                   <h2 className="text-[10px] font-mono uppercase tracking-[0.4em] text-amber-600 mb-8 italic font-bold">PROJET EXCEPTIONNEL</h2>
-                   <div className="space-y-12">
-                      <div className="border-b border-white/5 pb-12">
-                        <p className="text-5xl font-serif mb-4">{data.eventType?.title || 'Votre Événement'}</p>
-                        <p className="text-neutral-400 font-light leading-relaxed">Conçu pour une assemblée de {data.pax} personnes.</p>
+                   <h2 className="text-[10px] font-mono uppercase tracking-[0.5em] text-amber-600 mb-10 italic font-bold">VOTRE NOTE D'INTENTION</h2>
+                   <div className="space-y-16">
+                      <div className="border-b border-white/5 pb-16">
+                        <p className="text-6xl font-serif italic mb-6 leading-tight">{data.eventType?.title || 'Votre Projet'}</p>
+                        <p className="text-neutral-500 font-light text-xl leading-relaxed">Conçu pour {data.pax} invités, orchestré en {data.timeSlot?.title}.</p>
                       </div>
-                      <div className="grid grid-cols-2 gap-10">
-                         <div><p className="text-[8px] font-mono text-neutral-600 uppercase mb-4 tracking-[0.3em]">CONFIGURATION</p><p className="text-sm">{data.format?.title || 'Signature'}</p></div>
-                         <div><p className="text-[8px] font-mono text-neutral-600 uppercase mb-4 tracking-[0.3em]">EXPÉRIENCE</p><p className="text-sm">{data.experience.title}</p></div>
+                      <div className="grid grid-cols-2 gap-16">
+                         <div><p className="text-[9px] font-mono text-neutral-600 uppercase mb-4 tracking-[0.4em] font-bold">ATMOSPHÈRE</p><p className="text-sm tracking-widest">{data.format?.title || 'Signature'}</p></div>
+                         <div><p className="text-[9px] font-mono text-neutral-600 uppercase mb-4 tracking-[0.4em] font-bold">EXPÉRIENCE</p><p className="text-sm tracking-widest">{data.experience.title}</p></div>
                       </div>
-                      <div className="pt-12 border-t border-white/5">
-                        <div className="flex justify-between items-baseline"><span className="text-[10px] font-mono text-neutral-600 uppercase tracking-widest font-bold">INVESTISSEMENT ESTIMÉ</span><span className="text-5xl font-serif text-amber-500">{totalAmount} €</span></div>
+                      <div className="pt-16 border-t border-white/5 flex justify-between items-baseline">
+                         <span className="text-[9px] font-mono text-neutral-600 uppercase tracking-widest font-bold">INVESTISSEMENT ESTIMÉ</span>
+                         <span className="text-6xl font-serif italic text-amber-500">{totalAmount} €</span>
                       </div>
                    </div>
                 </div>
              </div>
-             <div className="w-full md:w-[480px] bg-[#0c0c0c] p-10 md:p-20 flex flex-col justify-center border-l border-white/5 shadow-2xl z-20">
-                <form onSubmit={handleSubmit} className="space-y-8 animate-fade-in">
-                   <h3 className="text-xl font-serif italic mb-8 text-neutral-300">Sceller cette intention</h3>
-                   <input type="text" placeholder="NOM COMPLET" required className="w-full bg-transparent border-b border-white/10 py-4 text-[10px] font-mono uppercase tracking-[0.2em] outline-none focus:border-amber-600 transition-all placeholder:text-neutral-800" onChange={e => setData({...data, contact: {...data.contact, name: e.target.value}})} />
-                   <input type="email" placeholder="EMAIL PROFESSIONNEL" required className="w-full bg-transparent border-b border-white/10 py-4 text-[10px] font-mono uppercase tracking-[0.2em] outline-none focus:border-amber-600 transition-all placeholder:text-neutral-800" onChange={e => setData({...data, contact: {...data.contact, email: e.target.value}})} />
-                   <input type="tel" placeholder="TÉLÉPHONE" required className="w-full bg-transparent border-b border-white/10 py-4 text-[10px] font-mono uppercase tracking-[0.2em] outline-none focus:border-amber-600 transition-all placeholder:text-neutral-800" onChange={e => setData({...data, contact: {...data.contact, phone: e.target.value}})} />
-                   <button type="submit" disabled={isSending} className="w-full py-6 bg-white text-black text-[10px] font-mono uppercase tracking-[0.5em] hover:bg-amber-600 hover:text-white transition-all shadow-xl font-bold">{isSending ? "Transmission..." : "Envoyer ma demande"}</button>
-                   <div className="flex flex-col gap-4 mt-8">
-                      <button type="button" onClick={handlePrint} className="flex items-center gap-3 text-[9px] font-mono text-neutral-500 hover:text-white uppercase tracking-[0.3em] transition-all italic"><FileText size={12}/> Télécharger la Note d'Intention</button>
-                      <button type="button" onClick={handleSaveTheDate} className="flex items-center gap-3 text-[9px] font-mono text-neutral-500 hover:text-white uppercase tracking-[0.3em] transition-all italic"><Share2 size={12}/> Partager l'invitation prestige</button>
+             <div className="w-full md:w-[500px] bg-[#0c0c0c] p-10 md:p-20 flex flex-col justify-center border-l border-white/5 shadow-2xl z-20">
+                <form onSubmit={handleSubmit} className="space-y-10">
+                   <h3 className="text-2xl font-serif italic mb-10 text-neutral-300">Sceller cette vision</h3>
+                   <input type="text" placeholder="NOM COMPLET" required className="w-full bg-transparent border-b border-white/10 py-5 text-xs font-mono uppercase tracking-[0.3em] outline-none focus:border-amber-600 transition-all placeholder:text-neutral-800" onChange={e => setData({...data, contact: {...data.contact, name: e.target.value}})} />
+                   <input type="email" placeholder="EMAIL PROFESSIONNEL" required className="w-full bg-transparent border-b border-white/10 py-5 text-xs font-mono uppercase tracking-[0.3em] outline-none focus:border-amber-600 transition-all placeholder:text-neutral-800" onChange={e => setData({...data, contact: {...data.contact, email: e.target.value}})} />
+                   <input type="tel" placeholder="TÉLÉPHONE" required className="w-full bg-transparent border-b border-white/10 py-5 text-xs font-mono uppercase tracking-[0.3em] outline-none focus:border-amber-600 transition-all placeholder:text-neutral-800" onChange={e => setData({...data, contact: {...data.contact, phone: e.target.value}})} />
+                   <button type="submit" disabled={isSending} className="w-full py-7 bg-white text-black text-[10px] font-mono uppercase tracking-[0.5em] hover:bg-amber-600 hover:text-white transition-all shadow-xl font-bold italic">{isSending ? "Transmission..." : "Envoyer ma demande"}</button>
+                   <div className="flex flex-col gap-6 mt-12">
+                      <button type="button" onClick={() => window.print()} className="flex items-center gap-4 text-[9px] font-mono text-neutral-500 hover:text-white uppercase tracking-[0.4em] transition-all italic"><FileText size={14}/> Télécharger la Note d'Intention (PDF)</button>
+                      <button type="button" onClick={handleSaveTheDate} className="flex items-center gap-4 text-[9px] font-mono text-neutral-500 hover:text-white uppercase tracking-[0.4em] transition-all italic"><Share2 size={14}/> Partager l'invitation prestige</button>
                    </div>
                 </form>
              </div>
@@ -390,6 +349,7 @@ export default function App() {
         )}
       </div>
 
+      {/* --- STYLE CSS --- */}
       <style dangerouslySetInnerHTML={{__html: `
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Space+Grotesk:wght@300;400;500&display=swap');
         .font-serif { font-family: 'Playfair Display', serif; }
@@ -403,9 +363,10 @@ export default function App() {
         .animate-fade-in-right { animation: fadeInRight 0.5s ease-out forwards; }
         .animate-fade-in { animation: fadeInUp 0.7s ease-out forwards; }
         @media print {
-            body * { visibility: hidden; background: white !important; }
-            .print\\:block, .print\\:block * { visibility: visible; }
-            .print\\:block { position: absolute; left: 0; top: 0; width: 100%; height: auto; }
+            body * { visibility: hidden; }
+            .print\\:block, .print\\:block * { visibility: visible; background: white !important; color: black !important; }
+            .print\\:block { position: absolute; left: 0; top: 0; width: 100%; height: auto; padding: 2cm; }
+            .print\\:hidden { display: none !important; }
         }
       `}} />
     </div>
