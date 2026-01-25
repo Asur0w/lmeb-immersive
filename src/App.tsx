@@ -189,7 +189,7 @@ const SERVICES = [
     desc: 'Préparation culinaire sur-mesure (Tapas, Menu ou Cuisine conviviale).', 
     category: 'food'
   },
-  { 
+  {
     id: 'deco', 
     title: 'Décoration Sur-Mesure', 
     price: 100, 
@@ -1149,7 +1149,7 @@ export default function App() {
             from { opacity: 0; transform: scale(0.95); }
             to { opacity: 1; transform: scale(1); }
         }
-        
+
         .animate-fade-in { animation: zoomIn 0.7s ease-out forwards; }
         .animate-fade-in-up { animation: fadeInUp 1s ease-out forwards; }
         .animate-fade-in-right { animation: fadeInRight 0.5s ease-out forwards; }
