@@ -87,6 +87,9 @@ export default function App() {
   const [isSending, setIsSending] = useState(false);
   const [isSent, setIsSent] = useState(false);
   const [isMultiDay, setIsMultiDay] = useState(false);
+  const [isAgreed, setIsAgreed] = useState(false); // NOUVEAU: GDPR
+
+  // Admin Stats
   const [secretClicks, setSecretClicks] = useState(0);
   const [showAdmin, setShowAdmin] = useState(false);
   const [stats, setStats] = useState({ visits: 0, finalStep: 0, leads: 0, choices: {} });
@@ -99,15 +102,12 @@ export default function App() {
     }
   }, []);
 
-  // --- LOGIQUE ADMIN ROBUSTE ---
-  // Se déclenche à 5 clics. Réinitialise après 5 secondes d'inactivité.
+  // --- LOGIQUE ADMIN (5 clics) ---
   const handleLogoClick = (e) => {
     e.preventDefault(); 
     e.stopPropagation(); 
-    
     const newCount = secretClicks + 1;
     setSecretClicks(newCount);
-
     if (newCount >= 5) {
         Promise.all([
             fetch('https://api.counterapi.dev/v1/lmeb-immersive/visits').then(r => r.json()),
@@ -116,21 +116,10 @@ export default function App() {
             fetch('https://api.counterapi.dev/v1/lmeb-immersive/choice_casino').then(r => r.json()),
             fetch('https://api.counterapi.dev/v1/lmeb-immersive/choice_world').then(r => r.json())
         ]).then(([d1, d2, d3, d4, d5]) => {
-            setStats({ 
-                visits: d1.count || 0, 
-                finalStep: d2.count || 0, 
-                leads: d3.count || 0, 
-                choices: { casino: d4.count || 0, world: d5.count || 0 } 
-            });
-            setShowAdmin(true);
-            setSecretClicks(0);
-        }).catch(() => {
-            // Même si l'API échoue, on ouvre l'admin
-            setShowAdmin(true);
-            setSecretClicks(0);
-        });
+            setStats({ visits: d1.count || 0, finalStep: d2.count || 0, leads: d3.count || 0, choices: { casino: d4.count || 0, world: d5.count || 0 } });
+            setShowAdmin(true); setSecretClicks(0);
+        }).catch(() => { setShowAdmin(true); setSecretClicks(0); });
     }
-
     setTimeout(() => { if(newCount < 5) setSecretClicks(0); }, 5000);
   };
 
@@ -138,30 +127,8 @@ export default function App() {
       fetch(`https://api.counterapi.dev/v1/lmeb-immersive/choice_${expId}/up`).catch(console.error);
   };
 
-  // INVITATION LUXE
   const handleSaveTheDate = () => {
-    const text = `
-M O N D E  E N  B O U T E I L L E
-▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-I N V I T A T I O N  P R I V É E
-
-Vous êtes attendu(e) pour vivre une expérience singulière.
-
-DATE
-${data.date} ${data.endDate ? '— ' + data.endDate : ''}
-
-LIEU
-L'Immersive, Namur
-(Accès confidentiel)
-
-THÈME
-${data.experience.title}
-
-"Le temps s'arrête là où l'expérience commence."
-
-▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-https://www.lemonde-enbouteille.be/salle
-    `.trim();
+    const text = `M O N D E  E N  B O U T E I L L E\n▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\nI N V I T A T I O N  P R I V É E\n\nVous êtes attendu(e) pour vivre une expérience singulière.\n\nDATE\n${data.date} ${data.endDate ? '— ' + data.endDate : ''}\n\nLIEU\nL'Immersive, Namur\n(Accès confidentiel)\n\nTHÈME\n${data.experience.title}\n\n"Le temps s'arrête là où l'expérience commence."\n\n▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\nhttps://www.lemonde-enbouteille.be/salle`;
     navigator.clipboard.writeText(text);
     alert("Invitation copiée dans le presse-papier.");
   };
@@ -197,17 +164,21 @@ https://www.lemonde-enbouteille.be/salle
   };
 
   const goToStep = (target) => { 
-    if (!isAnimating) { 
-      setIsAnimating(true); 
-      setStep(target); 
-      setTimeout(() => setIsAnimating(false), 800); 
-    } 
+    if (!isAnimating) { setIsAnimating(true); setStep(target); setTimeout(() => setIsAnimating(false), 800); } 
   };
   const autoNext = (target) => goToStep(target);
   const goBack = () => { if (step > 0) goToStep(step - 1); };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!data.contact.email || !data.contact.name || !data.contact.phone) { alert("Merci de compléter vos coordonnées."); return; }
+    
+    // VERIFICATION JURIDIQUE GDPR
+    if (!isAgreed) {
+        alert("Merci d'accepter les conditions pour continuer.");
+        return;
+    }
+
     setIsSending(true);
     // @ts-ignore
     window.emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ADMIN_ID, { ...data, total: totalAmount }, EMAILJS_PUBLIC_KEY);
@@ -217,6 +188,8 @@ https://www.lemonde-enbouteille.be/salle
         setIsSending(false); setIsSent(true);
     });
   };
+
+  // --- RENDER ---
 
   if (isSent) {
     return (
@@ -237,15 +210,13 @@ https://www.lemonde-enbouteille.be/salle
   if (step === 0) {
     return (
       <div className="relative h-[100dvh] w-full bg-[#050505] flex flex-col items-center justify-center p-6 text-white overflow-hidden print:hidden">
-        
-        {/* BACKGROUND AVEC OPACITÉ AUGMENTÉE (Lighter) */}
         <div className="absolute inset-0 z-0 opacity-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] pointer-events-none"></div>
         <div className="absolute inset-0 z-0 opacity-60 bg-[url('https://www.lemonde-enbouteille.be/web/image/16056-b2829e5f/79-DSC09373.webp')] bg-cover bg-center mix-blend-overlay"></div>
         
         <div className="relative z-10 text-center flex flex-col items-center w-full max-w-4xl">
           <div className="w-px h-24 bg-gradient-to-b from-transparent via-amber-600 to-transparent mb-10"></div>
           
-          {/* BOUTON ADMIN AVEC LOGO & TITRE AGRANDIS */}
+          {/* BOUTON ADMIN */}
           <div onClick={handleLogoClick} className="cursor-pointer mb-12 select-none relative z-[100] group">
             <img src="https://www.lemonde-enbouteille.be/web/image/26768-edef09a5/LOGO%20l%27immersive-24.png" alt="Logo" className="w-48 mx-auto mb-8 opacity-90 drop-shadow-2xl transition-transform duration-700 group-hover:scale-105" />
             <h1 className="text-6xl md:text-8xl lg:text-9xl font-serif tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-neutral-400 leading-none mb-4">L'IMMERSIVE</h1>
@@ -255,13 +226,11 @@ https://www.lemonde-enbouteille.be/salle
           <div className="border-l border-amber-600/30 pl-8 text-left max-w-2xl mb-16 backdrop-blur-sm py-4">
              <p className="text-neutral-300 font-light text-sm md:text-base leading-relaxed">Une adresse confidentielle à Namur. <br className="hidden md:block"/><strong>Un espace événementiel privatif alliant architecture de caractère et équipements connectés.</strong></p>
           </div>
-          
           <button onClick={() => goToStep(1)} className="group relative px-12 py-6 bg-white/5 border border-white/10 hover:border-amber-600/50 transition-all duration-500 w-full md:w-auto">
              <div className="absolute inset-0 bg-amber-600/10 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500 ease-out"></div>
              <span className="relative font-mono text-sm uppercase tracking-[0.2em] flex items-center justify-center gap-4 text-white group-hover:text-amber-500 transition-colors">Composer mon événement <ArrowRight size={16} /></span>
           </button>
 
-          {/* FOOTER RESTAURÉ */}
           <div className="mt-20 flex flex-col items-center gap-4 opacity-70 hover:opacity-100 transition-opacity duration-500">
              <div className="flex items-center gap-4"><div className="h-px w-10 bg-white/20"></div><p className="font-mono text-[10px] uppercase tracking-[0.25em] text-neutral-400">Confiance : Entreprises & Privés</p><div className="h-px w-10 bg-white/20"></div></div>
              <a href="https://www.lemonde-enbouteille.be/salle" target="_blank" rel="noopener noreferrer" className="font-mono text-[10px] text-neutral-500 hover:text-amber-500 uppercase tracking-widest transition-colors border-b border-transparent hover:border-amber-500 pb-1">www.lemonde-enbouteille.be</a>
@@ -294,16 +263,13 @@ https://www.lemonde-enbouteille.be/salle
     <div className="relative h-[100dvh] w-full bg-[#080808] text-white overflow-hidden flex flex-col md:flex-row">
       
       {/* --------------------
-          DESIGN PDF "MANIFESTE" (Visible seulement à l'impression)
+          PDF MANIFESTE LUXURY (PRINT)
           -------------------- */}
       <div className="hidden print:block fixed inset-0 z-[9999] bg-white text-black p-0 m-0 w-full h-full overflow-hidden">
          <div className="h-full w-full p-16 border-[1px] border-black flex flex-col justify-between relative">
-             {/* Filigrane */}
              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.03] pointer-events-none">
                  <h1 className="text-[150px] font-serif whitespace-nowrap -rotate-45">L'IMMERSIVE</h1>
              </div>
-
-             {/* Header */}
              <div className="flex justify-between items-start">
                  <div>
                      <h1 className="text-4xl font-serif tracking-widest mb-2 uppercase">L'Immersive</h1>
@@ -315,18 +281,11 @@ https://www.lemonde-enbouteille.be/salle
                      <p className="font-serif italic text-lg">{new Date().toLocaleDateString()}</p>
                  </div>
              </div>
-
-             {/* Body */}
              <div className="flex-1 flex flex-col justify-center gap-16">
                  <div className="text-center px-12">
-                     <p className="font-serif italic text-2xl leading-relaxed mb-6">
-                         "Pour {data.contact.name || 'votre événement'}, nous avons imaginé un moment suspendu."
-                     </p>
-                     <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-neutral-500">
-                         {data.eventType?.title} — {data.pax} Personnes — {data.timeSlot?.title}
-                     </p>
+                     <p className="font-serif italic text-2xl leading-relaxed mb-6">"Pour {data.contact.name || 'votre événement'}, nous avons imaginé un moment suspendu."</p>
+                     <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-neutral-500">{data.eventType?.title} — {data.pax} Personnes — {data.timeSlot?.title}</p>
                  </div>
-
                  <div className="grid grid-cols-2 gap-12 border-t border-b border-black/10 py-12">
                      <div className="pr-12 border-r border-black/10">
                          <h3 className="font-mono text-[10px] uppercase tracking-[0.2em] mb-6">L'Atmosphère</h3>
@@ -336,58 +295,30 @@ https://www.lemonde-enbouteille.be/salle
                      <div className="pl-6">
                          <h3 className="font-mono text-[10px] uppercase tracking-[0.2em] mb-6">L'Expérience</h3>
                          <p className="font-serif text-xl mb-2">{data.experience.title}</p>
-                         <ul className="text-xs text-neutral-600 space-y-2 mt-4">
-                             {data.selectedServices.map(id => (
-                                 <li key={id} className="flex items-center gap-2">
-                                     <span className="w-1 h-1 bg-black rounded-full"></span>
-                                     {SERVICES.find(s => s.id === id)?.title}
-                                 </li>
-                             ))}
-                         </ul>
+                         <ul className="text-xs text-neutral-600 space-y-2 mt-4">{data.selectedServices.map(id => (<li key={id} className="flex items-center gap-2"><span className="w-1 h-1 bg-black rounded-full"></span>{SERVICES.find(s => s.id === id)?.title}</li>))}</ul>
                      </div>
                  </div>
              </div>
-
-             {/* Footer */}
              <div className="flex justify-between items-end">
-                 <div className="text-xs font-mono uppercase tracking-widest text-neutral-500">
-                     Document confidentiel<br/>Valable 15 jours
-                 </div>
-                 <div className="text-right">
-                     <p className="font-mono text-[9px] uppercase tracking-[0.2em] mb-2">Investissement Estimé</p>
-                     <p className="text-5xl font-serif">{totalAmount} € <span className="text-lg">TVAC</span></p>
-                 </div>
+                 <div className="text-xs font-mono uppercase tracking-widest text-neutral-500">Document confidentiel<br/>Valable 15 jours</div>
+                 <div className="text-right"><p className="font-mono text-[9px] uppercase tracking-[0.2em] mb-2">Investissement Estimé</p><p className="text-5xl font-serif">{totalAmount} € <span className="text-lg">TVAC</span></p></div>
              </div>
          </div>
       </div>
 
-      {/* --------------------
-          APPLICATION WEB
-          -------------------- */}
       <div className="hidden md:flex flex-col justify-between w-20 border-r border-white/5 bg-[#0a0a0a] z-20 py-8 items-center h-full print:hidden">
         <div className="font-serif font-bold text-xl cursor-pointer text-amber-600" onClick={() => setStep(0)}>L.</div>
-        <div className="flex flex-col gap-6 items-center">
-          {[1, 2, 3, 4, 5, 6, 7].map((s) => (
-            <button key={s} disabled={step < s} onClick={() => setStep(s)} className={`text-[10px] font-mono transition-all ${step === s ? 'text-white font-bold scale-125' : 'text-neutral-700 hover:text-neutral-400'}`}>0{s}</button>
-          ))}
-        </div>
+        <div className="flex flex-col gap-6 items-center">{[1, 2, 3, 4, 5, 6, 7].map((s) => (<button key={s} disabled={step < s} onClick={() => setStep(s)} className={`text-[10px] font-mono transition-all ${step === s ? 'text-white font-bold scale-125' : 'text-neutral-700 hover:text-neutral-400'}`}>0{s}</button>))}</div>
         <div className="text-[9px] text-neutral-700 rotate-180 writing-vertical tracking-widest uppercase">Namur</div>
       </div>
 
       <div className="flex-1 relative flex flex-col h-full overflow-hidden print:hidden">
         {step > 0 && <button onClick={goBack} className="absolute bottom-8 left-8 z-40 flex items-center gap-2 text-neutral-500 hover:text-white uppercase text-[10px] tracking-widest font-mono print:hidden"><ChevronLeft size={16}/> Retour</button>}
-        
-        {/* PROGRESS BAR */}
         <div className="absolute top-0 left-0 h-1 bg-amber-600 transition-all duration-1000 z-50 print:hidden" style={{ width: `${(step/7)*100}%` }}></div>
-
-        {/* HEADER BUDGET */}
         <div className="absolute top-4 right-4 md:top-8 md:right-8 z-50 pointer-events-none">
            <div className="bg-black/60 backdrop-blur-md border border-white/10 rounded-lg px-4 py-2 md:px-6 md:py-3 flex flex-col items-end shadow-2xl pointer-events-auto">
              <div className="font-mono text-[8px] md:text-[10px] uppercase text-neutral-400 tracking-widest mb-1">Budget Estimé</div>
-             <div className="font-serif text-lg md:text-2xl text-white tracking-tight flex items-baseline gap-2">
-                <span className={isCustom ? "text-amber-500" : "text-white"}>{totalAmount} €</span>
-                {isCustom && <span className="text-[8px] md:text-[10px] font-sans text-neutral-400 border border-neutral-600 px-1 rounded">+ Devis</span>}
-             </div>
+             <div className="font-serif text-lg md:text-2xl text-white tracking-tight flex items-baseline gap-2"><span className={isCustom ? "text-amber-500" : "text-white"}>{totalAmount} €</span>{isCustom && <span className="text-[8px] md:text-[10px] font-sans text-neutral-400 border border-neutral-600 px-1 rounded">+ Devis</span>}</div>
            </div>
         </div>
 
@@ -395,10 +326,7 @@ https://www.lemonde-enbouteille.be/salle
         {step === 1 && (
           <div className="flex-1 flex flex-col h-full animate-fade-in duration-700 relative">
             <div className="absolute top-0 left-0 p-6 md:p-12 z-50 pointer-events-none bg-gradient-to-b from-black/80 to-transparent w-full">
-               <div className="mt-16 md:mt-16 pointer-events-auto">
-                 <span className="text-amber-500 font-mono text-xs uppercase tracking-widest mb-2 block">01 — Temporalité</span>
-                 <h2 className="text-3xl md:text-5xl font-serif text-white leading-none">Le Moment<br/>du Choix</h2>
-               </div>
+               <div className="mt-16 md:mt-16 pointer-events-auto"><span className="text-amber-500 font-mono text-xs uppercase tracking-widest mb-2 block">01 — Temporalité</span><h2 className="text-3xl md:text-5xl font-serif text-white leading-none">Le Moment<br/>du Choix</h2></div>
             </div>
             <div className="flex-1 flex flex-col md:flex-row h-full pt-32 md:pt-0 overflow-y-auto md:overflow-hidden">
               {TIME_SLOTS.map((slot) => (
@@ -423,10 +351,7 @@ https://www.lemonde-enbouteille.be/salle
         {step === 2 && (
           <div className="flex-1 p-6 md:p-16 flex flex-col justify-center animate-fade-in-right duration-500 overflow-y-auto">
              <div className="max-w-7xl mx-auto w-full">
-               <div className="mb-6 md:mb-8 border-b border-white/10 pb-6 mt-16 md:mt-0">
-                  <span className="text-amber-600 font-mono text-xs uppercase tracking-widest mb-2 block">02 — Intention</span>
-                  <h2 className="text-3xl md:text-4xl font-serif text-white">L'Énergie du Moment</h2>
-               </div>
+               <div className="mb-6 md:mb-8 border-b border-white/10 pb-6 mt-16 md:mt-0"><span className="text-amber-600 font-mono text-xs uppercase tracking-widest mb-2 block">02 — Intention</span><h2 className="text-3xl md:text-4xl font-serif text-white">L'Énergie du Moment</h2></div>
                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
                  {EVENT_TYPES.map((type) => (
                    <button key={type.id} onClick={() => { setData({...data, eventType: type}); autoNext(3); }} className="group relative h-96 w-full rounded-sm overflow-hidden border border-white/5 hover:border-amber-600/50 transition-all duration-300 text-left">
@@ -454,10 +379,7 @@ https://www.lemonde-enbouteille.be/salle
                     <button key={f.id} onClick={() => { setData({...data, format: f}); autoNext(4); }} className="group relative flex-1 min-h-[160px] border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-all duration-300 flex items-center overflow-hidden hover:border-amber-600/30">
                        <div className="w-1/3 h-full relative overflow-hidden"><div className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-105 opacity-60 group-hover:grayscale-0" style={{ backgroundImage: `url(${f.image})` }} /></div>
                        <div className="flex-1 p-8 text-left flex items-center justify-between">
-                          <div>
-                              <h3 className="text-3xl font-serif text-white mb-2 group-hover:text-amber-500 transition-colors">{f.title}</h3>
-                              <p className="text-xs text-neutral-400 font-light leading-relaxed max-w-md">{f.desc}</p>
-                          </div>
+                          <div><h3 className="text-3xl font-serif text-white mb-2 group-hover:text-amber-500 transition-colors">{f.title}</h3><p className="text-xs text-neutral-400 font-light leading-relaxed max-w-md">{f.desc}</p></div>
                           <ArrowRight size={24} className="text-white/20 group-hover:text-amber-600 transition-colors transform group-hover:translate-x-2 duration-300 ml-8"/>
                        </div>
                     </button>
@@ -589,6 +511,18 @@ https://www.lemonde-enbouteille.be/salle
                       <div className="group relative"><input type="email" required placeholder="EMAIL PROFESSIONNEL" className="w-full bg-transparent border-b border-white/20 py-3 text-white outline-none focus:border-amber-600 transition-colors placeholder:text-neutral-700 font-mono text-sm" onChange={e => setData({...data, contact: {...data.contact, email: e.target.value}})} /></div>
                       <div className="group relative"><input type="tel" required placeholder="TÉLÉPHONE" className="w-full bg-transparent border-b border-white/20 py-3 text-white outline-none focus:border-amber-600 transition-colors placeholder:text-neutral-700 font-mono text-sm" onChange={e => setData({...data, contact: {...data.contact, phone: e.target.value}})} /></div>
                       <div className="group relative"><textarea rows="3" placeholder="MESSAGE (Allergies, horaires...)" className="w-full bg-transparent border-b border-white/20 py-3 text-white outline-none focus:border-amber-600 transition-colors placeholder:text-neutral-700 font-mono text-sm resize-none" onChange={e => setData({...data, contact: {...data.contact, message: e.target.value}})} ></textarea></div>
+                      
+                      {/* CASE A COCHER JURIDIQUE */}
+                      <div className="flex items-start gap-3 mt-6 mb-8 group cursor-pointer" onClick={() => setIsAgreed(!isAgreed)}>
+                          <div className={`w-4 h-4 min-w-[16px] border transition-all duration-300 flex items-center justify-center ${isAgreed ? 'border-amber-600 bg-amber-600' : 'border-white/20 group-hover:border-white/50'}`}>
+                              {isAgreed && <Check size={10} className="text-white" />}
+                          </div>
+                          <p className="text-[9px] font-mono text-neutral-500 uppercase tracking-wider leading-relaxed select-none">
+                              J'accepte que mes données soient traitées pour cette demande. <br/>
+                              <span className="opacity-50">(Ceci n'est pas un engagement contractuel ferme).</span>
+                          </p>
+                      </div>
+
                        <button type="submit" disabled={isSending} className="mt-8 mb-20 md:mb-0 w-full bg-white text-black py-4 font-mono text-xs uppercase tracking-[0.2em] hover:bg-amber-600 hover:text-white transition-all duration-500 shadow-lg flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed">
                           {isSending ? (<><Loader className="animate-spin" size={16} /> Envoi en cours...</>) : (<><Send size={16} /> Envoyer la demande</>)}
                        </button>
