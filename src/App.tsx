@@ -103,7 +103,7 @@ export default function App() {
     }
   }, []);
 
-  // ADMIN TRIGGER
+  // ADMIN TRIGGER (5 clics sécurisés)
   const handleLogoClick = (e) => {
     e.preventDefault(); 
     e.stopPropagation(); 
@@ -173,63 +173,18 @@ export default function App() {
   const autoNext = (target) => goToStep(target);
   const goBack = () => { if (step > 0) goToStep(step - 1); };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    
-    // 1. Vérification des champs
-    if (!data.contact.email || !data.contact.name || !data.contact.phone) { 
-        alert("Merci de compléter vos coordonnées (Nom, Email, Téléphone)."); 
-        return; 
-    }
-    
-    // 2. Vérification GDPR
-    if (!isAgreed) { 
-        alert("Merci d'accepter les conditions (case à cocher) pour envoyer la demande."); 
-        return; 
-    }
-
-    // 3. Lancement du chargement
+    if (!data.contact.email || !data.contact.name || !data.contact.phone) { alert("Merci de compléter vos coordonnées."); return; }
+    if (!isAgreed) { alert("Merci d'accepter les conditions pour continuer."); return; }
     setIsSending(true);
-
-    const templateParams = {
-        name: data.contact.name, 
-        email: data.contact.email, 
-        phone: data.contact.phone, 
-        message: data.contact.message,
-        date: data.date + (data.endDate ? ` au ${data.endDate}` : ''), 
-        pax: data.pax,
-        type: data.eventType?.title || "Non défini", 
-        time_slot: data.timeSlot?.title || "Non défini", 
-        format: data.format?.title || "Non défini",
-        experience: isDryHire ? "Location Sèche" : data.experience?.title,
-        services: data.selectedServices.map(id => SERVICES.find(s => s.id === id)?.title).join(', '),
-        total: totalAmount, 
-        is_custom: isCustom ? "OUI (Devis requis)" : "NON"
-    };
-
-    try {
-        // @ts-ignore
-        // On attend que l'envoi ADMIN se fasse
-        await window.emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ADMIN_ID, templateParams, EMAILJS_PUBLIC_KEY);
-        
-        // @ts-ignore
-        // On attend que l'envoi CLIENT se fasse (optionnel, on pourrait ne pas attendre celui-ci pour aller plus vite)
-        await window.emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_CLIENT_ID, templateParams, EMAILJS_PUBLIC_KEY);
-
-        // Suivi API (Optionnel, ne bloque pas si ça échoue)
+    // @ts-ignore
+    window.emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ADMIN_ID, { ...data, total: totalAmount }, EMAILJS_PUBLIC_KEY);
+    // @ts-ignore
+    window.emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_CLIENT_ID, { ...data, total: totalAmount }, EMAILJS_PUBLIC_KEY).then(() => {
         fetch('https://api.counterapi.dev/v1/lmeb-immersive/leads/up').catch(console.error);
-
-        // SUCCÈS
-        setIsSent(true);
-
-    } catch (error) {
-        // ERREUR
-        console.error("ERREUR EMAILJS:", error);
-        alert("Une erreur est survenue lors de l'envoi. Vérifiez votre connexion ou réessayez. (Détails dans la console F12)");
-    } finally {
-        // DANS TOUS LES CAS (Réussite ou Échec), on arrête le chargement
-        setIsSending(false);
-    }
+        setIsSending(false); setIsSent(true);
+    });
   };
 
   // --- RENDER ---
@@ -255,10 +210,12 @@ export default function App() {
         <div className="absolute inset-0 z-0 opacity-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] pointer-events-none"></div>
         <div className="absolute inset-0 z-0 opacity-60 bg-[url('https://www.lemonde-enbouteille.be/web/image/16056-b2829e5f/79-DSC09373.webp')] bg-cover bg-center mix-blend-overlay"></div>
         
-        {/* CONTAINER PRINCIPAL */}
+        {/* CONTAINER PRINCIPAL CENTRÉ ET SURÉLEVÉ */}
         <div className="relative z-10 flex flex-col items-center justify-center h-full w-full max-w-4xl mx-auto px-6 pb-20"> 
+          
           <div className="w-px h-16 bg-gradient-to-b from-transparent via-amber-600 to-transparent mb-6"></div>
           
+          {/* LOGO & TITRE */}
           <div onClick={handleLogoClick} className="cursor-pointer select-none relative z-[100] group text-center mb-8">
             <img src="https://www.lemonde-enbouteille.be/web/image/26768-edef09a5/LOGO%20l%27immersive-24.png" alt="Logo" className="w-40 md:w-48 mx-auto mb-6 opacity-90 drop-shadow-2xl transition-transform duration-700 group-hover:scale-105" />
             <h1 className="text-5xl md:text-8xl lg:text-9xl font-serif tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-neutral-400 leading-none mb-4">L'IMMERSIVE</h1>
@@ -275,7 +232,7 @@ export default function App() {
           </button>
         </div>
 
-        {/* FOOTER FIXE */}
+        {/* FOOTER FIXE EN BAS */}
         <div className="absolute bottom-8 left-0 w-full flex flex-col items-center gap-4 z-50 animate-fade-in-up delay-500">
              <div className="flex items-center gap-4 opacity-60 hover:opacity-100 transition-opacity duration-500">
                 <div className="h-px w-10 bg-white/20"></div>
@@ -285,7 +242,7 @@ export default function App() {
              <a href="https://www.lemonde-enbouteille.be/salle" target="_blank" rel="noopener noreferrer" className="font-mono text-[9px] text-neutral-500 hover:text-amber-500 uppercase tracking-widest transition-colors border-b border-transparent hover:border-amber-500 pb-1">www.lemonde-enbouteille.be</a>
         </div>
 
-        {/* ADMIN */}
+        {/* PANNEAU ADMIN */}
         {showAdmin && (
           <div className="fixed inset-0 z-[110] bg-black/95 backdrop-blur-xl flex items-center justify-center p-6" onClick={() => setShowAdmin(false)}>
             <div className="max-w-sm w-full bg-[#111] border border-white/10 p-10 text-center shadow-2xl" onClick={e => e.stopPropagation()}>
@@ -311,92 +268,122 @@ export default function App() {
     <div className="relative h-[100dvh] w-full bg-[#080808] text-white overflow-hidden flex flex-col md:flex-row">
       
       {/* --------------------
-          PDF MANIFESTE LUXURY - VERSION 2.0 (Fiche Technique Architecte)
+          PDF MANIFESTE LUXURY (PRINT) - VERSION IMMERSIVE ULTIME
           -------------------- */}
       <div className="hidden print:block fixed inset-0 z-[9999] bg-white text-black p-0 m-0 w-full h-full overflow-hidden">
-         <div className="w-[210mm] h-[297mm] flex flex-col p-[20mm] mx-auto bg-white">
+         <div className="w-[210mm] h-[297mm] relative flex flex-col justify-between">
              
-             {/* HEADER AVEC CADRE */}
-             <div className="border-b-[3px] border-black pb-8 mb-12 flex justify-between items-end">
-                 <div>
-                     <h1 className="text-5xl font-serif tracking-tight text-black mb-2">L'IMMERSIVE</h1>
-                     <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-neutral-600">Le Monde en Bouteille — Namur</p>
-                 </div>
-                 <div className="text-right">
-                    <div className="font-mono text-[9px] uppercase tracking-[0.2em] mb-2 bg-black text-white inline-block px-2 py-1">Document Officiel</div>
-                    <div className="font-mono text-sm">REF-{new Date().getFullYear()}-{(new Date().getMonth()+1).toString().padStart(2,'0')}{new Date().getDate().toString().padStart(2,'0')}</div>
+             {/* HEADER AVEC ESPACE IMMERSIF */}
+             <div className="px-[20mm] pt-[20mm]">
+                 <div className="flex justify-between items-start border-b-[2px] border-black pb-8">
+                     <div>
+                         <h1 className="text-7xl font-serif tracking-tighter text-black mb-2">L'IMMERSIVE</h1>
+                         <p className="font-mono text-[9px] uppercase tracking-[0.4em] text-neutral-500">Le Monde en Bouteille — Namur</p>
+                     </div>
+                     <div className="text-right flex flex-col items-end pt-4">
+                        <div className="font-mono text-[9px] uppercase tracking-[0.2em] mb-1 bg-black text-white px-2 py-1">Document Officiel</div>
+                        <div className="font-mono text-xs text-neutral-600">REF-{new Date().getFullYear()}-{(new Date().getMonth()+1).toString().padStart(2,'0')}{new Date().getDate().toString().padStart(2,'0')}</div>
+                     </div>
                  </div>
              </div>
 
-             {/* CLIENT & INTENTION */}
-             <div className="mb-16">
-                 <div className="flex items-start gap-4 mb-6">
-                     <div className="w-2 h-2 bg-amber-600 mt-2"></div>
-                     <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-neutral-500">Bénéficiaire : {data.contact.name}</p>
-                 </div>
-                 <p className="font-serif text-4xl leading-tight text-black italic pl-6 border-l border-black/10">
-                     "Une expérience conçue sur-mesure, alliant technologie et terroir."
-                 </p>
-             </div>
+             {/* CORPS PRINCIPAL : NARRATIF & TECHNIQUE */}
+             <div className="flex-1 flex px-[20mm] py-16 gap-16">
+                 
+                 {/* COLONNE GAUCHE : L'HISTOIRE */}
+                 <div className="w-[55%] flex flex-col pr-8 border-r border-black/10">
+                     <div className="mb-20">
+                         <div className="flex items-center gap-3 mb-8">
+                             <div className="w-8 h-[1px] bg-amber-600"></div>
+                             <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-neutral-500">Bénéficiaire : {data.contact.name}</p>
+                         </div>
+                         <p className="font-serif text-5xl leading-[1.1] text-black italic">
+                             "Une parenthèse hors du temps, où l'architecture de caractère rencontre l'art de recevoir."
+                         </p>
+                     </div>
 
-             {/* GRILLE TECHNIQUE */}
-             <div className="flex-1">
-                 {/* Ligne 1 */}
-                 <div className="grid grid-cols-12 border-t border-black py-6 items-center">
-                     <div className="col-span-3 font-mono text-[9px] uppercase tracking-[0.2em] text-neutral-500">Date & Horaire</div>
-                     <div className="col-span-9 font-serif text-xl">{data.date} <span className="mx-2 text-neutral-300">|</span> {data.timeSlot?.label}</div>
-                 </div>
-                 {/* Ligne 2 */}
-                 <div className="grid grid-cols-12 border-t border-black/20 py-6 items-center">
-                     <div className="col-span-3 font-mono text-[9px] uppercase tracking-[0.2em] text-neutral-500">Format</div>
-                     <div className="col-span-9 flex items-baseline gap-4">
-                         <span className="font-serif text-xl">{data.eventType?.title}</span>
-                         <span className="font-mono text-xs text-neutral-500">({data.pax} Personnes)</span>
-                     </div>
-                 </div>
-                 {/* Ligne 3 */}
-                 <div className="grid grid-cols-12 border-t border-black/20 py-6 items-start">
-                     <div className="col-span-3 font-mono text-[9px] uppercase tracking-[0.2em] text-neutral-500 mt-1">Expérience</div>
-                     <div className="col-span-9">
-                         <span className="font-serif text-2xl block mb-2">{data.experience.title}</span>
-                         <span className="font-mono text-[10px] text-neutral-600">{data.format?.desc}</span>
-                     </div>
-                 </div>
-                 {/* Ligne 4 - Services */}
-                 <div className="grid grid-cols-12 border-t border-black/20 py-6 items-start">
-                     <div className="col-span-3 font-mono text-[9px] uppercase tracking-[0.2em] text-neutral-500 mt-1">Inclusions</div>
-                     <div className="col-span-9">
-                         <div className="grid grid-cols-2 gap-y-2 gap-x-8">
-                             {data.selectedServices.map(id => (
-                                 <div key={id} className="flex items-center gap-3">
-                                     <div className="w-1 h-1 bg-black rounded-full"></div>
-                                     <span className="font-mono text-[10px] uppercase tracking-wider text-black">{SERVICES.find(s => s.id === id)?.title}</span>
-                                 </div>
-                             ))}
+                     <div className="mt-auto">
+                         <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-neutral-400 mb-6">Paramètres de l'événement</p>
+                         <div className="grid grid-cols-2 gap-y-8 gap-x-4">
+                             <div>
+                                 <span className="block font-serif text-2xl mb-1">{data.date}</span>
+                                 <span className="block font-mono text-[10px] text-neutral-500 uppercase tracking-wider">Date Sélectionnée</span>
+                             </div>
+                             <div>
+                                 <span className="block font-serif text-2xl mb-1">{data.timeSlot?.label}</span>
+                                 <span className="block font-mono text-[10px] text-neutral-500 uppercase tracking-wider">Créneau</span>
+                             </div>
+                             <div>
+                                 <span className="block font-serif text-2xl mb-1">{data.pax} Personnes</span>
+                                 <span className="block font-mono text-[10px] text-neutral-500 uppercase tracking-wider">Audience</span>
+                             </div>
+                             <div>
+                                 <span className="block font-serif text-2xl mb-1">{data.eventType?.title}</span>
+                                 <span className="block font-mono text-[10px] text-neutral-500 uppercase tracking-wider">Format</span>
+                             </div>
                          </div>
                      </div>
                  </div>
-             </div>
 
-             {/* TOTAL & SIGNATURE */}
-             <div className="mt-auto">
-                 <div className="bg-neutral-50 p-8 flex justify-between items-center border border-black/5">
+                 {/* COLONNE DROITE : LES DÉTAILS */}
+                 <div className="w-[45%] flex flex-col space-y-16 pt-4">
                      <div>
-                         <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-neutral-500 mb-1">Total Estimé</p>
-                         <p className="font-serif text-5xl text-black">{totalAmount} € <span className="text-sm text-neutral-400 font-sans ml-2">TVAC</span></p>
+                         <div className="flex items-center justify-between border-b border-black/10 pb-2 mb-4">
+                             <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-neutral-400">Atmosphère</p>
+                             <div className="w-2 h-2 bg-black rounded-full"></div>
+                         </div>
+                         <p className="font-serif text-3xl mb-2">{data.format?.title}</p>
+                         <p className="text-xs text-neutral-600 leading-relaxed font-light">{data.format?.desc}</p>
                      </div>
-                     <div className="w-64 h-24 border border-black/10 bg-white p-2">
-                         <p className="font-mono text-[7px] uppercase text-neutral-400 mb-1">Signature</p>
+
+                     <div>
+                         <div className="flex items-center justify-between border-b border-black/10 pb-2 mb-4">
+                             <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-neutral-400">Expérience</p>
+                             <div className="w-2 h-2 bg-amber-600 rounded-full"></div>
+                         </div>
+                         <p className="font-serif text-3xl mb-2">{data.experience.title}</p>
+                     </div>
+
+                     <div>
+                         <div className="flex items-center justify-between border-b border-black/10 pb-2 mb-4">
+                             <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-neutral-400">Inclusions & Services</p>
+                             <Plus size={10} className="text-black"/>
+                         </div>
+                         <ul className="space-y-3">
+                             {data.selectedServices.map(id => (
+                                 <li key={id} className="flex items-baseline gap-3">
+                                     <div className="w-1 h-1 bg-neutral-300 rounded-full"></div>
+                                     <span className="font-mono text-[10px] uppercase tracking-widest text-black">{SERVICES.find(s => s.id === id)?.title}</span>
+                                 </li>
+                             ))}
+                         </ul>
                      </div>
                  </div>
-                 <div className="text-center mt-8">
-                     <p className="font-mono text-[8px] text-neutral-400 uppercase tracking-widest">Document généré automatiquement — L'Immersive Namur</p>
+             </div>
+
+             {/* PIED DE PAGE : TOTAL MASSIP (Black Block) */}
+             <div className="w-full bg-[#050505] text-white px-[20mm] py-[15mm] flex justify-between items-center">
+                 <div>
+                     <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-neutral-500 mb-2">Investissement Global Estimé</p>
+                     <p className="font-serif text-7xl leading-none">{totalAmount} € <span className="text-lg font-sans text-neutral-500 font-normal ml-2">TVAC</span></p>
+                 </div>
+                 
+                 <div className="flex gap-12">
+                     <div className="text-right">
+                         <div className="w-48 h-16 border border-white/20 mb-3 bg-white/5"></div>
+                         <p className="font-mono text-[7px] uppercase tracking-[0.2em] text-neutral-500">Signature Client</p>
+                     </div>
+                     <div className="text-right">
+                         <div className="w-48 h-16 border border-white/20 mb-3 flex items-center justify-center bg-white/5">
+                             <span className="font-serif italic text-neutral-600 text-sm">L'Immersive</span>
+                         </div>
+                         <p className="font-mono text-[7px] uppercase tracking-[0.2em] text-neutral-500">Pour Accord</p>
+                     </div>
                  </div>
              </div>
          </div>
       </div>
 
-      {/* SIDEBAR */}
       <div className="hidden md:flex flex-col justify-between w-20 border-r border-white/5 bg-[#0a0a0a] z-20 py-8 items-center h-full print:hidden">
         <div className="font-serif font-bold text-xl cursor-pointer text-amber-600" onClick={() => setStep(0)}>L.</div>
         <div className="flex flex-col gap-6 items-center">
@@ -417,7 +404,7 @@ export default function App() {
            </div>
         </div>
 
-        {/* STEPS 1-7 (IDENTIQUES A AVANT) */}
+        {/* STEP 1: TEMPORALITE */}
         {step === 1 && (
           <div className="flex-1 flex flex-col h-full animate-fade-in duration-700 relative">
             <div className="absolute top-0 left-0 p-6 md:p-12 z-50 pointer-events-none bg-gradient-to-b from-black/80 to-transparent w-full">
@@ -442,6 +429,7 @@ export default function App() {
           </div>
         )}
 
+        {/* STEP 2: INTENTION */}
         {step === 2 && (
           <div className="flex-1 p-6 md:p-16 flex flex-col justify-center animate-fade-in-right duration-500 overflow-y-auto">
              <div className="max-w-7xl mx-auto w-full">
@@ -463,6 +451,7 @@ export default function App() {
           </div>
         )}
 
+        {/* STEP 3: ARCHITECTURE */}
         {step === 3 && (
           <div className="flex-1 flex flex-col justify-center p-6 md:p-16 animate-fade-in-right duration-500 overflow-y-auto">
              <div className="max-w-7xl mx-auto w-full flex flex-col h-full justify-center">
@@ -482,6 +471,7 @@ export default function App() {
           </div>
         )}
 
+        {/* STEP 4: CALIBRAGE */}
         {step === 4 && (
           <div className="flex-1 flex flex-col animate-fade-in-right duration-500 justify-center overflow-y-auto">
              <div className="max-w-4xl mx-auto w-full p-6 md:p-8 mt-16 md:mt-0">
@@ -509,6 +499,7 @@ export default function App() {
           </div>
         )}
 
+        {/* STEP 5: IMMERSION */}
         {step === 5 && (
           <div className="flex-1 flex flex-col animate-fade-in-right duration-500 overflow-y-auto scrollbar-hide">
              <div className="max-w-6xl mx-auto w-full p-6 md:p-16 mt-16 md:mt-0">
@@ -546,6 +537,7 @@ export default function App() {
           </div>
         )}
 
+        {/* STEP 6: SERVICES & FINITIONS */}
         {step === 6 && (
           <div className="flex-1 p-6 md:p-16 overflow-y-auto scrollbar-hide animate-fade-in-right duration-500">
              <div className="max-w-6xl mx-auto w-full h-full flex flex-col">
@@ -574,6 +566,7 @@ export default function App() {
           </div>
         )}
 
+        {/* ÉTAPE 7 : FINAL */}
         {step === 7 && (
           <div className="flex-1 flex items-center justify-center p-0 md:p-6 animate-in zoom-in-95 duration-700 relative overflow-hidden h-full">
              <div className="absolute inset-0 bg-cover bg-center opacity-30 blur-2xl scale-110" style={{ backgroundImage: `url(${data.timeSlot?.image})` }}></div>
@@ -593,7 +586,7 @@ export default function App() {
                    <div className="pt-8 mt-12 border-t border-white/10 text-center pb-8 md:pb-0">
                       <div className="text-xs text-neutral-500 uppercase tracking-widest mb-3">Total Estimé TVAC</div>
                       <div className="flex items-baseline justify-center gap-3"><span className="text-4xl md:text-5xl font-serif text-amber-500">{totalAmount} €</span>{isCustom && <span className="text-sm font-sans text-neutral-400 border border-neutral-600 px-2 py-0.5 rounded">+ Devis</span>}</div>
-                      <button onClick={() => window.print()} className="mt-6 flex items-center justify-center gap-2 w-full text-[10px] uppercase tracking-widest text-neutral-500 hover:text-white transition-colors"><FileText size={12} /> Télécharger votre demande d'expérience</button>
+                      <button onClick={() => window.print()} className="mt-6 flex items-center justify-center gap-2 w-full text-[10px] uppercase tracking-widest text-neutral-500 hover:text-white transition-colors"><FileText size={12} /> Télécharger la Note d'Intention</button>
                    </div>
                 </div>
                 <div className="w-full md:w-1/2 p-6 md:p-10 flex flex-col justify-center bg-black/40 relative overflow-y-auto">
