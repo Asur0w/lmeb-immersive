@@ -45,7 +45,7 @@ const SERVICES = [
   { id: 'gift', title: 'Coffret Souvenir', price: 15, isPerHead: true, icon: <Gift size={20}/>, desc: 'Cadeau invité.' }
 ];
 
-// --- COMPONENTS ---
+// --- UI COMPONENTS ---
 const ProgressBar = ({ current, total }) => (
   <div className="absolute top-0 left-0 h-1 bg-amber-600 transition-all duration-1000 z-50 print:hidden" style={{ width: `${(current / total) * 100}%` }}></div>
 );
@@ -87,7 +87,7 @@ export default function App() {
   const [isSending, setIsSending] = useState(false);
   const [isSent, setIsSent] = useState(false);
   const [isMultiDay, setIsMultiDay] = useState(false);
-  const [isAgreed, setIsAgreed] = useState(false); // NOUVEAU: GDPR
+  const [isAgreed, setIsAgreed] = useState(false);
 
   // Admin Stats
   const [secretClicks, setSecretClicks] = useState(0);
@@ -102,7 +102,7 @@ export default function App() {
     }
   }, []);
 
-  // --- LOGIQUE ADMIN (5 clics) ---
+  // ADMIN TRIGGER (5 clics sécurisés)
   const handleLogoClick = (e) => {
     e.preventDefault(); 
     e.stopPropagation(); 
@@ -116,7 +116,10 @@ export default function App() {
             fetch('https://api.counterapi.dev/v1/lmeb-immersive/choice_casino').then(r => r.json()),
             fetch('https://api.counterapi.dev/v1/lmeb-immersive/choice_world').then(r => r.json())
         ]).then(([d1, d2, d3, d4, d5]) => {
-            setStats({ visits: d1.count || 0, finalStep: d2.count || 0, leads: d3.count || 0, choices: { casino: d4.count || 0, world: d5.count || 0 } });
+            setStats({ 
+                visits: d1.count || 0, finalStep: d2.count || 0, leads: d3.count || 0, 
+                choices: { casino: d4.count || 0, world: d5.count || 0 } 
+            });
             setShowAdmin(true); setSecretClicks(0);
         }).catch(() => { setShowAdmin(true); setSecretClicks(0); });
     }
@@ -172,13 +175,7 @@ export default function App() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!data.contact.email || !data.contact.name || !data.contact.phone) { alert("Merci de compléter vos coordonnées."); return; }
-    
-    // VERIFICATION JURIDIQUE GDPR
-    if (!isAgreed) {
-        alert("Merci d'accepter les conditions pour continuer.");
-        return;
-    }
-
+    if (!isAgreed) { alert("Merci d'accepter les conditions pour continuer."); return; }
     setIsSending(true);
     // @ts-ignore
     window.emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ADMIN_ID, { ...data, total: totalAmount }, EMAILJS_PUBLIC_KEY);
@@ -190,7 +187,6 @@ export default function App() {
   };
 
   // --- RENDER ---
-
   if (isSent) {
     return (
       <div className="relative h-[100dvh] w-full bg-[#050505] flex flex-col items-center justify-center p-6 text-white text-center print:hidden">
@@ -212,17 +208,14 @@ export default function App() {
       <div className="relative h-[100dvh] w-full bg-[#050505] flex flex-col items-center justify-center p-6 text-white overflow-hidden print:hidden">
         <div className="absolute inset-0 z-0 opacity-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] pointer-events-none"></div>
         <div className="absolute inset-0 z-0 opacity-60 bg-[url('https://www.lemonde-enbouteille.be/web/image/16056-b2829e5f/79-DSC09373.webp')] bg-cover bg-center mix-blend-overlay"></div>
-        
         <div className="relative z-10 text-center flex flex-col items-center w-full max-w-4xl">
           <div className="w-px h-24 bg-gradient-to-b from-transparent via-amber-600 to-transparent mb-10"></div>
-          
           {/* BOUTON ADMIN */}
           <div onClick={handleLogoClick} className="cursor-pointer mb-12 select-none relative z-[100] group">
             <img src="https://www.lemonde-enbouteille.be/web/image/26768-edef09a5/LOGO%20l%27immersive-24.png" alt="Logo" className="w-48 mx-auto mb-8 opacity-90 drop-shadow-2xl transition-transform duration-700 group-hover:scale-105" />
             <h1 className="text-6xl md:text-8xl lg:text-9xl font-serif tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-neutral-400 leading-none mb-4">L'IMMERSIVE</h1>
             <p className="font-mono text-xs md:text-sm uppercase tracking-[0.6em] text-amber-500">Le Monde en Bouteille</p>
           </div>
-
           <div className="border-l border-amber-600/30 pl-8 text-left max-w-2xl mb-16 backdrop-blur-sm py-4">
              <p className="text-neutral-300 font-light text-sm md:text-base leading-relaxed">Une adresse confidentielle à Namur. <br className="hidden md:block"/><strong>Un espace événementiel privatif alliant architecture de caractère et équipements connectés.</strong></p>
           </div>
@@ -230,13 +223,11 @@ export default function App() {
              <div className="absolute inset-0 bg-amber-600/10 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500 ease-out"></div>
              <span className="relative font-mono text-sm uppercase tracking-[0.2em] flex items-center justify-center gap-4 text-white group-hover:text-amber-500 transition-colors">Composer mon événement <ArrowRight size={16} /></span>
           </button>
-
           <div className="mt-20 flex flex-col items-center gap-4 opacity-70 hover:opacity-100 transition-opacity duration-500">
              <div className="flex items-center gap-4"><div className="h-px w-10 bg-white/20"></div><p className="font-mono text-[10px] uppercase tracking-[0.25em] text-neutral-400">Confiance : Entreprises & Privés</p><div className="h-px w-10 bg-white/20"></div></div>
              <a href="https://www.lemonde-enbouteille.be/salle" target="_blank" rel="noopener noreferrer" className="font-mono text-[10px] text-neutral-500 hover:text-amber-500 uppercase tracking-widest transition-colors border-b border-transparent hover:border-amber-500 pb-1">www.lemonde-enbouteille.be</a>
           </div>
         </div>
-
         {/* PANNEAU ADMIN */}
         {showAdmin && (
           <div className="fixed inset-0 z-[110] bg-black/95 backdrop-blur-xl flex items-center justify-center p-6" onClick={() => setShowAdmin(false)}>
@@ -263,52 +254,102 @@ export default function App() {
     <div className="relative h-[100dvh] w-full bg-[#080808] text-white overflow-hidden flex flex-col md:flex-row">
       
       {/* --------------------
-          PDF MANIFESTE LUXURY (PRINT)
+          PDF MANIFESTE LUXURY (PRINT) - DESIGN BUGATTI/LVMH
           -------------------- */}
-      <div className="hidden print:block fixed inset-0 z-[9999] bg-white text-black p-0 m-0 w-full h-full overflow-hidden">
-         <div className="h-full w-full p-16 border-[1px] border-black flex flex-col justify-between relative">
-             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.03] pointer-events-none">
-                 <h1 className="text-[150px] font-serif whitespace-nowrap -rotate-45">L'IMMERSIVE</h1>
-             </div>
-             <div className="flex justify-between items-start">
-                 <div>
-                     <h1 className="text-4xl font-serif tracking-widest mb-2 uppercase">L'Immersive</h1>
-                     <div className="h-px w-12 bg-black mb-2"></div>
-                     <p className="font-mono text-[9px] uppercase tracking-[0.3em]">Le Monde en Bouteille</p>
+      <div className="hidden print:block fixed inset-0 z-[9999] bg-[#FAFAFA] text-[#0A0A0A] w-full h-full p-0 overflow-hidden">
+         <div className="h-full w-full relative flex flex-col p-[1.5cm]">
+             
+             {/* CADRE FIN ELEGANT */}
+             <div className="absolute inset-[1cm] border-[0.5px] border-[#0A0A0A]/20 pointer-events-none"></div>
+
+             {/* HEADER */}
+             <div className="flex justify-between items-start mb-24 z-10">
+                 <div className="flex flex-col">
+                     <h1 className="text-5xl font-serif tracking-tight text-black mb-4">L'IMMERSIVE</h1>
+                     <div className="flex items-center gap-4">
+                         <div className="h-[1px] w-8 bg-black"></div>
+                         <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-[#444]">Le Monde en Bouteille</span>
+                     </div>
                  </div>
                  <div className="text-right">
-                     <p className="font-mono text-[9px] uppercase tracking-[0.2em] mb-1">MÉMOIRE D'INTENTION</p>
-                     <p className="font-serif italic text-lg">{new Date().toLocaleDateString()}</p>
+                    <div className="font-mono text-[8px] uppercase tracking-[0.2em] text-[#666] mb-2">Document Réf.</div>
+                    <div className="font-serif text-xl text-black">MÉMOIRE — {new Date().getFullYear()}</div>
                  </div>
              </div>
-             <div className="flex-1 flex flex-col justify-center gap-16">
-                 <div className="text-center px-12">
-                     <p className="font-serif italic text-2xl leading-relaxed mb-6">"Pour {data.contact.name || 'votre événement'}, nous avons imaginé un moment suspendu."</p>
-                     <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-neutral-500">{data.eventType?.title} — {data.pax} Personnes — {data.timeSlot?.title}</p>
-                 </div>
-                 <div className="grid grid-cols-2 gap-12 border-t border-b border-black/10 py-12">
-                     <div className="pr-12 border-r border-black/10">
-                         <h3 className="font-mono text-[10px] uppercase tracking-[0.2em] mb-6">L'Atmosphère</h3>
-                         <p className="font-serif text-xl mb-2">{data.format?.title}</p>
-                         <p className="text-xs text-neutral-600 leading-relaxed">{data.format?.desc}</p>
+
+             {/* CONTENT - LAYOUT ASYMETRIQUE */}
+             <div className="flex-1 grid grid-cols-12 gap-12 z-10">
+                 {/* COLONNE GAUCHE (Description) */}
+                 <div className="col-span-7 pr-12 flex flex-col justify-center border-r border-black/5">
+                     <p className="font-mono text-[9px] uppercase tracking-[0.4em] text-amber-900 mb-8">Intention du projet</p>
+                     <p className="font-serif text-3xl leading-snug text-black mb-8 italic">
+                         "Pour {data.contact.name || 'votre événement'}, nous avons conçu une parenthèse hors du temps, où l'architecture rencontre l'émotion."
+                     </p>
+                     <div className="mt-auto pt-12">
+                         <div className="flex justify-between items-end border-b border-black/10 pb-2 mb-4">
+                             <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#666]">Date</span>
+                             <span className="font-serif text-lg">{data.date}</span>
+                         </div>
+                         <div className="flex justify-between items-end border-b border-black/10 pb-2 mb-4">
+                             <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#666]">Horaire</span>
+                             <span className="font-serif text-lg">{data.timeSlot?.label}</span>
+                         </div>
+                         <div className="flex justify-between items-end border-b border-black/10 pb-2">
+                             <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#666]">Convives</span>
+                             <span className="font-serif text-lg">{data.pax} Personnes</span>
+                         </div>
                      </div>
-                     <div className="pl-6">
-                         <h3 className="font-mono text-[10px] uppercase tracking-[0.2em] mb-6">L'Expérience</h3>
-                         <p className="font-serif text-xl mb-2">{data.experience.title}</p>
-                         <ul className="text-xs text-neutral-600 space-y-2 mt-4">{data.selectedServices.map(id => (<li key={id} className="flex items-center gap-2"><span className="w-1 h-1 bg-black rounded-full"></span>{SERVICES.find(s => s.id === id)?.title}</li>))}</ul>
+                 </div>
+
+                 {/* COLONNE DROITE (Détails) */}
+                 <div className="col-span-5 flex flex-col justify-center pl-4">
+                     <div className="mb-12">
+                         <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#888] mb-4">Configuration Spatiale</p>
+                         <p className="font-serif text-2xl mb-2">{data.format?.title}</p>
+                         <p className="text-xs font-light text-[#444] leading-relaxed">{data.format?.desc}</p>
+                     </div>
+                     <div className="mb-12">
+                         <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#888] mb-4">Expérience Sensorielle</p>
+                         <p className="font-serif text-2xl mb-2">{data.experience.title}</p>
+                         <div className="flex flex-col gap-2 mt-4">
+                             {data.selectedServices.map(id => (
+                                 <div key={id} className="flex items-center gap-3">
+                                     <div className="w-1 h-1 bg-amber-600 rounded-full"></div>
+                                     <span className="text-xs font-mono uppercase tracking-widest text-[#333]">{SERVICES.find(s => s.id === id)?.title}</span>
+                                 </div>
+                             ))}
+                         </div>
                      </div>
                  </div>
              </div>
-             <div className="flex justify-between items-end">
-                 <div className="text-xs font-mono uppercase tracking-widest text-neutral-500">Document confidentiel<br/>Valable 15 jours</div>
-                 <div className="text-right"><p className="font-mono text-[9px] uppercase tracking-[0.2em] mb-2">Investissement Estimé</p><p className="text-5xl font-serif">{totalAmount} € <span className="text-lg">TVAC</span></p></div>
+
+             {/* FOOTER */}
+             <div className="mt-auto pt-16 z-10">
+                 <div className="flex justify-between items-end">
+                     <div>
+                         <p className="font-serif text-6xl text-black leading-none">{totalAmount}<span className="text-2xl align-top ml-2">€</span></p>
+                         <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#666] mt-2">Investissement Global Estimé (TVAC)</p>
+                     </div>
+                     <div className="text-right">
+                         <div className="w-32 h-px bg-black mb-4 ml-auto"></div>
+                         <p className="font-mono text-[8px] uppercase tracking-[0.2em] text-[#888]">Signature & Accord</p>
+                         <div className="h-16"></div> 
+                     </div>
+                 </div>
+                 <div className="w-full text-center mt-12">
+                     <p className="font-mono text-[7px] uppercase tracking-[0.4em] text-[#AAA]">Namur — Rue de la Croix — Belgique</p>
+                 </div>
              </div>
          </div>
       </div>
 
       <div className="hidden md:flex flex-col justify-between w-20 border-r border-white/5 bg-[#0a0a0a] z-20 py-8 items-center h-full print:hidden">
         <div className="font-serif font-bold text-xl cursor-pointer text-amber-600" onClick={() => setStep(0)}>L.</div>
-        <div className="flex flex-col gap-6 items-center">{[1, 2, 3, 4, 5, 6, 7].map((s) => (<button key={s} disabled={step < s} onClick={() => setStep(s)} className={`text-[10px] font-mono transition-all ${step === s ? 'text-white font-bold scale-125' : 'text-neutral-700 hover:text-neutral-400'}`}>0{s}</button>))}</div>
+        <div className="flex flex-col gap-6 items-center">
+          {[1, 2, 3, 4, 5, 6, 7].map((s) => (
+            <button key={s} disabled={step < s} onClick={() => setStep(s)} className={`text-[10px] font-mono transition-all ${step === s ? 'text-white font-bold scale-125' : 'text-neutral-700 hover:text-neutral-400'}`}>0{s}</button>
+          ))}
+        </div>
         <div className="text-[9px] text-neutral-700 rotate-180 writing-vertical tracking-widest uppercase">Namur</div>
       </div>
 
