@@ -131,8 +131,7 @@ const EXPERIENCES = [
     id: 'gastro', 
     title: 'Instant Gourmand', 
     price: -1, // Sur Devis
-    sub: 'Challenge Culinaire',
-    description: "Une immersion autour de la gastronomie. Quiz culinaire interactif, découverte d'ingrédients mystères et accords mets-vins sur mesure.",
+    sub: 'Repas',
     image: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=2940&auto=format&fit=crop'
   }
 ];
@@ -269,7 +268,7 @@ export default function App() {
     format: null,
     pax: 10,
     date: '',
-    endDate: '', 
+    endDate: '', // NOUVEAU : Date de fin
     experience: EXPERIENCES[0],
     selectedServices: ['tech'],
     contact: { name: '', email: '', phone: '', message: '' }
@@ -277,7 +276,7 @@ export default function App() {
 
   const [isSending, setIsSending] = useState(false);
   const [isSent, setIsSent] = useState(false);
-  const [isMultiDay, setIsMultiDay] = useState(false);
+  const [isMultiDay, setIsMultiDay] = useState(false); // NOUVEAU : Toggle multi-jours
 
   // --- STATS SECRÈTES ---
   const [secretClicks, setSecretClicks] = useState(0);
@@ -300,7 +299,7 @@ export default function App() {
     }
   }, [step]);
 
-  // 3. TRACKING CHOIX EXPÉRIENCE
+  // 3. TRACKING CHOIX EXPÉRIENCE (DATA ANALYSIS)
   const trackExperienceChoice = (expId) => {
       fetch(`https://api.counterapi.dev/v1/lmeb-immersive/choice_${expId}/up`).catch(console.error);
   };
@@ -508,7 +507,7 @@ export default function App() {
                     </span>
                   </button>
 
-                  {/* BOUTON SAVE THE DATE */}
+                  {/* BOUTON SAVE THE DATE (TEXTE SIMPLE SANS ICONE) */}
                   <button 
                     onClick={handleSaveTheDate}
                     className="flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.25em] text-neutral-500 hover:text-white transition-colors border-b border-transparent hover:border-white pb-1"
@@ -1158,12 +1157,12 @@ export default function App() {
                          {isCustom && <span className="text-sm font-sans text-neutral-400 border border-neutral-600 px-2 py-0.5 rounded">+ Devis</span>}
                       </div>
                       
-                      {/* BOUTON IMPRESSION PDF */}
+                      {/* BOUTON IMPRESSION PDF (TEXTE SEULEMENT) */}
                       <button 
                         onClick={handlePrint}
                         className="mt-6 flex items-center justify-center gap-2 w-full text-[10px] uppercase tracking-widest text-neutral-500 hover:text-white transition-colors"
                       >
-                        <Printer size={12} /> Télécharger le devis officiel
+                        Télécharger le devis officiel
                       </button>
                    </div>
                 </div>
