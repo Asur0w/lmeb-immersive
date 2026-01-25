@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, ChevronRight, ChevronLeft, Check, Clock, Calendar, Users, Briefcase, Wine, Coffee, Music, Monitor, Minus, Plus, Sparkles, Sun, Moon, Sunrise, Star, Utensils, Wifi, Gift, Palette, LayoutTemplate, Droplets, Map, Mail, Loader, Send, Activity } from 'lucide-react';
+import { ArrowRight, ChevronRight, ChevronLeft, Check, Clock, Calendar, Users, Briefcase, Wine, Coffee, Music, Monitor, Minus, Plus, Sparkles, Sun, Moon, Sunrise, Star, Utensils, Wifi, Gift, Palette, LayoutTemplate, Droplets, Map, Mail, Loader, Send, Activity, Printer, Share2, Download } from 'lucide-react';
 
 // --- CONFIGURATION EMAIL ---
 const EMAILJS_SERVICE_ID = "service_z8iw21s"; 
@@ -189,7 +189,7 @@ const SERVICES = [
     desc: 'Préparation culinaire sur-mesure (Tapas, Menu ou Cuisine conviviale).', 
     category: 'food'
   },
-  {
+  { 
     id: 'deco', 
     title: 'Décoration Sur-Mesure', 
     price: 100, 
@@ -211,13 +211,13 @@ const SERVICES = [
 // --- UI COMPONENTS ---
 
 const ProgressBar = ({ current, total }) => (
-  <div className="absolute top-0 left-0 h-1 bg-gradient-to-r from-amber-700 to-amber-500 transition-all duration-700 ease-out z-50" style={{ width: `${(current / total) * 100}%` }} />
+  <div className="absolute top-0 left-0 h-1 bg-gradient-to-r from-amber-700 to-amber-500 transition-all duration-700 ease-out z-50 print:hidden" style={{ width: `${(current / total) * 100}%` }} />
 );
 
 const BackButton = ({ onClick }) => (
   <button 
     onClick={onClick}
-    className="absolute bottom-8 left-6 md:left-8 z-40 flex items-center gap-2 text-neutral-500 hover:text-white transition-colors uppercase text-[10px] tracking-widest font-mono group mix-blend-difference bg-black/20 p-2 rounded backdrop-blur-sm md:bg-transparent md:p-0 cursor-pointer"
+    className="absolute bottom-8 left-6 md:left-8 z-40 flex items-center gap-2 text-neutral-500 hover:text-white transition-colors uppercase text-[10px] tracking-widest font-mono group mix-blend-difference bg-black/20 p-2 rounded backdrop-blur-sm md:bg-transparent md:p-0 cursor-pointer print:hidden"
   >
     <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
     Retour
@@ -225,7 +225,7 @@ const BackButton = ({ onClick }) => (
 );
 
 const StepIndicator = ({ step, setStep }) => (
-  <div className="hidden md:flex flex-col justify-between w-20 border-r border-white/5 bg-[#0a0a0a] z-20 py-8 items-center h-full">
+  <div className="hidden md:flex flex-col justify-between w-20 border-r border-white/5 bg-[#0a0a0a] z-20 py-8 items-center h-full print:hidden">
     <div className="font-serif font-bold text-xl cursor-pointer text-amber-600 hover:scale-110 transition-transform" onClick={() => setStep(0)}>L.</div>
     <div className="flex flex-col gap-6 items-center w-full">
       {[1, 2, 3, 4, 5, 6, 7].map((s) => (
@@ -249,7 +249,7 @@ const StepIndicator = ({ step, setStep }) => (
 
 // Mobile Step Indicator
 const MobileStepIndicator = ({ step }) => (
-  <div className="md:hidden absolute top-4 left-4 z-40 flex items-center gap-2">
+  <div className="md:hidden absolute top-4 left-4 z-40 flex items-center gap-2 print:hidden">
       <div className="text-amber-600 font-serif font-bold text-lg">L.</div>
       <div className="text-[10px] font-mono text-neutral-500 uppercase tracking-widest border-l border-white/20 pl-2">
          {step === 0 ? 'Accueil' : `Étape 0${step}/07`}
@@ -269,6 +269,7 @@ export default function App() {
     format: null,
     pax: 10,
     date: '',
+    endDate: '', // NOUVEAU : Date de fin
     experience: EXPERIENCES[0],
     selectedServices: ['tech'],
     contact: { name: '', email: '', phone: '', message: '' }
@@ -276,48 +277,67 @@ export default function App() {
 
   const [isSending, setIsSending] = useState(false);
   const [isSent, setIsSent] = useState(false);
+  const [isMultiDay, setIsMultiDay] = useState(false); // NOUVEAU : Toggle multi-jours
 
   // --- STATS SECRÈTES ---
   const [secretClicks, setSecretClicks] = useState(0);
   const [showAdmin, setShowAdmin] = useState(false);
-  const [stats, setStats] = useState({ visits: 0, finalStep: 0, leads: 0 });
+  const [stats, setStats] = useState({ visits: 0, finalStep: 0, leads: 0, choices: {} });
 
   // 1. TRACKING VISITEURS
   useEffect(() => {
     if (!sessionStorage.getItem('has_visited')) {
-       fetch('https://api.counterapi.dev/v1/lmeb-immersive/visits/up')
-         .catch(err => console.error(err));
+       fetch('https://api.counterapi.dev/v1/lmeb-immersive/visits/up').catch(console.error);
        sessionStorage.setItem('has_visited', 'true');
     }
   }, []);
 
-  // 2. TRACKING "FIN DU PARCOURS" (ARRIVÉE ETAPE 7)
+  // 2. TRACKING "FIN DU PARCOURS"
   useEffect(() => {
     if (step === 7 && !sessionStorage.getItem('reached_final')) {
-        fetch('https://api.counterapi.dev/v1/lmeb-immersive/finalstep/up')
-         .catch(err => console.error(err));
+        fetch('https://api.counterapi.dev/v1/lmeb-immersive/finalstep/up').catch(console.error);
         sessionStorage.setItem('reached_final', 'true');
     }
   }, [step]);
 
-  // 3. FONCTION ACTIVATION ADMIN (5 CLICS)
+  // 3. TRACKING CHOIX EXPÉRIENCE (DATA ANALYSIS)
+  const trackExperienceChoice = (expId) => {
+      fetch(`https://api.counterapi.dev/v1/lmeb-immersive/choice_${expId}/up`).catch(console.error);
+  };
+
+  // 4. FONCTION ACTIVATION ADMIN (5 CLICS)
   const handleLogoClick = () => {
      setSecretClicks(prev => prev + 1);
      if (secretClicks + 1 === 5) {
         Promise.all([
             fetch('https://api.counterapi.dev/v1/lmeb-immersive/visits').then(r => r.json()),
             fetch('https://api.counterapi.dev/v1/lmeb-immersive/finalstep').then(r => r.json()),
-            fetch('https://api.counterapi.dev/v1/lmeb-immersive/leads').then(r => r.json())
-        ]).then(([d1, d2, d3]) => {
+            fetch('https://api.counterapi.dev/v1/lmeb-immersive/leads').then(r => r.json()),
+            fetch('https://api.counterapi.dev/v1/lmeb-immersive/choice_casino').then(r => r.json()),
+            fetch('https://api.counterapi.dev/v1/lmeb-immersive/choice_world').then(r => r.json())
+        ]).then(([d1, d2, d3, d4, d5]) => {
             setStats({ 
                 visits: d1.count || 0, 
                 finalStep: d2.count || 0,
-                leads: d3.count || 0 
+                leads: d3.count || 0,
+                choices: { casino: d4.count || 0, world: d5.count || 0 }
             });
             setShowAdmin(true);
             setSecretClicks(0);
         }).catch(e => console.error(e));
      }
+  };
+
+  // 5. FONCTION PRINT/PDF
+  const handlePrint = () => {
+      window.print();
+  };
+
+  // 6. FONCTION SAVE THE DATE
+  const handleSaveTheDate = () => {
+      const text = `📅 Invitation : Événement @ L'Immersive (Namur)\n\n📍 Lieu : Le Monde en Bouteille, Namur\n📆 Date : ${data.date} ${data.endDate ? 'au ' + data.endDate : ''}\n✨ Expérience : ${data.experience.title}\n\nhttps://www.lemonde-enbouteille.be/salle`;
+      navigator.clipboard.writeText(text);
+      alert("Invitation copiée ! Vous pouvez la coller dans un mail ou WhatsApp.");
   };
 
   useEffect(() => {
@@ -417,7 +437,7 @@ export default function App() {
         email: data.contact.email,
         phone: data.contact.phone,
         message: data.contact.message,
-        date: data.date || "À définir",
+        date: data.date + (data.endDate ? ` au ${data.endDate}` : ''),
         pax: data.pax,
         type: data.eventType?.title || "Non défini",
         time_slot: data.timeSlot?.title || "Non défini",
@@ -435,9 +455,7 @@ export default function App() {
 
     Promise.all([sendAdmin, sendClient])
       .then(() => {
-          // --- TRACKING LEAD (SUCCÈS) ---
           fetch('https://api.counterapi.dev/v1/lmeb-immersive/leads/up').catch(console.error);
-          
           setIsSending(false);
           setIsSent(true);
       })
@@ -451,7 +469,7 @@ export default function App() {
   // --- ECRAN DE FIN ---
   if (isSent) {
     return (
-      <div className="relative h-[100dvh] w-full bg-[#050505] overflow-hidden flex flex-col items-center justify-center p-6 text-white">
+      <div className="relative h-[100dvh] w-full bg-[#050505] overflow-hidden flex flex-col items-center justify-center p-6 text-white print:hidden">
            <div className="absolute inset-0 z-0 opacity-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
            <div className="absolute inset-0 z-0 opacity-30 bg-[url('https://www.lemonde-enbouteille.be/web/image/16056-b2829e5f/79-DSC09373.webp')] bg-cover bg-center blur-sm mix-blend-overlay"></div>
 
@@ -479,7 +497,7 @@ export default function App() {
                 <span className="text-xs font-mono text-neutral-500">Nous reviendrons vers vous sous 24h avec une proposition chiffrée.</span>
               </p>
 
-              <div className="flex flex-col gap-6 w-full md:w-auto items-center">
+              <div className="flex flex-col gap-4 w-full md:w-auto items-center">
                   <button 
                     onClick={() => window.location.reload()} 
                     className="group relative px-8 py-4 bg-white/5 border border-white/10 hover:border-amber-600/50 transition-all duration-500 cursor-pointer w-full"
@@ -490,7 +508,14 @@ export default function App() {
                     </span>
                   </button>
 
-                  {/* LIEN OFICIEL - STYLE MONO DISCRET */}
+                  {/* NOUVEAU BOUTON : SAVE THE DATE */}
+                  <button 
+                    onClick={handleSaveTheDate}
+                    className="flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.25em] text-neutral-500 hover:text-white transition-colors border-b border-transparent hover:border-white pb-1"
+                  >
+                    <Share2 size={10} /> Copier l'invitation
+                  </button>
+
                   <a 
                     href="https://www.lemonde-enbouteille.be/salle" 
                     target="_blank"
@@ -508,7 +533,7 @@ export default function App() {
   // --- ECRAN ACCUEIL ---
   if (step === 0) {
     return (
-      <div className="relative h-[100dvh] w-full bg-[#050505] flex flex-col items-center justify-center p-6 md:p-8 text-white overflow-hidden">
+      <div className="relative h-[100dvh] w-full bg-[#050505] flex flex-col items-center justify-center p-6 md:p-8 text-white overflow-hidden print:hidden">
         
         <div className="absolute inset-0 z-0 opacity-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] pointer-events-none"></div>
         <div className="absolute inset-0 z-0 opacity-40 bg-[url('https://www.lemonde-enbouteille.be/web/image/16056-b2829e5f/79-DSC09373.webp')] bg-cover bg-center mix-blend-overlay pointer-events-none"></div>
@@ -517,7 +542,6 @@ export default function App() {
           
           <div className="w-px h-12 md:h-20 bg-gradient-to-b from-transparent via-amber-600 to-transparent mx-auto mb-6 md:mb-8"></div>
           
-          {/* ZONE LOGO CLIQUABLE POUR ADMIN */}
           <div className="animate-fade-in-up cursor-default select-none" onClick={handleLogoClick}>
             <img 
               src="https://www.lemonde-enbouteille.be/web/image/26768-edef09a5/LOGO%20l%27immersive-24.png" 
@@ -551,7 +575,6 @@ export default function App() {
             </span>
           </button>
 
-          {/* FOOTER INTEGRE ET MINIMALISTE */}
           <div className="mt-12 md:mt-16 animate-fade-in-up delay-500 flex flex-col items-center gap-3 opacity-60 hover:opacity-100 transition-opacity duration-500">
              
              <div className="flex items-center gap-3">
@@ -572,7 +595,7 @@ export default function App() {
              </a>
           </div>
 
-          {/* PANNEAU SECRET (Admin) */}
+          {/* PANNEAU ADMIN SECRET */}
           {showAdmin && (
             <div className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-xl flex items-center justify-center animate-fade-in-up" onClick={() => setShowAdmin(false)}>
                <div className="border border-white/10 p-8 w-80 text-center shadow-2xl relative bg-[#0a0a0a]" onClick={e => e.stopPropagation()}>
@@ -581,22 +604,22 @@ export default function App() {
                   </div>
                   
                   <div className="space-y-4">
-                      {/* STAT 1: VISITEURS */}
                       <div className="flex justify-between items-center p-3 bg-white/5 border border-white/5">
                           <div className="text-[10px] text-neutral-500 uppercase tracking-wider">Trafic</div>
                           <div className="text-xl font-serif text-white">{stats.visits}</div>
                       </div>
-
-                      {/* STAT 2: FIN DU PARCOURS (Ta demande) */}
                       <div className="flex justify-between items-center p-3 bg-white/5 border border-white/5">
                           <div className="text-[10px] text-neutral-400 uppercase tracking-wider">Final Step</div>
                           <div className="text-xl font-serif text-white">{stats.finalStep}</div>
                       </div>
-
-                      {/* STAT 3: LEADS */}
                       <div className="flex justify-between items-center p-3 bg-amber-900/10 border border-amber-600/30">
                           <div className="text-[10px] text-amber-600 uppercase tracking-wider font-bold">Devis Reçus</div>
                           <div className="text-xl font-serif text-amber-500">{stats.leads}</div>
+                      </div>
+                      
+                      <div className="pt-2 grid grid-cols-2 gap-2">
+                          <div className="text-[9px] text-neutral-500">Casino: <span className="text-white">{stats.choices?.casino}</span></div>
+                          <div className="text-[9px] text-neutral-500">World: <span className="text-white">{stats.choices?.world}</span></div>
                       </div>
                   </div>
 
@@ -612,15 +635,72 @@ export default function App() {
     );
   }
 
+  // --- STRUCTURE PRINCIPALE ---
   return (
-    <div className="relative h-[100dvh] w-full bg-[#080808] text-white overflow-hidden font-sans flex flex-col md:flex-row">
-      <div className="absolute inset-0 z-0 pointer-events-none opacity-[0.08] bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay"></div>
+    <div className="relative h-[100dvh] w-full bg-[#080808] text-white overflow-hidden font-sans flex flex-col md:flex-row print:bg-white print:text-black print:h-auto print:overflow-visible">
+      
+      {/* BACKGROUND (Caché à l'impression) */}
+      <div className="absolute inset-0 z-0 pointer-events-none opacity-[0.08] bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay print:hidden"></div>
       
       <ProgressBar current={step} total={7} />
       <StepIndicator step={step} setStep={goToStep} />
       <MobileStepIndicator step={step} />
 
-      <div className="flex-1 relative flex flex-col z-10 w-full h-full overflow-hidden">
+      {/* FACTURE CACHÉE (Visible uniquement à l'impression) */}
+      <div className="hidden print:block p-8 w-full max-w-4xl mx-auto">
+          <div className="flex justify-between items-start mb-12 border-b border-black pb-8">
+              <div>
+                  <h1 className="text-4xl font-serif text-black mb-2">L'IMMERSIVE</h1>
+                  <p className="font-mono text-xs uppercase tracking-widest text-neutral-600">Le Monde en Bouteille, Namur</p>
+              </div>
+              <div className="text-right">
+                  <div className="font-mono text-sm text-neutral-500">Pré-réservation</div>
+                  <div className="text-xl font-bold">{data.date}</div>
+              </div>
+          </div>
+
+          <div className="mb-8">
+              <h3 className="font-mono text-xs uppercase tracking-widest text-neutral-500 mb-4">Client</h3>
+              <div className="text-lg">{data.contact.name}</div>
+              <div className="text-sm text-neutral-600">{data.contact.email}</div>
+              <div className="text-sm text-neutral-600">{data.contact.phone}</div>
+          </div>
+
+          <div className="space-y-4 border-t border-neutral-200 pt-8 mb-12">
+              <div className="flex justify-between">
+                  <span>Location ({data.timeSlot?.title})</span>
+                  <span>{data.timeSlot?.price} €</span>
+              </div>
+              {!isDryHire && data.experience && (
+                  <div className="flex justify-between">
+                      <span>Expérience : {data.experience.title} ({data.pax} pers.)</span>
+                      <span>{data.experience.price === -1 ? 'Sur devis' : `${data.experience.price * data.pax} €`}</span>
+                  </div>
+              )}
+              {data.selectedServices.map(id => {
+                  const srv = SERVICES.find(s => s.id === id);
+                  let price = srv.price === -1 ? 'Devis' : (srv.isPerHead ? srv.price * data.pax : srv.price);
+                  if (srv.id === 'softs') price = getSoftsPrice(data.pax);
+                  return (
+                      <div key={id} className="flex justify-between text-neutral-600">
+                          <span>+ {srv.title}</span>
+                          <span>{price} €</span>
+                      </div>
+                  );
+              })}
+          </div>
+
+          <div className="border-t-2 border-black pt-8 flex justify-between items-center text-2xl font-serif">
+              <span>Total Estimé</span>
+              <span>{totalAmount} € {isCustom && '+ Devis'}</span>
+          </div>
+          
+          <div className="mt-16 text-center text-xs font-mono text-neutral-400">
+              Document généré automatiquement le {new Date().toLocaleDateString()}
+          </div>
+      </div>
+
+      <div className="flex-1 relative flex flex-col z-10 w-full h-full overflow-hidden print:hidden">
         
         {/* HEADER BUDGET */}
         <div className="absolute top-4 right-4 md:top-8 md:right-8 z-50 pointer-events-none">
@@ -777,14 +857,36 @@ export default function App() {
                         </div>
                    </div>
 
-                   <div className="flex flex-col items-center gap-6 p-8 md:p-10 border border-white/10 bg-white/[0.02]">
-                        <span className="text-xs font-mono uppercase tracking-widest text-neutral-500">Date Cible</span>
-                        <div className="w-full">
+                   <div className="flex flex-col items-center gap-6 p-8 md:p-10 border border-white/10 bg-white/[0.02] relative">
+                        <span className="text-xs font-mono uppercase tracking-widest text-neutral-500">
+                            {isMultiDay ? 'Dates (Début - Fin)' : 'Date Cible'}
+                        </span>
+                        
+                        <div className="w-full flex flex-col gap-4">
                           <input 
                             type="date" 
+                            min={new Date().toISOString().split('T')[0]} // BLOQUE LES DATES PASSÉES
                             onChange={(e) => setData({...data, date: e.target.value})}
-                            className="bg-transparent text-2xl md:text-3xl text-center font-serif text-white w-full outline-none border-b border-white/10 pb-4 focus:border-amber-600 transition-colors uppercase [color-scheme:dark]"
+                            className="bg-transparent text-xl md:text-2xl text-center font-serif text-white w-full outline-none border-b border-white/10 pb-2 focus:border-amber-600 transition-colors uppercase [color-scheme:dark]"
                           />
+                          
+                          {isMultiDay && (
+                              <input 
+                                type="date" 
+                                min={data.date || new Date().toISOString().split('T')[0]} 
+                                onChange={(e) => setData({...data, endDate: e.target.value})}
+                                className="bg-transparent text-xl md:text-2xl text-center font-serif text-amber-500 w-full outline-none border-b border-white/10 pb-2 focus:border-amber-600 transition-colors uppercase [color-scheme:dark] animate-fade-in-up"
+                              />
+                          )}
+                        </div>
+
+                        <div className="absolute bottom-2 right-2">
+                            <button 
+                                onClick={() => setIsMultiDay(!isMultiDay)}
+                                className={`text-[10px] uppercase tracking-widest px-2 py-1 border transition-colors ${isMultiDay ? 'bg-amber-600 border-amber-600 text-white' : 'border-white/20 text-neutral-500 hover:border-white'}`}
+                            >
+                                {isMultiDay ? '- 1 jour' : '+ Jours'}
+                            </button>
                         </div>
                    </div>
                 </div>
@@ -844,7 +946,7 @@ export default function App() {
                         {EXPERIENCES.filter(e => e.id !== 'none').map((exp) => (
                            <div 
                              key={exp.id}
-                             onClick={() => setData({...data, experience: exp})}
+                             onClick={() => { setData({...data, experience: exp}); trackExperienceChoice(exp.id); }}
                              className={`relative h-64 md:h-80 border cursor-pointer transition-all duration-300 group overflow-hidden ${
                                 data.experience.id === exp.id 
                                 ? 'border-amber-600 shadow-[0_0_30px_-10px_rgba(217,119,6,0.3)]' 
@@ -987,7 +1089,7 @@ export default function App() {
                       <div className="font-mono text-xs text-amber-500 uppercase tracking-widest mb-4 md:mb-6">Récapitulatif Détaillé</div>
                       <h2 className="text-2xl md:text-3xl font-serif text-white mb-2">{data.eventType?.title}</h2>
                       <div className="text-neutral-400 font-mono text-xs mb-8 flex items-center gap-4">
-                         <span>{data.date || 'Date à définir'}</span>
+                         <span>{data.date}{data.endDate ? ` — ${data.endDate}` : ''}</span>
                          <span className="w-1 h-1 bg-neutral-600 rounded-full"></span>
                          <span>{data.pax} Invités</span>
                       </div>
@@ -996,7 +1098,7 @@ export default function App() {
                         
                         <div className="flex justify-between items-center group">
                            <div>
-                              <div className="text-white font-medium">Location — {data.timeSlot?.title}</div>
+                              <div className="text-white font-medium">Location {data.timeSlot?.title}</div>
                               <div className="text-xs text-neutral-500">{data.timeSlot?.label}</div>
                            </div>
                            <div className="font-mono text-neutral-300">{data.timeSlot?.price} €</div>
@@ -1054,6 +1156,14 @@ export default function App() {
                          <span className="text-4xl md:text-5xl font-serif text-amber-500">{totalAmount} €</span>
                          {isCustom && <span className="text-sm font-sans text-neutral-400 border border-neutral-600 px-2 py-0.5 rounded">+ Devis</span>}
                       </div>
+                      
+                      {/* BOUTON IMPRESSION PDF */}
+                      <button 
+                        onClick={handlePrint}
+                        className="mt-6 flex items-center justify-center gap-2 w-full text-[10px] uppercase tracking-widest text-neutral-500 hover:text-white transition-colors"
+                      >
+                        <Printer size={12} /> Télécharger le devis officiel
+                      </button>
                    </div>
                 </div>
 
