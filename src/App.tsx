@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, ChevronRight, ChevronLeft, Check, Clock, Calendar, Users, Briefcase, Wine, Coffee, Music, Monitor, Minus, Plus, Sparkles, Sun, Moon, Sunrise, Star, Utensils, Wifi, Gift, Palette, LayoutTemplate, Droplets, Map, Mail, Loader, Send } from 'lucide-react';
+import { ArrowRight, ChevronRight, ChevronLeft, Check, Clock, Calendar, Users, Briefcase, Wine, Coffee, Music, Monitor, Minus, Plus, Sparkles, Sun, Moon, Sunrise, Star, Utensils, Wifi, Gift, Palette, LayoutTemplate, Droplets, Map, Mail, Loader, Send, Activity } from 'lucide-react';
 
-// --- CONFIGURATION EMAIL ---
+// --- CONFIGURATION EMAIL FINALE ---
 const EMAILJS_SERVICE_ID = "service_z8iw21s"; 
-const EMAILJS_TEMPLATE_ADMIN_ID = "template_3i47cv7"; 
-const EMAILJS_TEMPLATE_CLIENT_ID = "template_2keg8go"; 
+const EMAILJS_TEMPLATE_ADMIN_ID = "template_3i47cv7"; // Demande de projet
+const EMAILJS_TEMPLATE_CLIENT_ID = "template_2keg8go"; // Accusé réception
 const EMAILJS_PUBLIC_KEY = "s1sthtiZPEDfGRote"; 
 
 // --- DATA ---
@@ -82,7 +82,7 @@ const FORMATS = [
     subtitle: 'Standard',
     desc: 'Notre disposition signature. Équilibrée & chaleureuse.',
     setupFee: 0,
-    image: 'https://www.lemonde-enbouteille.be/web/image/26813-d579cd53/104-DSC09412.webp'
+    image: 'https://www.lemonde-enbouteille.be/web/image/26776-c184953c/90-DSC09392.webp'
   },
   {
     id: 'cocktail',
@@ -98,7 +98,7 @@ const FORMATS = [
     subtitle: 'Mixte',
     desc: 'Zone de confort assises et zone de flux debout.',
     setupFee: 0,
-    image: 'https://www.lemonde-enbouteille.be/web/image/26807-8f38cf40/31-DSC00898.webp'
+    image: 'https://www.lemonde-enbouteille.be/web/image/26778-34e20e4e/94-DSC09399.svg'
   }
 ];
 
@@ -277,6 +277,52 @@ export default function App() {
   const [isSending, setIsSending] = useState(false);
   const [isSent, setIsSent] = useState(false);
 
+  // --- STATS SECRÈTES ---
+  const [secretClicks, setSecretClicks] = useState(0);
+  const [showAdmin, setShowAdmin] = useState(false);
+  const [stats, setStats] = useState({ visits: 0, finalStep: 0, leads: 0 });
+
+  // 1. TRACKING VISITEURS
+  useEffect(() => {
+    // Vérifie si déjà visité dans cette session
+    if (!sessionStorage.getItem('has_visited')) {
+       fetch('https://api.counterapi.dev/v1/lmeb-immersive/visits/up')
+         .catch(err => console.error(err));
+       sessionStorage.setItem('has_visited', 'true');
+    }
+  }, []);
+
+  // 2. TRACKING "FIN DU PARCOURS" (Ta demande)
+  // On compte +1 si l'utilisateur arrive à l'étape 7 (Récap) pour la première fois
+  useEffect(() => {
+    if (step === 7 && !sessionStorage.getItem('reached_final')) {
+        fetch('https://api.counterapi.dev/v1/lmeb-immersive/finalstep/up')
+         .catch(err => console.error(err));
+        sessionStorage.setItem('reached_final', 'true');
+    }
+  }, [step]);
+
+  // 3. FONCTION D'ACTIVATION SECRÈTE (5 clics sur le logo)
+  const handleLogoClick = () => {
+     setSecretClicks(prev => prev + 1);
+     if (secretClicks + 1 === 5) {
+        // Chargement des données
+        Promise.all([
+            fetch('https://api.counterapi.dev/v1/lmeb-immersive/visits').then(r => r.json()),
+            fetch('https://api.counterapi.dev/v1/lmeb-immersive/finalstep').then(r => r.json()),
+            fetch('https://api.counterapi.dev/v1/lmeb-immersive/leads').then(r => r.json())
+        ]).then(([d1, d2, d3]) => {
+            setStats({ 
+                visits: d1.count || 0, 
+                finalStep: d2.count || 0,
+                leads: d3.count || 0 
+            });
+            setShowAdmin(true);
+            setSecretClicks(0);
+        }).catch(e => console.error(e));
+     }
+  };
+
   useEffect(() => {
     if (!isDryHire && data.experience.id !== 'none') {
         if (!data.selectedServices.includes('host')) {
@@ -385,7 +431,6 @@ export default function App() {
         is_custom: isCustom ? "OUI (Devis requis)" : "NON"
     };
 
-    // --- ENVOI VIA CDN (window.emailjs) ---
     // @ts-ignore
     const sendAdmin = window.emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ADMIN_ID, templateParams, EMAILJS_PUBLIC_KEY);
     // @ts-ignore
@@ -393,6 +438,9 @@ export default function App() {
 
     Promise.all([sendAdmin, sendClient])
       .then(() => {
+          // --- TRACKING LEAD (SUCCÈS) ---
+          fetch('https://api.counterapi.dev/v1/lmeb-immersive/leads/up').catch(console.error);
+          
           setIsSending(false);
           setIsSent(true);
       })
@@ -403,135 +451,169 @@ export default function App() {
       });
   };
 
-// --- ECRAN DE FIN ---
-if (isSent) {
-  return (
-    <div className="relative h-[100dvh] w-full bg-[#050505] overflow-hidden flex flex-col items-center justify-center p-6 text-white">
-         <div className="absolute inset-0 z-0 opacity-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
-         <div className="absolute inset-0 z-0 opacity-30 bg-[url('https://www.lemonde-enbouteille.be/web/image/16056-b2829e5f/79-DSC09373.webp')] bg-cover bg-center blur-sm mix-blend-overlay"></div>
+  // --- ECRAN DE FIN ---
+  if (isSent) {
+    return (
+      <div className="relative h-[100dvh] w-full bg-[#050505] overflow-hidden flex flex-col items-center justify-center p-6 text-white">
+           <div className="absolute inset-0 z-0 opacity-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
+           <div className="absolute inset-0 z-0 opacity-30 bg-[url('https://www.lemonde-enbouteille.be/web/image/16056-b2829e5f/79-DSC09373.webp')] bg-cover bg-center blur-sm mix-blend-overlay"></div>
 
-         <div className="relative z-10 max-w-xl w-full bg-black/40 backdrop-blur-xl border border-white/10 p-12 md:p-16 flex flex-col items-center text-center shadow-2xl animate-fade-in-up">
+           <div className="relative z-10 max-w-xl w-full bg-black/40 backdrop-blur-xl border border-white/10 p-12 md:p-16 flex flex-col items-center text-center shadow-2xl animate-fade-in-up">
+              
+              <div className="mb-8 relative">
+                 <div className="absolute inset-0 bg-amber-600 blur-xl opacity-20 animate-pulse"></div>
+                 <div className="w-20 h-20 rounded-full border border-amber-600/50 flex items-center justify-center bg-black/50 relative z-10">
+                    <Check size={32} className="text-amber-500" />
+                 </div>
+              </div>
+
+              <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-amber-600 mb-4">Confirmation</div>
+              
+              <h2 className="text-4xl md:text-5xl font-serif mb-6 text-transparent bg-clip-text bg-gradient-to-b from-white to-neutral-400">
+                Demande Transmise
+              </h2>
+
+              <div className="w-12 h-px bg-white/20 mb-8"></div>
+
+              <p className="font-light text-neutral-300 leading-relaxed text-sm mb-10">
+                Merci <span className="text-white font-medium">{data.contact.name}</span>. <br/>
+                Votre vision a été capturée. Une confirmation vient d'être envoyée à votre adresse email.
+                <br/><br/>
+                <span className="text-xs font-mono text-neutral-500">Nous reviendrons vers vous sous 24h avec une proposition chiffrée.</span>
+              </p>
+
+              <div className="flex flex-col gap-6 w-full md:w-auto items-center">
+                  <button 
+                    onClick={() => window.location.reload()} 
+                    className="group relative px-8 py-4 bg-white/5 border border-white/10 hover:border-amber-600/50 transition-all duration-500 cursor-pointer w-full"
+                  >
+                    <div className="absolute inset-0 bg-amber-600/10 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500 ease-out"></div>
+                    <span className="relative font-mono text-[10px] uppercase tracking-[0.2em] text-white group-hover:text-amber-500 transition-colors">
+                      Retour à l'accueil
+                    </span>
+                  </button>
+
+                  {/* LIEN OFICIEL - STYLE MONO DISCRET */}
+                  <a 
+                    href="https://www.lemonde-enbouteille.be/salle" 
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-mono text-[9px] uppercase tracking-[0.25em] text-neutral-500 hover:text-white transition-colors border-b border-white/10 hover:border-white pb-1"
+                  >
+                    Voir le lieu officiel
+                  </a>
+              </div>
+           </div>
+      </div>
+    )
+}
+
+  // --- ECRAN ACCUEIL ---
+  if (step === 0) {
+    return (
+      <div className="relative h-[100dvh] w-full bg-[#050505] flex flex-col items-center justify-center p-6 md:p-8 text-white overflow-hidden">
+        
+        <div className="absolute inset-0 z-0 opacity-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] pointer-events-none"></div>
+        <div className="absolute inset-0 z-0 opacity-40 bg-[url('https://www.lemonde-enbouteille.be/web/image/16056-b2829e5f/79-DSC09373.webp')] bg-cover bg-center mix-blend-overlay pointer-events-none"></div>
+
+        <div className="relative z-10 text-center w-full max-w-4xl mx-auto flex flex-col items-center justify-center h-full">
+          
+          <div className="w-px h-12 md:h-20 bg-gradient-to-b from-transparent via-amber-600 to-transparent mx-auto mb-6 md:mb-8"></div>
+          
+          {/* ZONE LOGO CLIQUABLE POUR ADMIN */}
+          <div className="animate-fade-in-up cursor-default select-none" onClick={handleLogoClick}>
+            <img 
+              src="https://www.lemonde-enbouteille.be/web/image/26768-edef09a5/LOGO%20l%27immersive-24.png" 
+              alt="Logo L'Immersive" 
+              className="w-28 md:w-40 mx-auto mb-4 md:mb-6 opacity-90 drop-shadow-2xl" 
+            />
             
-            <div className="mb-8 relative">
-               <div className="absolute inset-0 bg-amber-600 blur-xl opacity-20 animate-pulse"></div>
-               <div className="w-20 h-20 rounded-full border border-amber-600/50 flex items-center justify-center bg-black/50 relative z-10">
-                  <Check size={32} className="text-amber-500" />
+            <h1 className="text-5xl md:text-7xl lg:text-[7rem] font-serif tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-neutral-500 leading-none mb-3">
+              L'IMMERSIVE
+            </h1>
+            <p className="font-mono text-[9px] md:text-xs uppercase tracking-[0.4em] md:tracking-[0.6em] text-amber-500 mb-8 md:mb-10">
+              Le Monde en Bouteille
+            </p>
+          </div>
+
+          <div className="border-l border-amber-600/30 pl-6 text-left max-w-lg mx-auto backdrop-blur-sm py-2 mb-10 md:mb-12 animate-fade-in-up delay-200">
+             <p className="text-neutral-400 font-light leading-relaxed text-xs md:text-sm">
+               Une adresse confidentielle à Namur. <br className="hidden md:block"/>
+               <strong>Un espace événementiel privatif alliant architecture de caractère et équipements connectés.</strong> <br className="hidden md:block"/>
+               Réunions, séminaires ou soirées : ne louez pas une salle, vivez une expérience.
+             </p>
+          </div>
+
+          <button 
+            onClick={() => goToStep(1)}
+            className="group relative px-8 py-4 md:px-10 md:py-5 bg-white/5 border border-white/10 hover:border-amber-600/50 transition-all duration-500 w-full md:w-auto cursor-pointer z-50 animate-fade-in-up delay-300"
+          >
+            <div className="absolute inset-0 bg-amber-600/10 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500 ease-out"></div>
+            <span className="relative font-mono text-xs uppercase tracking-[0.2em] flex items-center justify-center gap-4 text-white group-hover:text-amber-500 transition-colors">
+              Composer mon événement <ArrowRight size={14} />
+            </span>
+          </button>
+
+          {/* FOOTER INTEGRE ET MINIMALISTE */}
+          <div className="mt-12 md:mt-16 animate-fade-in-up delay-500 flex flex-col items-center gap-3 opacity-60 hover:opacity-100 transition-opacity duration-500">
+             
+             <div className="flex items-center gap-3">
+                <div className="h-px w-8 bg-white/20"></div>
+                <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-neutral-400">
+                   Confiance : Entreprises & Privés
+                </p>
+                <div className="h-px w-8 bg-white/20"></div>
+             </div>
+             
+             <a 
+                href="https://www.lemonde-enbouteille.be/salle" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="font-mono text-[9px] text-neutral-500 hover:text-amber-500 uppercase tracking-widest transition-colors"
+             >
+                www.lemonde-enbouteille.be
+             </a>
+          </div>
+
+          {/* PANNEAU SECRET (Admin) */}
+          {showAdmin && (
+            <div className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-xl flex items-center justify-center animate-fade-in-up" onClick={() => setShowAdmin(false)}>
+               <div className="border border-white/10 p-8 w-80 text-center shadow-2xl relative bg-[#0a0a0a]" onClick={e => e.stopPropagation()}>
+                  <div className="text-amber-600 font-mono text-xs uppercase tracking-widest mb-8 flex items-center justify-center gap-2">
+                      <Activity size={12}/> DATA FLUX
+                  </div>
+                  
+                  <div className="space-y-4">
+                      {/* STAT 1: VISITEURS */}
+                      <div className="flex justify-between items-center p-3 bg-white/5 border border-white/5">
+                          <div className="text-[10px] text-neutral-500 uppercase tracking-wider">Trafic</div>
+                          <div className="text-xl font-serif text-white">{stats.visits}</div>
+                      </div>
+
+                      {/* STAT 2: DERNIERE ETAPE (Ta demande) */}
+                      <div className="flex justify-between items-center p-3 bg-white/5 border border-white/5">
+                          <div className="text-[10px] text-neutral-400 uppercase tracking-wider">Final Step</div>
+                          <div className="text-xl font-serif text-white">{stats.finalStep}</div>
+                      </div>
+
+                      {/* STAT 3: LEADS */}
+                      <div className="flex justify-between items-center p-3 bg-amber-900/10 border border-amber-600/30">
+                          <div className="text-[10px] text-amber-600 uppercase tracking-wider font-bold">Devis Reçus</div>
+                          <div className="text-xl font-serif text-amber-500">{stats.leads}</div>
+                      </div>
+                  </div>
+
+                  <div className="mt-6 pt-6 border-t border-white/10 text-[10px] text-neutral-600 font-mono">
+                     Taux de conversion : {stats.visits > 0 ? ((stats.leads / stats.visits) * 100).toFixed(1) : 0}%
+                  </div>
                </div>
             </div>
+          )}
 
-            <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-amber-600 mb-4">Confirmation</div>
-            
-            <h2 className="text-4xl md:text-5xl font-serif mb-6 text-transparent bg-clip-text bg-gradient-to-b from-white to-neutral-400">
-              Demande Transmise
-            </h2>
-
-            <div className="w-12 h-px bg-white/20 mb-8"></div>
-
-            <p className="font-light text-neutral-300 leading-relaxed text-sm mb-10">
-              Merci <span className="text-white font-medium">{data.contact.name}</span>. <br/>
-              Votre vision a été capturée. Une confirmation vient d'être envoyée à votre adresse email.
-              <br/><br/>
-              <span className="text-xs font-mono text-neutral-500">Nous reviendrons vers vous sous 24h avec une proposition chiffrée.</span>
-            </p>
-
-            <div className="flex flex-col gap-6 w-full md:w-auto items-center">
-                <button 
-                  onClick={() => window.location.reload()} 
-                  className="group relative px-8 py-4 bg-white/5 border border-white/10 hover:border-amber-600/50 transition-all duration-500 cursor-pointer w-full"
-                >
-                  <div className="absolute inset-0 bg-amber-600/10 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500 ease-out"></div>
-                  <span className="relative font-mono text-[10px] uppercase tracking-[0.2em] text-white group-hover:text-amber-500 transition-colors">
-                    Retour à l'accueil
-                  </span>
-                </button>
-
-                {/* LIEN OFICIEL - STYLE MONO DISCRET */}
-                <a 
-                  href="https://www.lemonde-enbouteille.be/salle" 
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-mono text-[9px] uppercase tracking-[0.25em] text-neutral-500 hover:text-white transition-colors border-b border-white/10 hover:border-white pb-1"
-                >
-                  Voir le lieu officiel
-                </a>
-            </div>
-         </div>
-    </div>
-  )
-}
-
- // --- ECRAN ACCUEIL (TYPO CORRIGÉE : MONO ULTRA-CLEAN) ---
- if (step === 0) {
-  return (
-    <div className="relative h-[100dvh] w-full bg-[#050505] flex flex-col items-center justify-center p-6 md:p-8 text-white overflow-hidden">
-      
-      <div className="absolute inset-0 z-0 opacity-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] pointer-events-none"></div>
-      <div className="absolute inset-0 z-0 opacity-40 bg-[url('https://www.lemonde-enbouteille.be/web/image/16056-b2829e5f/79-DSC09373.webp')] bg-cover bg-center mix-blend-overlay pointer-events-none"></div>
-
-      <div className="relative z-10 text-center w-full max-w-4xl mx-auto flex flex-col items-center justify-center h-full">
-        
-        <div className="w-px h-12 md:h-20 bg-gradient-to-b from-transparent via-amber-600 to-transparent mx-auto mb-6 md:mb-8"></div>
-        
-        <div className="animate-fade-in-up">
-          <img 
-            src="https://www.lemonde-enbouteille.be/web/image/26768-edef09a5/LOGO%20l%27immersive-24.png" 
-            alt="Logo L'Immersive" 
-            className="w-28 md:w-40 mx-auto mb-4 md:mb-6 opacity-90 drop-shadow-2xl" 
-          />
-          
-          <h1 className="text-5xl md:text-7xl lg:text-[7rem] font-serif tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-neutral-500 leading-none mb-3">
-            L'IMMERSIVE
-          </h1>
-          <p className="font-mono text-[9px] md:text-xs uppercase tracking-[0.4em] md:tracking-[0.6em] text-amber-500 mb-8 md:mb-10">
-            Le Monde en Bouteille
-          </p>
         </div>
-
-        <div className="border-l border-amber-600/30 pl-6 text-left max-w-lg mx-auto backdrop-blur-sm py-2 mb-10 md:mb-12 animate-fade-in-up delay-200">
-           <p className="text-neutral-400 font-light leading-relaxed text-xs md:text-sm">
-             Une adresse confidentielle à Namur. <br className="hidden md:block"/>
-             <strong>Un espace événementiel privatif alliant architecture de caractère et équipements connectés.</strong> <br className="hidden md:block"/>
-             Réunions, séminaires ou soirées : ne louez pas une salle, vivez une expérience.
-           </p>
-        </div>
-
-        <button 
-          onClick={() => goToStep(1)}
-          className="group relative px-8 py-4 md:px-10 md:py-5 bg-white/5 border border-white/10 hover:border-amber-600/50 transition-all duration-500 w-full md:w-auto cursor-pointer z-50 animate-fade-in-up delay-300"
-        >
-          <div className="absolute inset-0 bg-amber-600/10 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500 ease-out"></div>
-          <span className="relative font-mono text-xs uppercase tracking-[0.2em] flex items-center justify-center gap-4 text-white group-hover:text-amber-500 transition-colors">
-            Composer mon événement <ArrowRight size={14} />
-          </span>
-        </button>
-
-        {/* FOOTER INTEGRE ET MINIMALISTE */}
-        <div className="mt-12 md:mt-16 animate-fade-in-up delay-500 flex flex-col items-center gap-3 opacity-60 hover:opacity-100 transition-opacity duration-500">
-           
-           {/* Mention de confiance : Style Technique/Mono */}
-           <div className="flex items-center gap-3">
-              <div className="h-px w-8 bg-white/20"></div>
-              <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-neutral-400">
-                 Confiance : Entreprises & Privés
-              </p>
-              <div className="h-px w-8 bg-white/20"></div>
-           </div>
-           
-           {/* Lien Site : Style discret */}
-           <a 
-              href="https://www.lemonde-enbouteille.be/salle" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="font-mono text-[9px] text-neutral-500 hover:text-amber-500 uppercase tracking-widest transition-colors"
-           >
-              www.lemonde-enbouteille.be
-           </a>
-        </div>
-
       </div>
-    </div>
-  );
-}
+    );
+  }
 
   // --- STRUCTURE PRINCIPALE (OPTIMISÉE MOBILE 'dvh') ---
   return (
@@ -559,7 +641,7 @@ if (isSent) {
 
         {/* ÉTAPE 1 : TEMPORALITÉ */}
         {step === 1 && (
-          <div className="flex-1 flex flex-col h-full animate-in fade-in duration-700 relative">
+          <div className="flex-1 flex flex-col h-full animate-fade-in duration-700 relative">
             <div className="absolute top-0 left-0 p-6 md:p-12 z-50 pointer-events-none bg-gradient-to-b from-black/80 to-transparent w-full">
                <BackButton onClick={() => goToStep(0)} />
                <div className="mt-16 md:mt-16 pointer-events-auto">
@@ -606,7 +688,7 @@ if (isSent) {
 
         {/* ÉTAPE 2 : INTENTION */}
         {step === 2 && (
-          <div className="flex-1 p-6 md:p-16 flex flex-col justify-center animate-in slide-in-from-right duration-500 overflow-y-auto">
+          <div className="flex-1 p-6 md:p-16 flex flex-col justify-center animate-fade-in-right duration-500 overflow-y-auto">
              <div className="max-w-7xl mx-auto w-full h-full flex flex-col">
                <div className="mb-6 md:mb-8 flex items-end justify-between border-b border-white/10 pb-6 mt-16 md:mt-0">
                  <div>
@@ -641,7 +723,7 @@ if (isSent) {
 
         {/* ÉTAPE 3 : ARCHITECTURE */}
         {step === 3 && (
-          <div className="flex-1 flex flex-col justify-center p-6 md:p-16 animate-in slide-in-from-right duration-500 overflow-y-auto">
+          <div className="flex-1 flex flex-col justify-center p-6 md:p-16 animate-fade-in-right duration-500 overflow-y-auto">
              <div className="max-w-7xl mx-auto w-full h-full flex flex-col">
                <div className="mb-6 md:mb-8 border-b border-white/10 pb-6 mt-16 md:mt-0">
                  <span className="text-amber-600 font-mono text-xs uppercase tracking-widest mb-2 block">03 — Architecture</span>
@@ -681,7 +763,7 @@ if (isSent) {
 
         {/* ÉTAPE 4 : CALIBRAGE */}
         {step === 4 && (
-          <div className="flex-1 flex flex-col animate-in slide-in-from-right duration-500 justify-center overflow-y-auto">
+          <div className="flex-1 flex flex-col animate-fade-in-right duration-500 justify-center overflow-y-auto">
              <div className="max-w-4xl mx-auto w-full p-6 md:p-8 mt-16 md:mt-0">
                 <div className="text-center mb-10 md:mb-16">
                    <span className="text-amber-600 font-mono text-xs uppercase tracking-widest mb-4 block">04 — Calibrage</span>
@@ -725,7 +807,7 @@ if (isSent) {
 
         {/* ÉTAPE 5 : IMMERSION */}
         {step === 5 && (
-          <div className="flex-1 flex flex-col animate-in slide-in-from-right duration-500 overflow-y-auto scrollbar-hide">
+          <div className="flex-1 flex flex-col animate-fade-in-right duration-500 overflow-y-auto scrollbar-hide">
              <div className="max-w-6xl mx-auto w-full p-6 md:p-16 mt-16 md:mt-0">
                 <div className="mb-8 md:mb-10">
                    <span className="text-amber-600 font-mono text-xs uppercase tracking-widest mb-4 block">05 — Immersion</span>
@@ -760,7 +842,7 @@ if (isSent) {
 
                 {/* EXPERIENCE GRID */}
                 {!isDryHire && (
-                  <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 pb-20 md:pb-0">
+                  <div className="animate-fade-in-up pb-20 md:pb-0">
                      <h3 className="text-sm font-mono uppercase tracking-widest text-neutral-500 mb-6">Sélectionnez l'expérience</h3>
                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         {EXPERIENCES.filter(e => e.id !== 'none').map((exp) => (
@@ -817,7 +899,7 @@ if (isSent) {
 
         {/* ÉTAPE 6 : SERVICES */}
         {step === 6 && (
-          <div className="flex-1 p-6 md:p-16 overflow-y-auto scrollbar-hide animate-in slide-in-from-right duration-500">
+          <div className="flex-1 p-6 md:p-16 overflow-y-auto scrollbar-hide animate-fade-in-right duration-500">
              <div className="max-w-6xl mx-auto w-full h-full flex flex-col">
                 <div className="flex justify-between items-end mb-8 border-b border-white/10 pb-6 mt-16 md:mt-0">
                    <div>
@@ -1039,12 +1121,14 @@ if (isSent) {
           </div>
         )}
 
+        {/* --- STYLE CSS NATIF POUR GARANTIR LES ANIMATIONS PARTOUT --- */}
         <style dangerouslySetInnerHTML={{__html: `
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Space+Grotesk:wght@300;400;500&display=swap');
         .font-serif { font-family: 'Playfair Display', serif; }
         .font-mono { font-family: 'Space Grotesk', sans-serif; }
         .writing-vertical { writing-mode: vertical-rl; }
         
+        /* SCROLLBAR HIDE */
         .scrollbar-hide {
             -ms-overflow-style: none;
             scrollbar-width: none;
@@ -1052,6 +1136,28 @@ if (isSent) {
         .scrollbar-hide::-webkit-scrollbar {
             display: none;
         }
+
+        /* ANIMATIONS NATIVES */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInRight {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes zoomIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .animate-fade-in { animation: zoomIn 0.7s ease-out forwards; }
+        .animate-fade-in-up { animation: fadeInUp 1s ease-out forwards; }
+        .animate-fade-in-right { animation: fadeInRight 0.5s ease-out forwards; }
+        
+        .delay-200 { animation-delay: 200ms; opacity: 0; animation-fill-mode: forwards; }
+        .delay-300 { animation-delay: 300ms; opacity: 0; animation-fill-mode: forwards; }
+        .delay-500 { animation-delay: 500ms; opacity: 0; animation-fill-mode: forwards; }
       `}} />
       </div>
     </div>
