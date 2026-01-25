@@ -816,9 +816,9 @@ export default function App() {
                      className={`p-6 md:p-8 border text-left transition-all duration-300 group ${isDryHire ? 'border-white bg-white text-black' : 'border-white/10 hover:border-white/30 bg-[#0a0a0a]'}`}
                    >
                       <LayoutTemplate size={28} className={`mb-4 ${isDryHire ? 'text-black' : 'text-neutral-500'}`} />
-                      <h4 className="text-xl md:text-2xl font-serif mb-2">Location Sèche</h4>
+                      <h4 className="text-xl md:text-2xl font-serif mb-2">Location</h4>
                       <p className={`text-xs md:text-sm ${isDryHire ? 'text-neutral-700' : 'text-neutral-400'}`}>
-                        Mise à disposition de l'espace uniquement. 
+                        Mise à disposition de l'espace.
                       </p>
                    </button>
 
