@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, ChevronLeft, Check, Sunrise, Sun, Moon, Star, Utensils, Wifi, Gift, Palette, LayoutTemplate, Droplets, Monitor, Users, Loader, Send, FileText, Share2, Sparkles, Minus, Plus } from 'lucide-react';
+import { ArrowRight, ChevronLeft, Check, Sunrise, Sun, Moon, Star, Utensils, Wifi, Gift, Palette, LayoutTemplate, Droplets, Monitor, Users, Loader, Send, FileText, Share2, Sparkles, Minus, Plus, Fingerprint } from 'lucide-react';
 
 // --- CONFIGURATION EMAIL ---
 const EMAILJS_SERVICE_ID = "service_z8iw21s"; 
@@ -45,7 +45,7 @@ const SERVICES = [
   { id: 'gift', title: 'Coffret Souvenir', price: 15, isPerHead: true, icon: <Gift size={20}/>, desc: 'Cadeau invité.' }
 ];
 
-// --- UI COMPONENTS ---
+// --- COMPONENTS ---
 const ProgressBar = ({ current, total }) => (
   <div className="absolute top-0 left-0 h-1 bg-amber-600 transition-all duration-1000 z-50 print:hidden" style={{ width: `${(current / total) * 100}%` }}></div>
 );
@@ -208,14 +208,17 @@ export default function App() {
       <div className="relative h-[100dvh] w-full bg-[#050505] flex flex-col items-center justify-center p-6 text-white overflow-hidden print:hidden">
         <div className="absolute inset-0 z-0 opacity-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] pointer-events-none"></div>
         <div className="absolute inset-0 z-0 opacity-60 bg-[url('https://www.lemonde-enbouteille.be/web/image/16056-b2829e5f/79-DSC09373.webp')] bg-cover bg-center mix-blend-overlay"></div>
+        
         <div className="relative z-10 text-center flex flex-col items-center w-full max-w-4xl">
           <div className="w-px h-24 bg-gradient-to-b from-transparent via-amber-600 to-transparent mb-10"></div>
+          
           {/* BOUTON ADMIN */}
           <div onClick={handleLogoClick} className="cursor-pointer mb-12 select-none relative z-[100] group">
             <img src="https://www.lemonde-enbouteille.be/web/image/26768-edef09a5/LOGO%20l%27immersive-24.png" alt="Logo" className="w-48 mx-auto mb-8 opacity-90 drop-shadow-2xl transition-transform duration-700 group-hover:scale-105" />
             <h1 className="text-6xl md:text-8xl lg:text-9xl font-serif tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-neutral-400 leading-none mb-4">L'IMMERSIVE</h1>
             <p className="font-mono text-xs md:text-sm uppercase tracking-[0.6em] text-amber-500">Le Monde en Bouteille</p>
           </div>
+
           <div className="border-l border-amber-600/30 pl-8 text-left max-w-2xl mb-16 backdrop-blur-sm py-4">
              <p className="text-neutral-300 font-light text-sm md:text-base leading-relaxed">Une adresse confidentielle à Namur. <br className="hidden md:block"/><strong>Un espace événementiel privatif alliant architecture de caractère et équipements connectés.</strong></p>
           </div>
@@ -223,11 +226,20 @@ export default function App() {
              <div className="absolute inset-0 bg-amber-600/10 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500 ease-out"></div>
              <span className="relative font-mono text-sm uppercase tracking-[0.2em] flex items-center justify-center gap-4 text-white group-hover:text-amber-500 transition-colors">Composer mon événement <ArrowRight size={16} /></span>
           </button>
-          <div className="mt-20 flex flex-col items-center gap-4 opacity-70 hover:opacity-100 transition-opacity duration-500">
-             <div className="flex items-center gap-4"><div className="h-px w-10 bg-white/20"></div><p className="font-mono text-[10px] uppercase tracking-[0.25em] text-neutral-400">Confiance : Entreprises & Privés</p><div className="h-px w-10 bg-white/20"></div></div>
-             <a href="https://www.lemonde-enbouteille.be/salle" target="_blank" rel="noopener noreferrer" className="font-mono text-[10px] text-neutral-500 hover:text-amber-500 uppercase tracking-widest transition-colors border-b border-transparent hover:border-amber-500 pb-1">www.lemonde-enbouteille.be</a>
+
+          {/* FOOTER RESTAURÉ */}
+          <div className="absolute bottom-12 left-0 w-full flex flex-col items-center gap-4 z-50 animate-fade-in-up delay-500">
+             <div className="flex items-center gap-4 opacity-60 hover:opacity-100 transition-opacity duration-500">
+                <div className="h-px w-12 bg-white/30"></div>
+                <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-neutral-300">Confiance : Entreprises & Privés</p>
+                <div className="h-px w-12 bg-white/30"></div>
+             </div>
+             <a href="https://www.lemonde-enbouteille.be/salle" target="_blank" rel="noopener noreferrer" className="text-[10px] font-mono uppercase tracking-[0.2em] text-amber-500/80 hover:text-amber-500 transition-colors border-b border-transparent hover:border-amber-500 pb-1">
+                www.lemonde-enbouteille.be
+             </a>
           </div>
         </div>
+
         {/* PANNEAU ADMIN */}
         {showAdmin && (
           <div className="fixed inset-0 z-[110] bg-black/95 backdrop-blur-xl flex items-center justify-center p-6" onClick={() => setShowAdmin(false)}>
@@ -254,15 +266,11 @@ export default function App() {
     <div className="relative h-[100dvh] w-full bg-[#080808] text-white overflow-hidden flex flex-col md:flex-row">
       
       {/* --------------------
-          PDF MANIFESTE LUXURY (PRINT) - DESIGN BUGATTI/LVMH
+          PDF MANIFESTE LUXURY (PRINT)
           -------------------- */}
       <div className="hidden print:block fixed inset-0 z-[9999] bg-[#FAFAFA] text-[#0A0A0A] w-full h-full p-0 overflow-hidden">
          <div className="h-full w-full relative flex flex-col p-[1.5cm]">
-             
-             {/* CADRE FIN ELEGANT */}
              <div className="absolute inset-[1cm] border-[0.5px] border-[#0A0A0A]/20 pointer-events-none"></div>
-
-             {/* HEADER */}
              <div className="flex justify-between items-start mb-24 z-10">
                  <div className="flex flex-col">
                      <h1 className="text-5xl font-serif tracking-tight text-black mb-4">L'IMMERSIVE</h1>
@@ -276,73 +284,32 @@ export default function App() {
                     <div className="font-serif text-xl text-black">MÉMOIRE — {new Date().getFullYear()}</div>
                  </div>
              </div>
-
-             {/* CONTENT - LAYOUT ASYMETRIQUE */}
              <div className="flex-1 grid grid-cols-12 gap-12 z-10">
-                 {/* COLONNE GAUCHE (Description) */}
                  <div className="col-span-7 pr-12 flex flex-col justify-center border-r border-black/5">
                      <p className="font-mono text-[9px] uppercase tracking-[0.4em] text-amber-900 mb-8">Intention du projet</p>
-                     <p className="font-serif text-3xl leading-snug text-black mb-8 italic">
-                         "Pour {data.contact.name || 'votre événement'}, nous avons conçu une parenthèse hors du temps, où l'architecture rencontre l'émotion."
-                     </p>
+                     <p className="font-serif text-3xl leading-snug text-black mb-8 italic">"Pour {data.contact.name || 'votre événement'}, nous avons conçu une parenthèse hors du temps, où l'architecture rencontre l'émotion."</p>
                      <div className="mt-auto pt-12">
-                         <div className="flex justify-between items-end border-b border-black/10 pb-2 mb-4">
-                             <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#666]">Date</span>
-                             <span className="font-serif text-lg">{data.date}</span>
-                         </div>
-                         <div className="flex justify-between items-end border-b border-black/10 pb-2 mb-4">
-                             <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#666]">Horaire</span>
-                             <span className="font-serif text-lg">{data.timeSlot?.label}</span>
-                         </div>
-                         <div className="flex justify-between items-end border-b border-black/10 pb-2">
-                             <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#666]">Convives</span>
-                             <span className="font-serif text-lg">{data.pax} Personnes</span>
-                         </div>
+                         <div className="flex justify-between items-end border-b border-black/10 pb-2 mb-4"><span className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#666]">Date</span><span className="font-serif text-lg">{data.date}</span></div>
+                         <div className="flex justify-between items-end border-b border-black/10 pb-2 mb-4"><span className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#666]">Horaire</span><span className="font-serif text-lg">{data.timeSlot?.label}</span></div>
+                         <div className="flex justify-between items-end border-b border-black/10 pb-2"><span className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#666]">Convives</span><span className="font-serif text-lg">{data.pax} Personnes</span></div>
                      </div>
                  </div>
-
-                 {/* COLONNE DROITE (Détails) */}
                  <div className="col-span-5 flex flex-col justify-center pl-4">
-                     <div className="mb-12">
-                         <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#888] mb-4">Configuration Spatiale</p>
-                         <p className="font-serif text-2xl mb-2">{data.format?.title}</p>
-                         <p className="text-xs font-light text-[#444] leading-relaxed">{data.format?.desc}</p>
-                     </div>
-                     <div className="mb-12">
-                         <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#888] mb-4">Expérience Sensorielle</p>
-                         <p className="font-serif text-2xl mb-2">{data.experience.title}</p>
-                         <div className="flex flex-col gap-2 mt-4">
-                             {data.selectedServices.map(id => (
-                                 <div key={id} className="flex items-center gap-3">
-                                     <div className="w-1 h-1 bg-amber-600 rounded-full"></div>
-                                     <span className="text-xs font-mono uppercase tracking-widest text-[#333]">{SERVICES.find(s => s.id === id)?.title}</span>
-                                 </div>
-                             ))}
-                         </div>
-                     </div>
+                     <div className="mb-12"><p className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#888] mb-4">Configuration Spatiale</p><p className="font-serif text-2xl mb-2">{data.format?.title}</p><p className="text-xs font-light text-[#444] leading-relaxed">{data.format?.desc}</p></div>
+                     <div className="mb-12"><p className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#888] mb-4">Expérience Sensorielle</p><p className="font-serif text-2xl mb-2">{data.experience.title}</p><div className="flex flex-col gap-2 mt-4">{data.selectedServices.map(id => (<div key={id} className="flex items-center gap-3"><div className="w-1 h-1 bg-amber-600 rounded-full"></div><span className="text-xs font-mono uppercase tracking-widest text-[#333]">{SERVICES.find(s => s.id === id)?.title}</span></div>))}</div></div>
                  </div>
              </div>
-
-             {/* FOOTER */}
              <div className="mt-auto pt-16 z-10">
                  <div className="flex justify-between items-end">
-                     <div>
-                         <p className="font-serif text-6xl text-black leading-none">{totalAmount}<span className="text-2xl align-top ml-2">€</span></p>
-                         <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#666] mt-2">Investissement Global Estimé (TVAC)</p>
-                     </div>
-                     <div className="text-right">
-                         <div className="w-32 h-px bg-black mb-4 ml-auto"></div>
-                         <p className="font-mono text-[8px] uppercase tracking-[0.2em] text-[#888]">Signature & Accord</p>
-                         <div className="h-16"></div> 
-                     </div>
+                     <div><p className="font-serif text-6xl text-black leading-none">{totalAmount}<span className="text-2xl align-top ml-2">€</span></p><p className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#666] mt-2">Investissement Global Estimé (TVAC)</p></div>
+                     <div className="text-right"><div className="w-32 h-px bg-black mb-4 ml-auto"></div><p className="font-mono text-[8px] uppercase tracking-[0.2em] text-[#888]">Signature & Accord</p><div className="h-16"></div></div>
                  </div>
-                 <div className="w-full text-center mt-12">
-                     <p className="font-mono text-[7px] uppercase tracking-[0.4em] text-[#AAA]">Namur — Rue de la Croix — Belgique</p>
-                 </div>
+                 <div className="w-full text-center mt-12"><p className="font-mono text-[7px] uppercase tracking-[0.4em] text-[#AAA]">Namur — Rue de la Croix — Belgique</p></div>
              </div>
          </div>
       </div>
 
+      {/* WEB APP */}
       <div className="hidden md:flex flex-col justify-between w-20 border-r border-white/5 bg-[#0a0a0a] z-20 py-8 items-center h-full print:hidden">
         <div className="font-serif font-bold text-xl cursor-pointer text-amber-600" onClick={() => setStep(0)}>L.</div>
         <div className="flex flex-col gap-6 items-center">
@@ -363,7 +330,7 @@ export default function App() {
            </div>
         </div>
 
-        {/* STEP 1: TEMPORALITE */}
+        {/* STEP 1 */}
         {step === 1 && (
           <div className="flex-1 flex flex-col h-full animate-fade-in duration-700 relative">
             <div className="absolute top-0 left-0 p-6 md:p-12 z-50 pointer-events-none bg-gradient-to-b from-black/80 to-transparent w-full">
@@ -388,7 +355,7 @@ export default function App() {
           </div>
         )}
 
-        {/* STEP 2: INTENTION */}
+        {/* STEP 2 */}
         {step === 2 && (
           <div className="flex-1 p-6 md:p-16 flex flex-col justify-center animate-fade-in-right duration-500 overflow-y-auto">
              <div className="max-w-7xl mx-auto w-full">
@@ -410,7 +377,7 @@ export default function App() {
           </div>
         )}
 
-        {/* STEP 3: ARCHITECTURE */}
+        {/* STEP 3 */}
         {step === 3 && (
           <div className="flex-1 flex flex-col justify-center p-6 md:p-16 animate-fade-in-right duration-500 overflow-y-auto">
              <div className="max-w-7xl mx-auto w-full flex flex-col h-full justify-center">
@@ -430,7 +397,7 @@ export default function App() {
           </div>
         )}
 
-        {/* STEP 4: CALIBRAGE */}
+        {/* STEP 4 */}
         {step === 4 && (
           <div className="flex-1 flex flex-col animate-fade-in-right duration-500 justify-center overflow-y-auto">
              <div className="max-w-4xl mx-auto w-full p-6 md:p-8 mt-16 md:mt-0">
@@ -458,7 +425,7 @@ export default function App() {
           </div>
         )}
 
-        {/* STEP 5: IMMERSION */}
+        {/* STEP 5 */}
         {step === 5 && (
           <div className="flex-1 flex flex-col animate-fade-in-right duration-500 overflow-y-auto scrollbar-hide">
              <div className="max-w-6xl mx-auto w-full p-6 md:p-16 mt-16 md:mt-0">
@@ -496,7 +463,7 @@ export default function App() {
           </div>
         )}
 
-        {/* STEP 6: SERVICES & FINITIONS */}
+        {/* STEP 6 */}
         {step === 6 && (
           <div className="flex-1 p-6 md:p-16 overflow-y-auto scrollbar-hide animate-fade-in-right duration-500">
              <div className="max-w-6xl mx-auto w-full h-full flex flex-col">
@@ -521,7 +488,7 @@ export default function App() {
           </div>
         )}
 
-        {/* ÉTAPE 7 : FINAL */}
+        {/* ÉTAPE 7 */}
         {step === 7 && (
           <div className="flex-1 flex items-center justify-center p-0 md:p-6 animate-in zoom-in-95 duration-700 relative overflow-hidden h-full">
              <div className="absolute inset-0 bg-cover bg-center opacity-30 blur-2xl scale-110" style={{ backgroundImage: `url(${data.timeSlot?.image})` }}></div>
@@ -553,7 +520,7 @@ export default function App() {
                       <div className="group relative"><input type="tel" required placeholder="TÉLÉPHONE" className="w-full bg-transparent border-b border-white/20 py-3 text-white outline-none focus:border-amber-600 transition-colors placeholder:text-neutral-700 font-mono text-sm" onChange={e => setData({...data, contact: {...data.contact, phone: e.target.value}})} /></div>
                       <div className="group relative"><textarea rows="3" placeholder="MESSAGE (Allergies, horaires...)" className="w-full bg-transparent border-b border-white/20 py-3 text-white outline-none focus:border-amber-600 transition-colors placeholder:text-neutral-700 font-mono text-sm resize-none" onChange={e => setData({...data, contact: {...data.contact, message: e.target.value}})} ></textarea></div>
                       
-                      {/* CASE A COCHER JURIDIQUE */}
+                      {/* CHECKBOX GDPR */}
                       <div className="flex items-start gap-3 mt-6 mb-8 group cursor-pointer" onClick={() => setIsAgreed(!isAgreed)}>
                           <div className={`w-4 h-4 min-w-[16px] border transition-all duration-300 flex items-center justify-center ${isAgreed ? 'border-amber-600 bg-amber-600' : 'border-white/20 group-hover:border-white/50'}`}>
                               {isAgreed && <Check size={10} className="text-white" />}
