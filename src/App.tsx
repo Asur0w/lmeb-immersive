@@ -29,7 +29,7 @@ const FORMATS = [
 ];
 
 const EXPERIENCES = [
-  { id: 'none', title: 'Location Sèche', price: 0, sub: 'L\'espace nu', description: "Mise à disposition exclusive de l'espace. Idéal pour vos réunions autonomes ou présentations.", image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2301&auto=format&fit=crop' },
+  { id: 'none', title: 'Location', price: 0, sub: 'L\'espace nu', description: "Mise à disposition exclusive de l'espace. Idéal pour vos réunions autonomes ou présentations.", image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2301&auto=format&fit=crop' },
   { id: 'world', title: 'Tour du Monde', price: 40, sub: 'Dégustation 5 vins', description: "Une exploration sensorielle guidée à travers 5 vins d'exception. Le format classique et élégant pour découvrir nos pépites du terroir.", image: 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?q=80&w=2940&auto=format&fit=crop' },
   { id: 'casino', title: 'Casino du Vin', price: 46, sub: 'Animation Ludique', description: "L'ambiance feutrée de la Black List. Dégustation à l'aveugle, tables de jeu, jetons et enchères. Misez sur vos sens dans ce format participatif.", image: 'https://images.unsplash.com/photo-1596838132731-3301c3fd4317?q=80&w=2940&auto=format&fit=crop' },
   { id: 'gastro', title: 'Instant Gourmand', price: -1, sub: 'Repas', description: "Une immersion autour de la gastronomie. Quiz culinaire interactif, découverte d'ingrédients mystères et accords mets-vins sur mesure.", image: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=2940&auto=format&fit=crop' }
@@ -223,7 +223,7 @@ export default function App() {
           </div>
 
           <div className="border-l border-amber-600/30 pl-6 text-left max-w-xl backdrop-blur-sm py-2 mb-10">
-             <p className="text-neutral-300 font-light text-xs md:text-sm leading-relaxed">Une adresse confidentielle à Namur. <br className="hidden md:block"/><strong>Un espace événementiel privatif alliant architecture de caractère et équipements connectés.</strong></p>
+             <p className="text-neutral-300 font-light text-xs md:text-sm leading-relaxed">Une adresse confidentielle à Namur. <br className="hidden md:block"/><strong>Un espace événementiel privatif alliant expérience de caractère. Salle conçue avec des équipements connectés.</strong></p>
           </div>
           
           <button onClick={() => goToStep(1)} className="group relative px-10 py-5 bg-white/5 border border-white/10 hover:border-amber-600/50 transition-all duration-500 w-full md:w-auto">
@@ -433,7 +433,7 @@ export default function App() {
                 <div className="mb-8 md:mb-10"><span className="text-amber-600 font-mono text-xs uppercase tracking-widest mb-4 block">05 — Immersion</span><h3 className="text-3xl md:text-4xl font-serif mb-2">Niveau d'Expérience</h3></div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-8 md:mb-12">
                    <button onClick={() => { setIsDryHire(true); setData({...data, experience: EXPERIENCES[0]}); }} className={`p-6 md:p-8 border text-left transition-all duration-300 group ${isDryHire ? 'border-white bg-white text-black' : 'border-white/10 hover:border-white/30 bg-[#0a0a0a]'}`}>
-                      <LayoutTemplate size={28} className={`mb-4 ${isDryHire ? 'text-black' : 'text-neutral-500'}`} /><h4 className="text-xl md:text-2xl font-serif mb-2">Location Sèche</h4><p className={`text-xs md:text-sm ${isDryHire ? 'text-neutral-700' : 'text-neutral-400'}`}>Mise à disposition de l'espace uniquement.</p>
+                      <LayoutTemplate size={28} className={`mb-4 ${isDryHire ? 'text-black' : 'text-neutral-500'}`} /><h4 className="text-xl md:text-2xl font-serif mb-2">Location</h4><p className={`text-xs md:text-sm ${isDryHire ? 'text-neutral-700' : 'text-neutral-400'}`}>Mise à disposition de l'espace uniquement.</p>
                    </button>
                    <button onClick={() => { setIsDryHire(false); setData({...data, experience: EXPERIENCES[1]}); }} className={`p-6 md:p-8 border text-left transition-all duration-300 group ${!isDryHire ? 'border-amber-600 bg-amber-600 text-white' : 'border-white/10 hover:border-amber-600/50 bg-[#0a0a0a]'}`}>
                       <div className="flex items-center gap-3 mb-2"><Sparkles size={20} className={!isDryHire ? 'text-white' : 'text-amber-500'} /><h4 className="text-xl md:text-2xl font-serif">Expérience Immersive</h4></div><p className={`text-xs md:text-sm ${!isDryHire ? 'text-white/90' : 'text-neutral-400'}`}>Une animation sensorielle incluse (Vin, Casino, Gastronomie).</p>
@@ -524,7 +524,7 @@ export default function App() {
                    <div className="pt-8 mt-12 border-t border-white/10 text-center pb-8 md:pb-0">
                       <div className="text-xs text-neutral-500 uppercase tracking-widest mb-3">Total Estimé TVAC</div>
                       <div className="flex items-baseline justify-center gap-3"><span className="text-4xl md:text-5xl font-serif text-amber-500">{totalAmount} €</span>{isCustom && <span className="text-sm font-sans text-neutral-400 border border-neutral-600 px-2 py-0.5 rounded">+ Devis</span>}</div>
-                      <button onClick={() => window.print()} className="mt-6 flex items-center justify-center gap-2 w-full text-[10px] uppercase tracking-widest text-neutral-500 hover:text-white transition-colors"><FileText size={12} /> Télécharger la Note d'Intention</button>
+                      <button onClick={() => window.print()} className="mt-6 flex items-center justify-center gap-2 w-full text-[10px] uppercase tracking-widest text-neutral-500 hover:text-white transition-colors"><FileText size={12} /> Télécharger votre demande d'expérience</button>
                    </div>
                 </div>
                 <div className="w-full md:w-1/2 p-6 md:p-10 flex flex-col justify-center bg-black/40 relative overflow-y-auto">
